@@ -1,118 +1,110 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import 'react-native-gesture-handler';
+import { HomeScreen } from './src/screens/HomeScreen';
+import { AudioScreen } from './src/screens/AudioScreen';
+import { LibraryScreen } from './src/screens/LibraryScreen';
+import { StoreScreen } from './src/screens/StoreScreen';
+import { MoreScreen } from './src/screens/MoreScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const screenOptionStyle = {
+  headerStyle: {
+    backgroundColor: "#D8A623",
+  },
+  headerTintColor: "white",
+  headerBackTitle: "Back",
+};
+
+
+function HomeStackNavigator() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
   );
 }
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+function AudioStackNavigator() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Rhapsody Audio" component={AudioScreen} />
+    </Stack.Navigator>
   );
+}
+
+function LibraryStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Rhapsody Library" component={LibraryScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function StoreStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="Rhapsody Store" component={StoreScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function MoreStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="More Settings" component={MoreScreen} />
+    </Stack.Navigator>
+  );
+}
+
+export default function App() {
+	return (
+		<NavigationContainer>
+			<Tab.Navigator 
+				screenOptions={({ route }) => ({
+					tabBarIcon: ({ focused, color, size }) => {
+					  let iconName= "Home";
+		  
+					  if (route.name === 'Home') {
+						  iconName = 'home-sharp';
+					  } else if (route.name === 'Audio') {
+						  iconName = 'musical-note-sharp';
+					  } else if (route.name === 'Library') {
+						  iconName = 'library-sharp';
+					  }else if (route.name === 'Store') {
+              iconName = 'cart-sharp';
+              } else if (route.name === 'More') {
+              iconName = 'ellipsis-horizontal-sharp';
+              }
+		  
+					  return <IonIcon name={iconName} size={size} color={color}/>;
+					},
+          tabBarActiveTintColor: '#D8A623',
+          tabBarInactiveTintColor: '#333333',
+				  })}>
+				<Tab.Screen name="Home" component={HomeStackNavigator} options={{headerShown: false}} />
+				<Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
+				<Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
+        <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />
+				<Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
+			</Tab.Navigator>
+		</NavigationContainer>
+	);
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
 });
-
-export default App;
