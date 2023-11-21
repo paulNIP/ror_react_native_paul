@@ -6,11 +6,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
 import 'react-native-gesture-handler';
-import { HomeScreen } from './src/screens/HomeScreen';
-import { AudioScreen } from './src/screens/AudioScreen';
-import { LibraryScreen } from './src/screens/LibraryScreen';
-import { StoreScreen } from './src/screens/StoreScreen';
-import { MoreScreen } from './src/screens/MoreScreen';
+
+
+
+
+
+import AudioScreen from './src/screens/AudioScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import LibraryScreen from './src/screens/LibraryScreen';
+import StoreScreen from './src/screens/StoreScreen';
+import MoreScreen from './src/screens/MoreScreen';
 
 
 const Tab = createBottomTabNavigator();
