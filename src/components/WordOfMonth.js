@@ -23,6 +23,8 @@ const WordOfMonth=()=>{
 
   }, []);
 
+  console.log("Selected Articles",words);
+
  
 
   
@@ -31,12 +33,13 @@ const WordOfMonth=()=>{
     return (
         <>
         <View style={styles.container}>
+          
 
             {
               words.map((l, i) => {
 
                 return i === 0 ?
-<TouchableOpacity onPress={()=>{navigation.navigate('Article')}}>
+<TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
 <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10,marginBottom:10 }}>
 <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
     <Image
@@ -60,7 +63,7 @@ const WordOfMonth=()=>{
               
 
                    :
-                <TouchableOpacity onPress={()=>{navigation.navigate('Article')}}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
                 <ListItem key={i} bottomDivider>
                    <Image
                      style={styles.image}
@@ -78,11 +81,7 @@ const WordOfMonth=()=>{
          }   
 
           
-            <Button
-              title="More from Rhapsody News"
-              color='#F9A825'
-              onPress={() => Alert.alert('Simple Button pressed')}
-            />
+
         </View>
     </>
     );

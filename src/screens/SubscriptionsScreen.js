@@ -9,7 +9,7 @@ const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 import styles from './styles'
 
 
-const SubscriptionPlans = () => {
+const SubscriptionScreen = () => {
 
   const carouselRef = useRef(null)
 
@@ -129,4 +129,4 @@ const stylesMo = StyleSheet.create({
 
 
 
-export default SubscriptionPlans;
+export default SubscriptionScreen;

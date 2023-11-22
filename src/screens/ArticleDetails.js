@@ -1,12 +1,10 @@
 import React , { useEffect, useState } from 'react';
 import { View, Image, StyleSheet,FlatList ,Button,SafeAreaView,ScrollView} from 'react-native';
 import { Text, Card,  Divider } from '@rneui/themed';
-import { ListItem ,Avatar} from '@rneui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import HTMLView from 'react-native-htmlview';
 import { useNavigation } from '@react-navigation/native';
 import {Dimensions} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getArticleDetails } from '../service/devotionalService';
 
 const windowUnlockHeight = Dimensions.get('window').height*75;
@@ -27,6 +25,8 @@ const ArticleDetails = ({ route, navigation }) => {
         fetchData();
   
     }, []);
+
+    console.log("Worddddf",words);
   return (
     <SafeAreaView>
     <ScrollView>
@@ -35,7 +35,7 @@ const ArticleDetails = ({ route, navigation }) => {
           words.map((l, i) => {
 
             return (
-                    <TouchableOpacity >
+                    <TouchableOpacity>
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10,marginBottom:10 }}>
                     <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                     <Image

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Text, View,Image,ImageBackground,StyleSheet,TouchableOpacity,ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from 'react-native-paper';
-import { Button,List } from 'react-native-paper';
 import {Dimensions} from 'react-native';
 
 

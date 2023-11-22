@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import IonIcon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import 'react-native-gesture-handler';
 
@@ -16,6 +16,15 @@ import HomeScreen from './src/screens/HomeScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import StoreScreen from './src/screens/StoreScreen';
 import MoreScreen from './src/screens/MoreScreen';
+import SubscriptionScreen from './src/screens/SubscriptionsScreen';
+import WalletScreen from './src/screens/WalletScreen';
+import LoginPage from './src/screens/Auth/LoginPage';
+import RegistrationPage from './src/screens/Auth/RegistrationPage';
+import PastArticles from './src/screens/PastArticles';
+import RelatedArticles from './src/screens/RelatedArticles';
+import SavedArticles from './src/screens/SavedArticles';
+import SearchArticles from './src/screens/SearchArticles';
+import ArticleDetails from './src/screens/ArticleDetails';
 
 
 const Tab = createBottomTabNavigator();
@@ -34,6 +43,16 @@ function HomeStackNavigator() {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+      <Stack.Screen name="My Wallet" component={WalletScreen} />
+      <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
+      <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>
+
+      <Stack.Screen name="Past Articles" component={PastArticles} />
+      <Stack.Screen name="Related Articles" component={RelatedArticles} />
+      <Stack.Screen name="Saved Articles" component={SavedArticles} />
+      <Stack.Screen name="Search Article" component={SearchArticles} />
+      <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
     </Stack.Navigator>
   );
 }
@@ -76,26 +95,26 @@ export default function App() {
 			<Tab.Navigator 
 				screenOptions={({ route }) => ({
 					tabBarIcon: ({ focused, color, size }) => {
-					  let iconName= "Home";
+					  let iconName= "home";
 		  
 					  if (route.name === 'Home') {
-						  iconName = 'home-sharp';
+						  iconName = 'home';
 					  } else if (route.name === 'Audio') {
-						  iconName = 'musical-note-sharp';
+						  iconName = 'music-note';
 					  } else if (route.name === 'Library') {
-						  iconName = 'library-sharp';
+						  iconName = 'bookshelf';
 					  }else if (route.name === 'Store') {
-              iconName = 'cart-sharp';
+              iconName = 'cart';
               } else if (route.name === 'More') {
-              iconName = 'ellipsis-horizontal-sharp';
+              iconName = 'dots-horizontal';
               }
 		  
-					  return <IonIcon name={iconName} size={size} color={color}/>;
+					  return <MaterialCommunityIcons  name={iconName} size={size} color={color} />;
 					},
           tabBarActiveTintColor: '#D8A623',
           tabBarInactiveTintColor: '#333333',
 				  })}>
-				<Tab.Screen name="Home" component={HomeStackNavigator} options={{headerShown: false}} />
+				<Tab.Screen name="Welcome" component={HomeStackNavigator} options={{headerShown: false}} />
 				<Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
 				<Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
         <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />

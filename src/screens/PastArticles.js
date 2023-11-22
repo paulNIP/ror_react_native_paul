@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import {Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BlurView } from 'expo-blur';
 import { getPastArticles } from '../service/devotionalService';
 
 
@@ -56,7 +55,7 @@ const PastArticles = () => {
 
 {/* <View style={{ height: 200, 
    position:'absolute', left: 40, top:630,right:40}}> */}
-  <BlurView intensity={100}  style={{ height: 400, 
+  <View intensity={100}  style={{ height: 400, 
    position:'absolute',width:Dimensions.get('window').width, top:630}}>
     <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
     <Button
@@ -65,7 +64,7 @@ const PastArticles = () => {
           onPress={() => {navigation.navigate('Subscription')}}
         />
 
-  </BlurView>
+  </View>
 
 
     </SafeAreaView>

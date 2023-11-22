@@ -25,9 +25,15 @@ const AccountChips = () => {
 
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
-          const data = await getProfile(email);
-          setProfile(data);
-          setStatus(data.subscription.status);
+          if(email==null){
+
+          }else{
+            const data = await getProfile(email);
+            setProfile(data);
+            setStatus(data.subscription.status);
+
+          }
+
 
 
       }
@@ -44,13 +50,35 @@ return (
       <View style={styles.contentView}>
       
           <TouchableOpacity style={styles.roundButton}
-            onPress={walletClickedHandler}
+            onPress={()=>{
+              if(status==='active'){
+                navigation.navigate('My Wallet');
+
+              }else if(status!=='active' && status !=null){
+                navigation.navigate('My Wallet');
+
+              }else{
+                navigation.navigate('Login');
+
+              }
+            }}
             >
             <Text>Check Wallet</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.roundButton}
-            onPress={subscriptionClickedHandler}
+            onPress={()=>{
+              if(status==='active'){
+                navigation.navigate('Subscription');
+
+              }else if(status!=='active' && status !=null){
+                navigation.navigate('Subscription');
+
+              }else{
+                navigation.navigate('Login');
+
+              }
+            }}
             >
             <Text>Upgrade Subscription</Text>
           </TouchableOpacity>
@@ -60,7 +88,18 @@ return (
             (
               // return if profile subscription is inactive or null
               <TouchableOpacity style={styles.roundButton}
-              onPress={subscriptionClickedHandler}
+              onPress={()=>{
+                if(status==='active'){
+                  navigation.navigate('Subscription');
+  
+                }else if(status!=='active' && status !=null){
+                  navigation.navigate('Subscription');
+  
+                }else{
+                  navigation.navigate('Login');
+  
+                }
+              }}
               >
               <Text>Free trial</Text>
             </TouchableOpacity>

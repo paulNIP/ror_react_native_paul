@@ -1,17 +1,17 @@
 import React , { useEffect, useState } from 'react';
-import { View, Image, StyleSheet,FlatList ,Button,SafeAreaView,ScrollView} from 'react-native';
-import { Text, Card,  Divider } from '@rneui/themed';
-import { ListItem ,Avatar} from '@rneui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ScrollView,View
+} from 'react-native';
 import {Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getPastArticles, getRelatedArticles } from '../service/devotionalService';
+
 
 
 const MoreScreen = ({ route, navigation }) => {
-
-  const { title } = route.params;
 
 
 
@@ -27,48 +27,23 @@ const MoreScreen = ({ route, navigation }) => {
 
   }, []);
 return (
-  <SafeAreaView>
-  <ScrollView>
-
-      {
-        words.map((l, i) => {
-
-          return (
-          <TouchableOpacity onPress={()=>{navigation.navigate('ArticleDetails',{date:l.date})}}>
-          <ListItem key={i} bottomDivider>
-             <Image
-               style={styles.image}
-               source={{uri: l.image}} 
-               resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
-             />
-             <ListItem.Content>
-               <ListItem.Title>{l.title}</ListItem.Title>
-               <ListItem.Subtitle style={{color:'#999999'}}>{l.excerpt}</ListItem.Subtitle>
-               <Text style={{color:'#606060'}}>{l.date}</Text>
-             </ListItem.Content>
-          </ListItem>
-          </TouchableOpacity>
-          )
-        })
-   }  
-
-   </ScrollView> 
-
-{/* <View style={{ height: 200, 
- position:'absolute', left: 40, top:630,right:40}}> */}
-<View   style={{ height: 400, 
- position:'absolute',width:Dimensions.get('window').width, top:630}}>
-  <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
-  <Button
-        title="Unlock with a Higher Package"
-        color='#F9A825'
-        onPress={() => {navigation.navigate('Subscription')}}
-      />
-
-</View>
-
-
-  </SafeAreaView>
+  <SafeAreaView >
+      <ScrollView>
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </Text>
+        <View style={{flexDirection:'row'}}>
+        <MaterialCommunityIcons style={{marginStart:10}} name="file-find-outline" size={30} color="gray" />
+            <Text style={{marginStart:10,fontSize:30}}>Home</Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   
 );
 };

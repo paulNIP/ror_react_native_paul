@@ -3,10 +3,9 @@ import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button
 import Strings from '../constants/Strings';
 import { getDailyDevotional } from '../service/devotionalService';
 import AccountChips from './AccountChips';
-import ReadAndEarn from './ReadAndEarn';
 import HTMLView from 'react-native-htmlview';
 import DailyQuiz from './DailyQuiz';
-import {Overlay, Icon } from '@rneui/themed';
+import {Overlay } from '@rneui/themed';
 import { WebView } from 'react-native-webview';
 
 import { Divider } from '@rneui/themed';
@@ -15,14 +14,8 @@ import {Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { showAlert, closeAlert } from "react-native-customisable-alert";
 import { getProfile, getWallet } from '../service/authService';
-//import DeviceInfo which will help us to get UniqueId
-// import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
-
 
 
 const windowHeight = Dimensions.get('window').height*0.6;
@@ -39,13 +32,39 @@ const DailyDevotional = () => {
 
   const [status, setStatus] = useState();
   const [points, setPoints] = useState();
+  const [loggedIn, setLoggedIn] = React.useState(null);
+
+
+
+  React.useEffect(() => {
+    async function setData() {
+      const logData = await AsyncStorage.getItem("hasLoggedIn");
+
+
+      if (logData == null) {
+        setLoggedIn(false);
+        AsyncStorage.setItem("hasLoggedIn", "false");
+      } else {
+        setLoggedIn(true);
+      }
+
+    }
+    setData();
+
+  }, []);
 
   useEffect(() => {
 
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
-          const data = await getProfile(email);
-          setStatus(data.subscription.status);
+          if(email==null){
+
+          }else{
+            const data = await getProfile(email);
+            setStatus(data.subscription.status);
+
+          }
+          
 
 
       }
@@ -59,8 +78,15 @@ const DailyDevotional = () => {
   
         const fetchData = async () => {
             const email= await AsyncStorage.getItem('email');
-            const data = await getWallet(email);
-            setPoints(data.reading_points);
+            if(email==null){
+              setPoints('-');
+
+            }else{
+              const data = await getWallet(email);
+              setPoints(data.reading_points);
+
+            }
+            
   
         }
         fetchData();
@@ -100,7 +126,6 @@ const DailyDevotional = () => {
 
   const handleOnLayout = useCallback(async () => {
     if (isLoaded) {
-      // await SplashScreen.hideAsync(); //hide the splashscreen
     }
   }, [isLoaded]);
 
@@ -127,22 +152,13 @@ const DailyDevotional = () => {
   const [timerEnd, setTimerEnd] = useState(false);
 
   const timerCallbackFunc = (timerFlag) => {
-      // Setting timer flag to finished
+
       setTimerEnd(timerFlag);
       toggleReadingOverlay();
-      // console.warn(
-      // 'You can alert the user by letting him know that Timer is out.',
-      // );
+
 
   };
 
-  // let deviceId = DeviceInfo.getDeviceId();
-
-  // const [deviceId, setDeviceId] = 
-  //   useState('');
-
-  // var uniqueId = DeviceInfo.getUniqueId();
-  //   setDeviceId(uniqueId);
 
   const renderDevotional = ({ item }) => {
 
@@ -216,17 +232,26 @@ const DailyDevotional = () => {
           <Divider style={{width:100,color:'#DAA520', alignSelf:'center'}} color='red' width={2}/>
           <Text style={styles.excerpt}>{item.excerpt}</Text>
           <View style={styles.fixToText}>
-          { status==='active' ? 
-             (<Button
+             <Button
                 title="Read more"
                 color='red'
                 onPress={() => {
-                  setShouldShow(!shouldShow);
-                  setTimerEnd(false);
-                  refTimer.current.resetTimer();
+                  if(status==='active'){
+                    setShouldShow(!shouldShow);
+                    setTimerEnd(false);
+                    refTimer.current.resetTimer();
+
+                  }else if(status!=='active' && status !=null){
+                    navigation.navigate('Subscription');
+
+                  }else{
+                    navigation.navigate('Login');
+
+                  }
+                  
                 }}
-              />):(null)
-              }
+              />
+              
           </View>
           </View>
         ) : null

@@ -98,19 +98,19 @@ return (
         </View>
         <WordOfMonth/>
 
-        <ActionButton buttonColor="#F9A825">
+        <ActionButton buttonColor="#D8A623">
           {/*Inner options of the action button*/}
           {/*Icons here
              https://infinitered.github.io/ionicons-version-3-search/
            */}
           <ActionButton.Item
-            buttonColor="#F9A825"
+            buttonColor="#D8A623"
             title="Change Theme"
             onPress={() => alert('Change Theme')}>
             <MaterialCommunityIcons style={{alignSelf:'center'}} name="format-paint" size={30} color="white" />
           </ActionButton.Item>
           <ActionButton.Item
-            buttonColor="#F9A825"
+            buttonColor="#D8A623"
             title="Notes"
             onPress={() => alert('Notes clicked')}>
             <MaterialCommunityIcons style={{alignSelf:'center'}} name="lead-pencil" size={30} color="white" />
