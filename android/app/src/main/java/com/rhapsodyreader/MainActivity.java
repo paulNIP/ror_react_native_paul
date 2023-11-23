@@ -5,6 +5,9 @@ import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 import android.os.Bundle;
+import android.view.WindowManager;
+ 
+
 
 public class MainActivity extends ReactActivity {
 
@@ -21,6 +24,8 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "rhapsodyreader";
   }
+
+
 
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link

@@ -39,6 +39,7 @@
     "react-native-screens": "^3.27.0",
     "react-native-select-dropdown": "^3.4.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-tab-view": "^3.5.2",
     "react-native-text-input-interactive": "^0.1.4",
     "react-native-track-player": "^4.0.1",
     "react-native-vector-icons": "^9.2.0",

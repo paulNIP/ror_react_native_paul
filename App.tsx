@@ -1,9 +1,10 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import RNBootSplash from 'react-native-bootsplash';
 
 import 'react-native-gesture-handler';
 
@@ -90,6 +91,8 @@ function MoreStackNavigator() {
 }
 
 export default function App() {
+
+
 	return (
 		<NavigationContainer>
 			<Tab.Navigator 
