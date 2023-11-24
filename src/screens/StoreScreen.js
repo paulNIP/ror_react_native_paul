@@ -16,9 +16,18 @@ import { getBooks
 
 const StoreScreen = ({ navigation }) => {
 
+  
   const [books, setBooks] = useState([]);
+  useEffect(() => {
 
+    const fetchData = async () => {
+        const data = await getBooks();
+        setBooks(data);
 
+    }
+    fetchData();
+
+  }, []);
 
 
   const renderCategories = ({ item }) => {

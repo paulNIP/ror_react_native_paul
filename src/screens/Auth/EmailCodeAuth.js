@@ -87,7 +87,7 @@ const EmailCodeAuth=({ route, navigation })=> {
               //insert data into user DB local storage sqlite
 
               saveUserData();
-              navigation.navigate('HomeApp')
+              navigation.navigate('Welcome')
               
             } else {
               //toggle snack bar
