@@ -9,11 +9,10 @@ import {Overlay } from '@rneui/themed';
 import { WebView } from 'react-native-webview';
 
 import { Divider } from '@rneui/themed';
-import { useFonts } from 'expo-font';
 import {Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CountDownTimer from 'react-native-countdown-timer-hooks';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getProfile, getWallet } from '../service/authService';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -117,17 +116,8 @@ const DailyDevotional = () => {
     return unsubscribe;
   }, [navigation]);
 
-  const [isLoaded] = useFonts({
-    "robo-regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "robo-med": require("../assets/fonts/Roboto-Medium.ttf"),
-    "robo-bold": require("../assets/fonts/Roboto-Bold.ttf"),
-    
-  });
 
-  const handleOnLayout = useCallback(async () => {
-    if (isLoaded) {
-    }
-  }, [isLoaded]);
+
 
   const [devotional, setDevotional] = useState([]);
 
@@ -226,7 +216,7 @@ const DailyDevotional = () => {
             </View>
 
         
-        {shouldShow ? ( <View onLayout={handleOnLayout} style={{padding:10}}>
+        {shouldShow ? ( <View  style={{padding:10}}>
           <View style={{justifyContent:'center'}}>
           <Text style={styles.heading} >{item.title}</Text></View>
           <Divider style={{width:100,color:'#DAA520', alignSelf:'center'}} color='red' width={2}/>
@@ -260,7 +250,7 @@ const DailyDevotional = () => {
 
         {shouldShow ? null
          : (
-          <View style={{marginBottom:20,padding:10}} onLayout={handleOnLayout}>
+          <View style={{marginBottom:20,padding:10}} >
             <Text style={styles.heading}>{item.title}</Text>
             <Divider style={{width:100, alignSelf:'center'}} color='red' width={2}/>
             <HTMLView style={{marginTop:10}}
@@ -339,7 +329,7 @@ const DailyDevotional = () => {
 return (
   
   <>
-    <View style={styles.container} onLayout={handleOnLayout}>
+    <View style={styles.container} >
       <FlatList data={devotional} renderItem={renderDevotional} />
     </View>
     

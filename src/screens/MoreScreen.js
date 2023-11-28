@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,6 +16,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MoreScreen = () => {
   const navigation = useNavigation();
+
+  const [name, setName] = useState();
+  const [subscription, setSubscription] = useState();
+   
+  useEffect(() => {
+
+      const fetchData = async () => {
+          let data = await AsyncStorage.getItem('name');
+          let data2 = await AsyncStorage.getItem('subscription');
+          if(data==null){
+            setName('Guest');
+
+          }else{
+            setName(data)
+            
+          }
+
+          if(data2==null){
+            setSubscription('Basic User');
+
+          }else{
+            setSubscription(data2);
+            
+          }
+          
+      }
+      fetchData();
+
+  }, []);
 
   const onShare = async () => {
     try {
@@ -76,8 +105,8 @@ const MoreScreen = () => {
               source={require('../assets/logo.png')}
             />
             <View style={{marginTop:90,marginLeft:10}}>
-              <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>User </Text>
-              <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>Basic User</Text>
+              <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>{name}</Text>
+              <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>{subscription}</Text>
 
             </View>
 

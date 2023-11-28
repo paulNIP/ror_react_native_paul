@@ -1,19 +1,11 @@
 import React,{useEffect,useState} from 'react';
-import { View, Text, StyleSheet,Image, Button,TouchableOpacity,StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, Text, StyleSheet,Image, TouchableOpacity,StatusBar, Platform } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import RNBootSplash from 'react-native-bootsplash';
 //import AppIntroSlider to use it
-import AppIntroSlider from 'react-native-app-intro-slider';
-
-
 import 'react-native-gesture-handler';
-
-
-
-
 
 import AudioScreen from './src/screens/AudioScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -37,18 +29,28 @@ import Favourites from './src/screens/Favourites';
 import StudyTracker from './src/screens/StudyTracker';
 import BookmarkedArticles from './src/screens/BookmarkedArticles';
 import EmailCodeAuth from './src/screens/Auth/EmailCodeAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackNavigationProp } from "@react-navigation/stack";
+
+import OnboardingScreen from './src/screens/OnBoardingScreen';
+import AppFeedBack from './src/screens/AppFeedBack';
 
 
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-type AppStackParamList = {
-  Login: undefined;
 
+export type StackParamList = {
+  AppFeedBack: undefined;
 };
 
-const AuthStack = createStackNavigator<AppStackParamList>();
+const StackHeader = createStackNavigator<StackParamList>();
+
+export type StackNavigation = StackNavigationProp<StackParamList>;
+
+
+
 
 const screenOptionStyle = {
   headerStyle: {
@@ -58,46 +60,62 @@ const screenOptionStyle = {
   headerBackTitle: "Back",
 };
 
-const slides = [
-  {
-    key: 's1',
-    text: 'Welcome to Rhapsody of Realities',
-    title: 'The life-changing truths in this edition will refresh, transform and prepare you for a very fulfilling, fruitful and rewarding experience with God’s Word.',
-    // image: require('./src/assets/welcome1_2.png'),
-    backgroundColor: '#20d2bb',
-  },
-  {
-    key: 's2',
-    title: 'Great New Features',
-    text: 'Enjoy over 18 New exciting features!',
-    // image: require('./src/assets/welcome2_2.png'),
-    backgroundColor: '#febe29',
-  },
-  {
-    key: 's3',
-    title: 'Rich Bookstore',
-    text: 'Enjoy our bookstore with hundreds of books available!',
-    // image: require('./src/assets/welcome3_3.png'),
-    backgroundColor: '#22bcb5',
-  },
-  {
-    key: 's4',
-    title: 'Be more with Rhapsody Subscriptions',
-    text: 'Enjoy Reading points, Timer, Wallet feature, Gift of subscription and lots more!',
-    // image: require('./src/assets/welcome4_4.png'),
-    backgroundColor: '#3395ff',
-  },
-  
-];
+
 
 
 function HomeStackNavigator() {
+
+  const [name, setName] = useState<any>();
+  const navigation = useNavigation<StackNavigation>();
+   
+  useEffect(() => {
+
+      const fetchData = async () => {
+          let data = await AsyncStorage.getItem('name');
+          if(data==null){
+            setName('Guest')
+
+          }else{
+            setName(data)
+          }
+          
+      }
+      fetchData();
+
+  }, []);
 
 
 
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} 
+      options={{
+        title: '',
+        headerLeft: () => (
+          <View style={{flexDirection:"row"}}>
+            <Text style={{color:'white',fontWeight:"bold",marginLeft:30,marginRight:30,fontSize:18,marginTop:5}}>Welcome</Text>
+            <Text style={{color:'black',fontWeight:"bold",fontSize:18,marginTop:5}}>{name}</Text>
+           <Image
+                style={{width:40,height:40,marginLeft:10}}
+                source={require('./src/assets/prof.png')}
+              />
+            {/* <Text style={{fontSize:18,color:"white",fontWeight:"bold",marginLeft:10}}>Welcome Guest</Text> */}
+          </View>
+         ),
+        headerRight: () => (
+          <View style={{marginRight:10}}>
+            
+
+                  <TouchableOpacity onPress={()=>{
+                    navigation.navigate('AppFeedBack');
+                  }}>
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                  </TouchableOpacity>
+
+
+
+          </View>
+         )}}/>
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
       <Stack.Screen name="My Wallet" component={WalletScreen} />
       <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
@@ -109,6 +127,10 @@ function HomeStackNavigator() {
       <Stack.Screen name="Search Article" component={SearchArticles} />
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
+      <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
+        title: 'FeedBack'
+        
+      }} />
     </Stack.Navigator>
   );
 }
@@ -138,11 +160,31 @@ function StoreStackNavigator() {
 }
 
 function MoreStackNavigator() {
+
+  const [name, setName] = useState<any>();
+   
+  useEffect(() => {
+
+      const fetchData = async () => {
+          let data = await AsyncStorage.getItem('name');
+          if(data==null){
+            setName('Guest')
+
+          }else{
+            setName(data)
+          }
+          
+      }
+      fetchData();
+
+  }, []);
+
+  console.log("Yyuuuddbcbcbcnbcb bkfj",name);
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="More Settings" component={MoreScreen} 
       options={{
-        title: 'Welcome Guest',
+        title: 'Welcome ' +name,
         headerLeft: () => (
           <View style={{flexDirection:"row"}}>
            <Image
@@ -154,10 +196,22 @@ function MoreStackNavigator() {
          ),
         headerRight: () => (
           <View style={{marginRight:10}}>
-            <TouchableOpacity >
-                <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>Log In</Text>
-                {/* <Text style={{fontWeight:"bold",color:'#FFFFFF'}}>Log Out</Text> */}
-           </TouchableOpacity>
+            
+              {
+                name==='Guest' ?(
+                  <TouchableOpacity >
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>Log In</Text>
+                  </TouchableOpacity>
+
+                ):(
+                  <TouchableOpacity >
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>Log Out</Text>
+                  </TouchableOpacity>
+
+                )
+              }
+
+
           </View>
          ),
       }}/>
@@ -177,44 +231,25 @@ function MoreStackNavigator() {
 
 export default function App() {
 
-  const [showRealApp, setShowRealApp] = useState(false);
+  const [showRealApp, setShowRealApp] = useState<any>();
+   
+  useEffect(() => {
 
-const onDone = () => {
-  setShowRealApp(true);
-};
-const onSkip = () => {
-  setShowRealApp(true);
-};
+      const fetchData = async () => {
+          const hasOnBoarded = await AsyncStorage.getItem('hasOnBoarded');   
+          setShowRealApp(hasOnBoarded);
+          
+      }
+      fetchData();
 
-const RenderItem = (item:any) => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: item.backgroundColor,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        paddingBottom: 100,
-      }}>
-      <Text style={styles.introTitleStyle}>
-        {item.title}
-      </Text>
-      {/* <Image
-        style={styles.introImageStyle}
-        source={item.image} /> */}
-      <Text style={styles.introTextStyle}>
-        {item.text}
-      </Text>
-    </View>
-  );
-};
+  }, []);
+
 
 
 	return (
 		
-
-// <>
-// {showRealApp ? (
+<>
+{showRealApp ? (
   <NavigationContainer>
   <StatusBar
 backgroundColor='#D8A623'
@@ -248,54 +283,10 @@ backgroundColor='#D8A623'
    <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
  </Tab.Navigator>
 </NavigationContainer>
-// ) : (
-//   <AppIntroSlider
-//     data={slides}
-//     renderItem={RenderItem}
-//     onDone={onDone}
-//     showSkipButton={true}
-//     onSkip={onSkip}
-//   />
-// )}
-// </>
+) : (
+  <OnboardingScreen/>
+)}
+</>
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-    padding:10
-	},
-
-  titleStyle: {
-    padding: 10,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  paragraphStyle: {
-    padding: 20,
-    textAlign: 'center',
-    fontSize: 16,
-  },
-  introImageStyle: {
-    width: 200,
-    height: 200,
-  },
-  introTextStyle: {
-    fontSize: 18,
-    textAlign: 'center',
-    paddingVertical: 30,
-  },
-  introTitleStyle: {
-    fontSize: 25,
-    textAlign: 'center',
-    marginBottom: 16,
-    fontWeight: 'bold',
-  },
-
-
-});

@@ -12,11 +12,14 @@ import { getBooks
   //   getTeenDevotional, getTranslatedBooks
   
   } from "../service/storeService";
+import {Dimensions} from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 
 
 const StoreScreen = ({ navigation }) => {
 
-  
+
   const [books, setBooks] = useState([]);
   useEffect(() => {
 
@@ -390,12 +393,12 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
-            <Text style={{marginLeft:10,fontWeight:'bold'}}>BOOK CATEGORIES</Text>
-          </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline"  color="warning" />
-          </View>
+            <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
+              <Text style={{marginLeft:10,fontWeight:'bold'}}>BOOK CATEGORIES</Text>
+            </View>
+            <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
+              <Button title="VIEW ALL" type="outline"  color="warning" />
+            </View>
           </View>
         </View>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginHorizontal:10}}>
@@ -406,11 +409,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>BOOKS</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Other Books by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -424,11 +427,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>DAILY DEVOTIONAL</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Rhapsodyof Realities Daily Devotional</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -443,11 +446,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Teevo</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Rhapsody of Realities for Teenagers</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -461,11 +464,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Prayer</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Books on prayer by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -478,11 +481,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Faith & Prosperity</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Books on Faith & Prosperity by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -495,11 +498,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Holy Spirit</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Books on Healing by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -512,11 +515,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Divine Healing</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Books on Divine healing by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -529,11 +532,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Children's Devotional</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Childrens Books by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -546,11 +549,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Soul Wining</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Books on Soul Wining by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -563,11 +566,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>Christian Living</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Christian Living</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
@@ -580,11 +583,11 @@ const StoreScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{marginBottom:15,alignItems:'flex-start'}}>
+          <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>BOOKS TRANSLATIONS</Text>
             <Text style={{marginLeft:10,color:'#999999'}}>Translated Books by Pastor Chris Oyakhilome</Text>
           </View>
-          <View style={{marginBottom:15,alignItems:'flex-end'}}>
+          <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
             <Button title="VIEW ALL" type="outline"  color="warning" />
           </View>
           </View>
