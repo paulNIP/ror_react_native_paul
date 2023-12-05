@@ -300,11 +300,12 @@ export default function App() {
 	return (
 		
 <>
-{showRealApp ? (
+
   <NavigationContainer>
   <StatusBar
 backgroundColor='#D8A623'
 />
+{showRealApp ? (
  <Tab.Navigator 
    screenOptions={({ route }) => ({
      tabBarIcon: ({ focused, color, size }) => {
@@ -333,10 +334,11 @@ backgroundColor='#D8A623'
    <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />
    <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
  </Tab.Navigator>
-</NavigationContainer>
-) : (
+ ) : (
   <OnboardingScreen/>
 )}
+</NavigationContainer>
+
 </>
 	);
 }

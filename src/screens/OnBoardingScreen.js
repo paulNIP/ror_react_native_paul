@@ -74,6 +74,8 @@ const _keyExtractor = (item) => item.title;
 
 const OnboardingScreen = () => {
 
+  
+
   const completeOnboarding = async() =>{
     //Flip Onboarding
     await AsyncStorage.setItem('hasOnBoarded',JSON.stringify({hasOnboarded:true}));
@@ -188,7 +190,8 @@ const OnboardingScreen = () => {
   
   
         }
-       
+
+        const navigation = useNavigation();
         completeOnboarding();
         navigation.navigate("Welcome");
   
