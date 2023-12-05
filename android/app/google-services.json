@@ -1,0 +1,117 @@
+{
+  "project_info": {
+    "project_number": "409072143587",
+    "firebase_url": "https://rhapsodyreader22.firebaseio.com",
+    "project_id": "rhapsodyreader22",
+    "storage_bucket": "rhapsodyreader22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409072143587:android:4d9cd5c4820f8fb4",
+        "android_client_info": {
+          "package_name": "com.geomobile.sqlitetutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409072143587-0fe996b80vqr96quvq61lqf7ltr5nsu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.geomobile.sqlitetutorial",
+            "certificate_hash": "0cbfd40eadfcb4fa7e823212c4967313af9908d8"
+          }
+        },
+        {
+          "client_id": "409072143587-oe3m19o5j8tssd804phnrjudc7po5c7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1lmlqzGY6kMm2-q03QEkuFbtZXjYOCf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409072143587-oe3m19o5j8tssd804phnrjudc7po5c7p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409072143587:android:e8dd49bef3b18a1e",
+        "android_client_info": {
+          "package_name": "com.rhapsodyreader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409072143587-f5mg75pscdnvfuho375fgllqfj5p4c1k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhapsodyreader",
+            "certificate_hash": "abaf35d0d549fda5f3664e3d442d76043a42a20d"
+          }
+        },
+        {
+          "client_id": "409072143587-gbg5d3fruhu8hdhasgnpnpn4egl2b9td.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhapsodyreader",
+            "certificate_hash": "22972ed69f6595954fec22cff2abdce9dc0094b0"
+          }
+        },
+        {
+          "client_id": "409072143587-pk1sdbmb6jlb53n6560ftb85e2no52lp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhapsodyreader",
+            "certificate_hash": "3f6dbd3f40354ef9675ceb8adb3b1ec3a3574711"
+          }
+        },
+        {
+          "client_id": "409072143587-iktk16folkesf549l1kmg3hm4lcl4gee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhapsodyreader",
+            "certificate_hash": "cb36da71a2bac56e38a7cd054b9246a47d1a76a7"
+          }
+        },
+        {
+          "client_id": "409072143587-723ms6r0ldl797okig4ng5umhokpfdaq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rhapsodyreader",
+            "certificate_hash": "0cbfd40eadfcb4fa7e823212c4967313af9908d8"
+          }
+        },
+        {
+          "client_id": "409072143587-oe3m19o5j8tssd804phnrjudc7po5c7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1lmlqzGY6kMm2-q03QEkuFbtZXjYOCf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409072143587-oe3m19o5j8tssd804phnrjudc7po5c7p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

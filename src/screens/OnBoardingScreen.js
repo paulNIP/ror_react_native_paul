@@ -11,6 +11,7 @@ import { DatabaseConnection } from '../database/database-connection';
 
 
 
+
 const data = [
   {
     title: 'Welcome to Rhapsody of Realities',
@@ -74,6 +75,9 @@ const _keyExtractor = (item) => item.title;
 
 const OnboardingScreen = () => {
 
+
+  const navigation = useNavigation();
+
   
 
   const completeOnboarding = async() =>{
@@ -81,6 +85,7 @@ const OnboardingScreen = () => {
     await AsyncStorage.setItem('hasOnBoarded',JSON.stringify({hasOnboarded:true}));
     //Set Theme
     await AsyncStorage.setItem('THEME_COLOR','#D8A623');
+    navigation.navigate("Welcome");
     
   
   }
@@ -191,9 +196,9 @@ const OnboardingScreen = () => {
   
         }
 
-        const navigation = useNavigation();
+        
         completeOnboarding();
-        navigation.navigate("Welcome");
+        
   
 
 

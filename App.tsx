@@ -12,7 +12,8 @@ import HomeScreen from './src/screens/HomeScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import StoreScreen from './src/screens/StoreScreen';
 import MoreScreen from './src/screens/MoreScreen';
-import SubscriptionScreen from './src/screens/SubscriptionsScreen';
+import SubscriptionsScreen from './src/screens/SubscriptionsScreen';
+// import { withIAPContext } from "react-native-iap";
 import WalletScreen from './src/screens/WalletScreen';
 import LoginPage from './src/screens/Auth/LoginPage';
 import RegistrationPage from './src/screens/Auth/RegistrationPage';
@@ -35,13 +36,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import OnboardingScreen from './src/screens/OnBoardingScreen';
 import AppFeedBack from './src/screens/AppFeedBack';
 
-import {
-  initConnection,
-  endConnection,
-  flushFailedPurchasesCachedAsPendingAndroid,
-} from 'react-native-iap';
+
 import RecipeDetail from './src/screens/RecipeDetail';
-import Paywall from './src/screens/paywall';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -50,9 +47,9 @@ const Stack = createStackNavigator();
 
 export type StackParamList = {
   AppFeedBack: undefined;
-  PayWall:undefined;
   Welcome:undefined;
   Login:undefined;
+  OnboardingScreen:undefined;
   RecipeDetail:{ id: string };
 };
 
@@ -127,7 +124,7 @@ function HomeStackNavigator() {
 
           </View>
          )}}/>
-      <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+      <Stack.Screen name="Subscription" component={SubscriptionsScreen} />
       <Stack.Screen name="My Wallet" component={WalletScreen} />
       <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>
@@ -141,12 +138,8 @@ function HomeStackNavigator() {
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
       }} />
-      <Stack.Screen name="RecipeDetail" component={RecipeDetail}  options={{
-        title: 'RecipeDetail' 
-      }} />
-      <Stack.Screen name="Paywall" component={Paywall}  options={{
-        title: 'Pay Wall Subscription' 
-      }} />
+
+
     </Stack.Navigator>
   );
 }
@@ -158,6 +151,8 @@ function AudioStackNavigator() {
     </Stack.Navigator>
   );
 }
+
+
 
 function LibraryStackNavigator() {
   return (
@@ -272,26 +267,7 @@ export default function App() {
           setShowRealApp(hasOnBoarded);
           
       }
-      
-      //initialize in-app purchases
-      const init = async () => {
-        try {
-          await initConnection();
-  
-          if (Platform.OS === 'android') {
-            flushFailedPurchasesCachedAsPendingAndroid();
-          }
-        }
-        catch (error:any) {
-          console.error('Error occurred during initilization', error.message);
-        }
-      }
       fetchData();
-      init();
-
-      return () => {
-        endConnection();
-      }
 
   }, []);
 
@@ -328,6 +304,7 @@ backgroundColor='#D8A623'
      tabBarActiveTintColor: '#D8A623',
      tabBarInactiveTintColor: '#333333',
      })}>
+  
    <Tab.Screen name="Welcome" component={HomeStackNavigator} options={{headerShown: false}} />
    <Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
    <Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
@@ -335,7 +312,9 @@ backgroundColor='#D8A623'
    <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
  </Tab.Navigator>
  ) : (
-  <OnboardingScreen/>
+  <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen name="OnBoardingScreen" component={OnboardingScreen}  options={{headerShown: false}}/>
+  </Stack.Navigator>
 )}
 </NavigationContainer>
 

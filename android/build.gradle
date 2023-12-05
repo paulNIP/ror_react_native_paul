@@ -16,8 +16,10 @@ buildscript {
         ndkVersion = "23.1.7779620"
     }
     repositories {
+        maven { url 'https://jitpack.io' }
         google()
         mavenCentral()
+        jcenter()
     }
 
     
