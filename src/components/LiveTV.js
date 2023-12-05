@@ -1,6 +1,6 @@
 import React , { useEffect, useState } from 'react';
 import { View, StyleSheet, Button,Text ,FlatList} from 'react-native';
-// import { Video, ResizeMode } from 'expo-av';
+import Video from 'react-native-video';
 import { liveTvService } from '../service/liveTvService';
 import {Dimensions} from 'react-native';
 
@@ -26,7 +26,8 @@ const LiveTV=()=> {
 
     const renderLiveTvs = ({ item }) => {
 
-      const video_url = item.url;
+      const video_url = item.url;;
+      console.log(video_url);
 
       
       return (
@@ -51,6 +52,13 @@ const LiveTV=()=> {
           defaultMuted={false}
           loop={false}
         /> */}
+
+        <Video  
+            source={{url: video_url}}                  // the video file
+            paused={true}                  // make it start    
+            style={styles.video}  // any style you want
+            repeat={false}             // make it a loop
+        />
 
         
         <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>

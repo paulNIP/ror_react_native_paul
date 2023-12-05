@@ -13,7 +13,7 @@ import LibraryScreen from './src/screens/LibraryScreen';
 import StoreScreen from './src/screens/StoreScreen';
 import MoreScreen from './src/screens/MoreScreen';
 import SubscriptionsScreen from './src/screens/SubscriptionsScreen';
-// import { withIAPContext } from "react-native-iap";
+import { withIAPContext } from "react-native-iap";
 import WalletScreen from './src/screens/WalletScreen';
 import LoginPage from './src/screens/Auth/LoginPage';
 import RegistrationPage from './src/screens/Auth/RegistrationPage';
@@ -56,6 +56,16 @@ export type StackParamList = {
 const StackHeader = createStackNavigator<StackParamList>();
 
 export type StackNavigation = StackNavigationProp<StackParamList>;
+
+export const screens = [
+  {
+    name: "Subscription",
+    title: "Subscription",
+    component: withIAPContext(SubscriptionsScreen),
+    section: "Context"
+  }
+];
+
 
 
 
@@ -124,7 +134,14 @@ function HomeStackNavigator() {
 
           </View>
          )}}/>
-      <Stack.Screen name="Subscription" component={SubscriptionsScreen} />
+      {/* <Stack.Screen name="Subscription" component={SubscriptionsScreen} /> */}
+      {screens.map(({ name, component, title }) => (
+        <Stack.Screen
+          key={name}
+          name={name}
+          component={component}
+        />
+      ))}
       <Stack.Screen name="My Wallet" component={WalletScreen} />
       <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>

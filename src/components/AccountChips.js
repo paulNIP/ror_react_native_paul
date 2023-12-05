@@ -75,7 +75,7 @@ return (
                 navigation.navigate('Subscription');
 
               }else{
-                navigation.navigate('Login');
+                navigation.navigate('Subscription');
 
               }
             }}

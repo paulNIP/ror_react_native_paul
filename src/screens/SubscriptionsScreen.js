@@ -18,6 +18,10 @@ import {
 } from "react-native-iap";
 
 
+// importing Segmented Control Tab
+import SegmentedControlTab from 'react-native-segmented-control-tab';
+
+
 const errorLog = ({ message, error }) => {
   console.error("An error happened", message, error);
 };
@@ -45,6 +49,7 @@ const SubscriptionsScreen = ({ navigation }) => {
   } = useIAP();
 
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState();
 
   const handleGetPurchaseHistory = async () => {
     try {
@@ -54,8 +59,20 @@ const SubscriptionsScreen = ({ navigation }) => {
     }
   };
 
+  //fetch theme
+  const fetchTheme = async () => {
+    const color= await AsyncStorage.getItem('THEME_COLOR');
+    if(data==null){
+      setTheme('#D8A623');
+    }else{
+      setTheme(color);
+    }
+    
+ }
+
   useEffect(() => {
     handleGetPurchaseHistory();
+    fetchTheme();
   }, [connected]);
 
   const handleGetSubscriptions = async () => {
@@ -134,10 +151,61 @@ const SubscriptionsScreen = ({ navigation }) => {
     checkCurrentPurchase(currentPurchase);
   }, [currentPurchase, finishTransaction]);
 
+  //segmented control
+  // For single select SegmentedControlTab
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  // For multi select SegmentedControlTab
+  const [selectedIndices, setSelectedIndices] = useState([0]);
+  // For custom SegmentedControlTab
+  const [customStyleIndex, setCustomStyleIndex] = useState(0);
+
+  const handleSingleIndexSelect = (index) => {
+    // For single Tab Selection SegmentedControlTab
+    setSelectedIndex(index);
+  };
+
+
+
+  const handleCustomIndexSelect = (index) => {
+    // Tab selection for custom Tab Selection
+    setCustomStyleIndex(index);
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
-        <View style={{ padding: 10 }}>
+        
+        <View style={styles.container}>
+        {/* Simple Segmented Control*/}
+        <Text
+            style={
+              (styles.listItem,
+              {
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 18,
+                marginBottom:5
+              })
+            }
+          >
+            Subscription Packages
+          </Text>
+        <SegmentedControlTab
+          values={['READING PLANS', 'FAMILY PLANS','GIFT PLANS']}
+          selectedIndex={customStyleIndex}
+          tabStyle={{borderColor: '#D8A623'}}
+          activeTabStyle={{borderColor: '#D8A623',backgroundColor:'#D8A623'}}
+          tabsContainerStyle={{backgroundColor: '#D8A623' }}
+          onTabPress={handleCustomIndexSelect}
+        />
+        {/* <View style={styles.seperator} /> */}
+
+
+
+
+        {customStyleIndex === 0 && (
+          <View style={{ padding: 10 }}>
           <Text
             style={{
               fontSize: 28,
@@ -247,6 +315,232 @@ const SubscriptionsScreen = ({ navigation }) => {
             })}
           </View>
         </View>
+        )}
+        {customStyleIndex === 1 && (
+          <View style={{ padding: 10 }}>
+          <Text
+            style={{
+              fontSize: 28,
+              textAlign: "center",
+              paddingBottom: 15,
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            Subscribe
+          </Text>
+          <Text style={styles.listItem}>
+            Subscribe to some cool stuff today.
+          </Text>
+          <Text
+            style={
+              (styles.listItem,
+              {
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 18,
+              })
+            }
+          >
+            Choose your membership plan.
+          </Text>
+          <View style={{ marginTop: 10 }}>
+            {subscriptions.map((subscription, index) => {
+              const owned = purchaseHistory.find(
+                (s) => s?.productId === subscription.productId,
+              );
+              console.log("subscriptions", subscription?.productId);
+              return (
+                <View style={styles.box} key={index}>
+                  {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                    <>
+                      <Text style={styles.specialTag}>SPECIAL OFFER</Text>
+                    </>
+                  )}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        paddingBottom: 10,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {subscription?.title}
+                    </Text>
+                    <Text
+                      style={{
+                        paddingBottom: 20,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                      }}
+                    >
+                      {subscription?.localizedPrice}
+                    </Text>
+                  </View>
+                  {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                    <Text>
+                      Free for 1{" "}
+                      {subscription?.introductoryPriceSubscriptionPeriodIOS}
+                    </Text>
+                  )}
+                  <Text style={{ paddingBottom: 20 }}>
+                    {subscription?.description}
+                  </Text>
+                  {owned && (
+                    <Text style={{ textAlign: "center", marginBottom: 10 }}>
+                      You are Subscribed to this plan!
+                    </Text>
+                  )}
+                  {owned && (
+                    <TouchableOpacity
+                      style={[styles.button, { backgroundColor: "#0071bc" }]}
+                      onPress={() => {
+                        navigation.navigate("Home");
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Continue to App</Text>
+                    </TouchableOpacity>
+                  )}
+                  {loading && <ActivityIndicator size="large" />}
+                  {!loading && !owned && isIos && (
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setLoading(true);
+                        handleBuySubscription(subscription.productId);
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Subscribe</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </View>
+        )}
+        {customStyleIndex === 2 && (
+          <View style={{ padding: 10 }}>
+          <Text
+            style={{
+              fontSize: 28,
+              textAlign: "center",
+              paddingBottom: 15,
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            Subscribe
+          </Text>
+          <Text style={styles.listItem}>
+            Subscribe to some cool stuff today.
+          </Text>
+          <Text
+            style={
+              (styles.listItem,
+              {
+                fontWeight: "500",
+                textAlign: "center",
+                marginTop: 10,
+                fontSize: 18,
+              })
+            }
+          >
+            Choose your membership plan.
+          </Text>
+          <View style={{ marginTop: 10 }}>
+            {subscriptions.map((subscription, index) => {
+              const owned = purchaseHistory.find(
+                (s) => s?.productId === subscription.productId,
+              );
+              console.log("subscriptions", subscription?.productId);
+              return (
+                <View style={styles.box} key={index}>
+                  {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                    <>
+                      <Text style={styles.specialTag}>SPECIAL OFFER</Text>
+                    </>
+                  )}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginTop: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        paddingBottom: 10,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {subscription?.title}
+                    </Text>
+                    <Text
+                      style={{
+                        paddingBottom: 20,
+                        fontWeight: "bold",
+                        fontSize: 18,
+                      }}
+                    >
+                      {subscription?.localizedPrice}
+                    </Text>
+                  </View>
+                  {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                    <Text>
+                      Free for 1{" "}
+                      {subscription?.introductoryPriceSubscriptionPeriodIOS}
+                    </Text>
+                  )}
+                  <Text style={{ paddingBottom: 20 }}>
+                    {subscription?.description}
+                  </Text>
+                  {owned && (
+                    <Text style={{ textAlign: "center", marginBottom: 10 }}>
+                      You are Subscribed to this plan!
+                    </Text>
+                  )}
+                  {owned && (
+                    <TouchableOpacity
+                      style={[styles.button, { backgroundColor: "#0071bc" }]}
+                      onPress={() => {
+                        navigation.navigate("Home");
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Continue to App</Text>
+                    </TouchableOpacity>
+                  )}
+                  {loading && <ActivityIndicator size="large" />}
+                  {!loading && !owned && isIos && (
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => {
+                        setLoading(true);
+                        handleBuySubscription(subscription.productId);
+                      }}
+                    >
+                      <Text style={styles.buttonText}>Subscribe</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </View>
+        )}
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -261,9 +555,6 @@ export default SubscriptionsScreen;
 
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
   listItem: {
     fontSize: 16,
     paddingLeft: 8,
@@ -304,6 +595,30 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginBottom: 2,
   },
+
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  headerText: {
+    padding: 8,
+    fontSize: 14,
+    color: '#444444',
+    textAlign: 'center',
+  },
+  tabContent: {
+    color: '#444444',
+    fontSize: 18,
+    margin: 24,
+  },
+  seperator: {
+    marginHorizontal: -10,
+    alignSelf: 'stretch',
+    borderTopWidth: 1,
+    borderTopColor: '#888888',
+    marginTop: 24,
+  },
+
 });
 
 
