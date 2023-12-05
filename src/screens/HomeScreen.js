@@ -16,6 +16,8 @@ import RecentArticles from '../components/RecentArticles';
 import ActionButton from 'react-native-action-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const THEME_COLOR = '##D8A623';
+
 
 
 const HomeScreen= ({navigation}) => {
@@ -25,13 +27,14 @@ const HomeScreen= ({navigation}) => {
 return (
   
   <SafeAreaView style={styles.container}>
+    <StatusBar barStyle={THEME_COLOR} />
     <ScrollView style={styles.scrollView} >
       <View >
-      <StatusBar
+      {/* <StatusBar
             translucent
             backgroundColor="#F9A825"
             barStyle="light-content"
-          />
+          /> */}
 
         <DailyDevotional/>
         <PremiumNotification/>

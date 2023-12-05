@@ -4,6 +4,7 @@ import { View, StyleSheet, Button,Text ,FlatList} from 'react-native';
 import { liveTvService } from '../service/liveTvService';
 import {Dimensions} from 'react-native';
 
+
 const windowWidth = Dimensions.get('window').width;
 
 const LiveTV=()=> {
@@ -41,6 +42,17 @@ const LiveTV=()=> {
           isLooping
           onPlaybackStatusUpdate={status => setStatus(() => status)}
         /> */}
+
+        {/* <VideoPlayer
+          video={{uri: 'https://example.com/video.mp4'}}
+          videoWidth={1600}
+          videoHeight={900}
+          autoplay={true}
+          defaultMuted={false}
+          loop={false}
+        /> */}
+
+        
         <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{marginBottom:15,alignItems:'flex-start'}}>
             <Text style={{marginLeft:10,fontWeight:'bold'}}>LIVE: RHAPSODY TV 24-HOURS{'\n'}LIVESTREAM</Text>

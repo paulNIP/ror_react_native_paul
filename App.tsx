@@ -35,6 +35,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import OnboardingScreen from './src/screens/OnBoardingScreen';
 import AppFeedBack from './src/screens/AppFeedBack';
 
+import {
+  initConnection,
+  endConnection,
+  flushFailedPurchasesCachedAsPendingAndroid,
+} from 'react-native-iap';
+import RecipeDetail from './src/screens/RecipeDetail';
+import Paywall from './src/screens/paywall';
 
 
 const Tab = createBottomTabNavigator();
@@ -43,6 +50,10 @@ const Stack = createStackNavigator();
 
 export type StackParamList = {
   AppFeedBack: undefined;
+  PayWall:undefined;
+  Welcome:undefined;
+  Login:undefined;
+  RecipeDetail:{ id: string };
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -128,8 +139,13 @@ function HomeStackNavigator() {
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
-        title: 'FeedBack'
-        
+        title: 'FeedBack' 
+      }} />
+      <Stack.Screen name="RecipeDetail" component={RecipeDetail}  options={{
+        title: 'RecipeDetail' 
+      }} />
+      <Stack.Screen name="Paywall" component={Paywall}  options={{
+        title: 'Pay Wall Subscription' 
       }} />
     </Stack.Navigator>
   );
@@ -162,6 +178,7 @@ function StoreStackNavigator() {
 function MoreStackNavigator() {
 
   const [name, setName] = useState<any>();
+  const navigation = useNavigation<StackNavigation>();
    
   useEffect(() => {
 
@@ -178,6 +195,21 @@ function MoreStackNavigator() {
       fetchData();
 
   }, []);
+
+  const logOutUser = async () => {
+    //clear email from local storage
+    try {
+        await AsyncStorage.removeItem("email");
+        return true;
+    }
+    catch(exception) {
+        return false;
+    }
+    //redirect user
+    navigation.navigate('Welcome');
+    
+      
+  };
 
   console.log("Yyuuuddbcbcbcnbcb bkfj",name);
   return (
@@ -199,12 +231,12 @@ function MoreStackNavigator() {
             
               {
                 name==='Guest' ?(
-                  <TouchableOpacity >
+                  <TouchableOpacity onPress={()=>{navigation.navigate('Login')}} >
                     <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>Log In</Text>
                   </TouchableOpacity>
 
                 ):(
-                  <TouchableOpacity >
+                  <TouchableOpacity onPress={logOutUser} >
                     <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>Log Out</Text>
                   </TouchableOpacity>
 
@@ -240,7 +272,26 @@ export default function App() {
           setShowRealApp(hasOnBoarded);
           
       }
+      
+      //initialize in-app purchases
+      const init = async () => {
+        try {
+          await initConnection();
+  
+          if (Platform.OS === 'android') {
+            flushFailedPurchasesCachedAsPendingAndroid();
+          }
+        }
+        catch (error:any) {
+          console.error('Error occurred during initilization', error.message);
+        }
+      }
       fetchData();
+      init();
+
+      return () => {
+        endConnection();
+      }
 
   }, []);
 

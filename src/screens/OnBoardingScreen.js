@@ -10,6 +10,7 @@ import { DatabaseConnection } from '../database/database-connection';
 
 
 
+
 const data = [
   {
     title: 'Welcome to Rhapsody of Realities',
@@ -75,10 +76,14 @@ const OnboardingScreen = () => {
 
   const completeOnboarding = async() =>{
     //Flip Onboarding
-    await AsyncStorage.setItem('hasOnBoarded',JSON.stringify({hasOnboarded:true}))
+    await AsyncStorage.setItem('hasOnBoarded',JSON.stringify({hasOnboarded:true}));
+    //Set Theme
+    await AsyncStorage.setItem('THEME_COLOR','#D8A623');
     
   
   }
+
+
 
   return(
 

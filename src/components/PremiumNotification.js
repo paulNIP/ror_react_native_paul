@@ -1,12 +1,42 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { View,Text, StyleSheet,Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import RNFS from 'react-native-fs';
+import { TouchableOpacity } from 'react-native';
+
+import { DatabaseConnection } from '../database/database-connection';
+
+const db = DatabaseConnection.getdb();
 
 
 const PremiumNotification = () => {
 
+   let [rhapsodyData, setRhapsodyData] = useState({});
+
     const openRhapsodyReader = () => {
-        Alert. alert('Opening Rhapsody Reader');
+
+        var monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
+        // get current month rhapsody
+        var d = new Date();
+        var bk =monthNames[d.getMonth()]+" Rhapsody";
+
+        setRhapsodyData({})
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM book_download where book_download_title LIKE ? ORDER BY book_id DESC LIMIT 1',
+            [bk],
+            (tx, results) => {
+              var len = results.rows.length;
+              console.log('len', len);
+              if (len > 0) {
+                setRhapsodyData(results.rows.item(0));
+              } else {
+                Alert.alert("The "+bk+" Rhapsody is not available in your Library. \nPlease download it from the Store");
+              }
+            }
+          );
+        });
+
       };
 
 return (
@@ -15,7 +45,10 @@ return (
        <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
        name="book-open-variant" size={25} color="#0099e5" />    
        <Text style={{marginTop:5}}>You are on a Premium Plan</Text>
-       <Text style={styles.titleText} onPress={openRhapsodyReader}>Open in Rhapsody Reader</Text>
+       <TouchableOpacity onPress={openRhapsodyReader}>
+       <Text style={styles.titleText} >
+        Open in Rhapsody Reader</Text>
+        </TouchableOpacity>
       </View>
   </>
 );

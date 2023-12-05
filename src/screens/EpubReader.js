@@ -2,8 +2,8 @@ import React from "react";
 import {StyleSheet} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useWindowDimensions } from 'react-native';
-import { Reader, ReaderProvider } from '@epubjs-react-native/core';
-import { useFileSystem } from '@epubjs-react-native/file-system'; // for Bare React Native project
+// import { Reader, ReaderProvider } from '@epubjs-react-native/core';
+// import { useFileSystem } from '@epubjs-react-native/file-system'; // for Bare React Native project
 
 const EpubReader = ({ route, navigation }) => {
 
@@ -23,7 +23,7 @@ const EpubReader = ({ route, navigation }) => {
   return (
     <ReaderProvider>
         <SafeAreaView style={styles.container}>
-        <Reader
+        {/* <Reader
             // src="https://s3.amazonaws.com/moby-dick/OPS/package.opf" 
             src={file}
             width={width}
@@ -32,7 +32,7 @@ const EpubReader = ({ route, navigation }) => {
             initialLocation="Friday 22"
             
           
-        />
+        /> */}
         </SafeAreaView>
     </ReaderProvider>
   );
