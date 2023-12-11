@@ -167,8 +167,20 @@ function HomeStackNavigator() {
 
 function AudioStackNavigator() {
   return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Rhapsody Audio" component={AudioScreen} />
+    <Stack.Navigator screenOptions={{headerTitleAlign: 'center',
+                    headerStyle: {
+                      backgroundColor: "#D8A623",
+                    },
+                    headerTintColor: "white",
+                    headerBackTitle: "Back"}}>
+      <Stack.Screen name="Rhapsody Audio" component={AudioScreen} 
+      options={{
+                title: "Rhapsody Audio",
+                headerTitleStyle: { 
+                    textAlign:"center", 
+                    flex:1 
+                },}}
+       />
     </Stack.Navigator>
   );
 }

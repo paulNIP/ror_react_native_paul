@@ -5,7 +5,7 @@ import {
   View,
   Image,
   SafeAreaView,ScrollView,
-  TouchableOpacity,
+  TouchableOpacity,FlatList
 } from 'react-native';
 import Colors from '../constants/Colors';
 import Slider from 'react-native-slider';
@@ -15,6 +15,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 import PlayButton from '../components/PlayButton';
 import { getAudioArticles } from '../service/devotionalService';
 import { DatabaseConnection } from '../database/database-connection';
+import { ListItem ,Avatar} from '@rneui/themed';
+import RNFS from 'react-native-fs';
+
 
 
 let dirs = RNFetchBlob.fs.dirs.DocumentDir;
@@ -63,7 +66,9 @@ function AudioScreen() {
   const [current_track, setCurrentTrack] = useState(0);
   const [inprogress, setInprogress] = useState(false);
   const [audioRecorderPlayer] = useState(new AudioRecorderPlayer());
+
   const [audioArray,setAudioArray] = useState([]);
+
 
   useEffect(() => {
   
@@ -74,30 +79,32 @@ function AudioScreen() {
           if(String(i).length===1){
             //console.log("Month Digits",String(i).padStart(2, "0"));// results in "04"
             const data = await getAudioArticles(String(i).padStart(2, "0"));
-            // Insert data into local DB if Doesnot Exist
+            
 
             for(let j = 0; j < data.length; j++) {
               let obj = data[j];
+              // Insert data into local DB if Doesnot Exist
+              setAudioArray(current => [...current, obj]);
 
-              db.transaction((tx) => {
-                tx.executeSql('SELECT * FROM audio_devotionals where formated_date=?', [obj.formated_date], (tx, results) => {
+            //   db.transaction((tx) => {
+            //     tx.executeSql('SELECT * FROM audio_devotionals where formated_date=?', [obj.formated_date], (tx, results) => {
 
-                    if(results.rows.length>0){
-                      //Dont insert into DB
+            //         if(results.rows.length>0){
+            //           //Dont insert into DB
 
-                    }else{
-                      //insert into db
-                      //insert into Database
-                      let sql = "INSERT INTO audio_devotionals (date,formated_date,url,audio_id,title,photo_link) VALUES (?, ?,?,?,?,?)";
-                      let params = [obj.date,obj.formated_date,obj.url,obj.audio_id,obj.title,obj.photo_link]; //storing user data in an array
-                      db.executeSql(sql, params, (result) => {
-                          // console.log("Success Audio created successfully.");
-                      }, (error) => {
-                          // console.log("Create user error", error);
-                      });
-                    }
-                });
-            });
+            //         }else{
+            //           //insert into db
+            //           //insert into Database
+            //           let sql = "INSERT INTO audio_devotionals (date,formated_date,url,audio_id,title,photo_link) VALUES (?, ?,?,?,?,?)";
+            //           let params = [obj.date,obj.formated_date,obj.url,obj.audio_id,obj.title,obj.photo_link]; //storing user data in an array
+            //           db.executeSql(sql, params, (result) => {
+            //               // console.log("Success Audio created successfully.");
+            //           }, (error) => {
+            //               // console.log("Create user error", error);
+            //           });
+            //         }
+            //     });
+            // });
               
             }
 
@@ -109,27 +116,30 @@ function AudioScreen() {
             // Insert data into local DB  if Doesnot Exist
             for(let j = 0; j < data.length; j++) {
               let obj = data[j];
+              setAudioArray(current => [...current, obj]);
 
-              db.transaction((tx) => {
-                tx.executeSql('SELECT * FROM audio_devotionals where formated_date=?', [obj.formated_date], (tx, results) => {
+            //   db.transaction((tx) => {
+            //     tx.executeSql('SELECT * FROM audio_devotionals where formated_date=?', [obj.formated_date], (tx, results) => {
 
-                    if(results.rows.length>0){
-                      //Dont insert into DB
+            //         if(results.rows.length>0){
+            //           //Dont insert into DB
 
-                    }else{
-                      //insert into db
-                      //insert into Database
-                      let sql = "INSERT INTO audio_devotionals (date,formated_date,url,audio_id,title,photo_link) VALUES (?, ?,?,?,?,?)";
-                      let params = [obj.date,obj.formated_date,obj.url,obj.audio_id,obj.title,obj.photo_link]; //storing user data in an array
-                      db.executeSql(sql, params, (result) => {
-                          console.log("Success Audio created successfully.");
-                      }, (error) => {
-                          console.log("Create user error", error);
-                      });
-                    }
-                });
-            });
+            //         }else{
+            //           //insert into db
+            //           //insert into Database
+            //           let sql = "INSERT INTO audio_devotionals (date,formated_date,url,audio_id,title,photo_link) VALUES (?, ?,?,?,?,?)";
+            //           let params = [obj.date,obj.formated_date,obj.url,obj.audio_id,obj.title,obj.photo_link]; //storing user data in an array
+            //           db.executeSql(sql, params, (result) => {
+            //               console.log("Success Audio created successfully.");
+            //           }, (error) => {
+            //               console.log("Create user error", error);
+            //           });
+            //         }
+            //     });
+            // });
             }
+
+            
 
 
           }
@@ -137,24 +147,24 @@ function AudioScreen() {
 
     }
 
-    const loadData = async () => {
-      db.transaction(tx => {
-        tx.executeSql('SELECT * FROM audio_devotionals', [], (tx, results) => {
+    // const loadData = async () => {
+    //   db.transaction(tx => {
+    //     tx.executeSql('SELECT * FROM audio_devotionals', [], (tx, results) => {
 
-          for (let i = 0; i < results.rows.length; ++i) {
-            // console.log("DB Results",results.rows.item(i));
-            audioArray.push(results.rows.item(i));
-          }
-        });
-      });
+    //       for (let i = 0; i < results.rows.length; ++i) {
+    //         // console.log("DB Results",results.rows.item(i));
+    //         audioArray.push(results.rows.item(i));
+    //         // 👇️ push to the end of the state array
+    //         setAudioArray(current => [...current, results.rows.item(i)]);
+    //       }
+    //     });
+    //   });
 
-    }
+    // }
     fetchData();
-    loadData();
+    // loadData();
 
   }, []);
-
-  console.log("DB COMPANY DATA",audioArray);
 
   const changeTime = async (seconds) => {
     // 50 / duration
@@ -221,9 +231,40 @@ function AudioScreen() {
     });
   };
 
+  // console.log("Audio Files ",audioArray);
+
+
+  // const renderAudio = ({ item }) => {
+
+  //   const imgr = item.photo_link;
+
+    
+  //   return (
+  //     <View style={{padding:10}}>
+  //       <TouchableOpacity onPress={()=>{
+  //                 console.log(item.url);
+  //               }}>
+  //       <ListItem bottomDivider>
+  //           <Image
+  //             style={styles.image}
+  //             source={{uri: imgr}} 
+  //             resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
+  //           />
+  //           <ListItem.Content>
+  //             <ListItem.Title>{item.title}</ListItem.Title>
+  //             {/* <ListItem.Subtitle style={{color:'#999999'}}>{l.excerpt}</ListItem.Subtitle> */}
+  //             <Text style={{color:'#606060'}}>{item.formated_date}</Text>
+  //           </ListItem.Content>
+  //       </ListItem>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // };
+
   return (
     <SafeAreaView >
       <ScrollView>
+        <View style={{backgroundColor:"#D8A623",borderBottomStartRadius:80,borderBottomEndRadius:80}}>
         <View style={{ alignItems: 'center' }}>
           <View style={styles.coverContainer}>
             <Image
@@ -277,6 +318,73 @@ function AudioScreen() {
             <FontAwesome name="forward" size={32} color="#93A8B3" />
           </TouchableOpacity>
         </View>
+
+        </View>
+
+
+
+        {
+              audioArray.map((l, i) => {
+                return (
+                <TouchableOpacity onPress={()=>{
+                  console.log(l.url);
+                  //Download file before Playing
+                    const url = l.url;
+                    const fileName = l.formated_date;
+                    const filePath = RNFS.DocumentDirectoryPath + '/'+fileName+'.mp3';
+
+                    //check if file exists
+                    RNFS.exists(filePath)
+                      .then((exists) => {
+                        if (exists) {
+                          //play audio file
+                          console.log('Playing file ',fileName);
+                        } else {
+                          //Download File
+                          console.log('Downloading file',fileName)
+                          RNFS.downloadFile({
+                            fromUrl: url,
+                            toFile: filePath,
+                            background: true, // Enable downloading in the background (iOS only)
+                            discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+                            progress: (res) => {
+                              // Handle download progress updates if needed
+                              const progress = (res.bytesWritten / res.contentLength) * 100;
+                              console.log(`Progress: ${progress.toFixed(2)}%`);
+                            },
+                          })
+                            .promise.then((response) => {
+                              console.log('File downloaded!', response);
+                            })
+                            .catch((err) => {
+                              console.log('Download error:', err);
+                        });
+                        }
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                
+
+
+                }}>
+                <ListItem key={i} bottomDivider>
+                   <Image
+                     style={styles.image}
+                     source={{uri: l.photo_link}} 
+                     resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
+                   />
+                   <ListItem.Content>
+                     <ListItem.Title>{l.title}</ListItem.Title>
+                    
+                     <Text style={{color:'#606060'}}>{l.formated_date}</Text>
+                   </ListItem.Content>
+                </ListItem>
+                </TouchableOpacity>
+                )
+              })
+         } 
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -339,6 +447,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   trackname: { alignItems: 'center', marginTop: 15 },
+
+
+
+  user: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 15
+  },
+  name: {
+    fontSize: 16,
+    marginTop: 5,
+  },
+
 });
 
 
