@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import { View, Text, StyleSheet,Image, TouchableOpacity,StatusBar, Platform } from 'react-native';
+import { View, Text, StyleSheet,Image, TouchableOpacity,StatusBar, Platform,I18nManager } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -37,7 +37,10 @@ import OnboardingScreen from './src/screens/OnBoardingScreen';
 import AppFeedBack from './src/screens/AppFeedBack';
 
 
-import RecipeDetail from './src/screens/RecipeDetail';
+import * as RNLocalize from "react-native-localize";
+import i18n from "i18n-js";
+import memoize from "lodash.memoize"; // Use for caching/memoize for better performance
+import { getAudioArticles } from './src/service/devotionalService';
 
 
 
@@ -51,6 +54,7 @@ export type StackParamList = {
   Login:undefined;
   OnboardingScreen:undefined;
   RecipeDetail:{ id: string };
+  Registration:{email:string}
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -284,6 +288,13 @@ export default function App() {
           setShowRealApp(hasOnBoarded);
           
       }
+      //const fetch audio devotionals
+      const fetchAudioDevotionals = async () => {
+        const audio = await getAudioArticles();  
+        
+        
+      }
+      fetchAudioDevotionals();
       fetchData();
 
   }, []);

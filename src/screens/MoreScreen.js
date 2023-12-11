@@ -11,8 +11,22 @@ import {Dimensions,ImageBackground,Image,View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Divider } from '@rneui/themed';
 //import Ionicons
-import Icon from 'react-native-ionicons';
+// import Icon from 'react-native-ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {
+  ActionSheetCell,
+  ButtonCell,
+  createValidator,
+  DatePickerCell,
+  emailValidator,
+  Form,
+  PushButtonCell,
+  Section,
+  SwitchCell,
+  TextInputCell,
+} from 'react-native-forms';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 

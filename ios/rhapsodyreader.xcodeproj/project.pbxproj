@@ -12,7 +12,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		5D3479452B1EFF2600827E95 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 5D3479442B1EFF2600827E95 /* Fonts */; };
+		5D987BD92B21E66F00CE5C15 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* Info.plist */; };
+		5D987BDB2B21EC2700CE5C15 /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = 5D987BDA2B21EC2700CE5C15 /* fonts */; };
 		7699B88040F8A987B510C191 /* libPods-rhapsodyreader-rhapsodyreaderTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-rhapsodyreader-rhapsodyreaderTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -41,7 +42,7 @@
 		3B4392A12AC88292D35C810B /* Pods-rhapsodyreader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rhapsodyreader.debug.xcconfig"; path = "Target Support Files/Pods-rhapsodyreader/Pods-rhapsodyreader.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-rhapsodyreader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rhapsodyreader.release.xcconfig"; path = "Target Support Files/Pods-rhapsodyreader/Pods-rhapsodyreader.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-rhapsodyreader-rhapsodyreaderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rhapsodyreader-rhapsodyreaderTests.debug.xcconfig"; path = "Target Support Files/Pods-rhapsodyreader-rhapsodyreaderTests/Pods-rhapsodyreader-rhapsodyreaderTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5D3479442B1EFF2600827E95 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
+		5D987BDA2B21EC2700CE5C15 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-rhapsodyreader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rhapsodyreader.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rhapsodyreader/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-rhapsodyreader-rhapsodyreaderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rhapsodyreader-rhapsodyreaderTests.release.xcconfig"; path = "Target Support Files/Pods-rhapsodyreader-rhapsodyreaderTests/Pods-rhapsodyreader-rhapsodyreaderTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -118,7 +119,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				5D3479442B1EFF2600827E95 /* Fonts */,
+				5D987BDA2B21EC2700CE5C15 /* fonts */,
 				13B07FAE1A68108700A75B9A /* rhapsodyreader */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* rhapsodyreaderTests */,
@@ -245,9 +246,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D3479452B1EFF2600827E95 /* Fonts in Resources */,
+				5D987BD92B21E66F00CE5C15 /* Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				5D987BDB2B21EC2700CE5C15 /* fonts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,6 +613,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Debug;
 		};
@@ -647,6 +650,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -671,6 +675,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",

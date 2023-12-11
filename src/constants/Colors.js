@@ -6,6 +6,7 @@ export default {
 	primary: 'rgb(225, 47, 129)',
 	gray: 'rgb(131, 141, 149)',
 	lightGray: 'rgb(241, 169, 207)',
+	THEME_COLOR:'#D8A623',
 
 	white: '#ddd'
 }

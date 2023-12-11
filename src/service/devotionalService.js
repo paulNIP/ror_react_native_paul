@@ -55,6 +55,24 @@ const getPastArticles =async() => {
 });
 }
 
+const getAudioArticles =async(month) => {
+    //loop through getting month devotionals
+    return new Promise((resolve, reject) => {
+    axios.get(Strings.API_URL+'/audio/english/'+month)
+        .then((res) => {
+          resolve(res.data);
+
+
+      })
+        .catch((err) => {
+          reject(err)
+      });
+  });
+
+  
+
+}
+
 const getRelatedArticles =async(title) => {
   return new Promise((resolve, reject) => {
 
@@ -75,4 +93,5 @@ const getRelatedArticles =async(title) => {
 
 
 
-export { getDailyDevotional ,getArticleDetails,getPastArticles,getRelatedArticles}
+export { getDailyDevotional ,getArticleDetails,getPastArticles,
+     getRelatedArticles,getAudioArticles}

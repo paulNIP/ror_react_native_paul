@@ -138,6 +138,15 @@ const OnboardingScreen = () => {
                 console.log("Create table error", error)
               }
             );
+
+            devotionalsDB.executeSql(
+              'CREATE TABLE IF NOT EXISTS audio_devotionals (id integer primary key, date text,formated_date text,url text,audio_id text,title text,photo_link text)',[], (result) => {
+
+                console.log("Audio devotionals Table created successfully");
+              }, (error) => {
+                console.log("Create table error", error)
+              }
+            );
         
             posts_feed_dbDB.executeSql(
               'CREATE TABLE IF NOT EXISTS feed_data (id integer primary key autoincrement, post_id text unique,post_email text, post_names text,post_text text,post_image text,post_image_name text, post_time text, post_audience text,post_comments_number text, post_likes_number text,groupname text )',[], (result) => {
