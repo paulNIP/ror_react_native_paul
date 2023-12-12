@@ -17,6 +17,7 @@ import { getAudioArticles } from '../service/devotionalService';
 import { DatabaseConnection } from '../database/database-connection';
 import { ListItem ,Avatar} from '@rneui/themed';
 import RNFS from 'react-native-fs';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 
@@ -68,9 +69,14 @@ function AudioScreen() {
   const [audioRecorderPlayer] = useState(new AudioRecorderPlayer());
 
   const [audioArray,setAudioArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+
+
 
 
   useEffect(() => {
+
   
     const fetchData = async () => {
         let month = new Date().getMonth() + 1;
@@ -231,7 +237,7 @@ function AudioScreen() {
     });
   };
 
-  // console.log("Audio Files ",audioArray);
+
 
 
   // const renderAudio = ({ item }) => {
@@ -264,19 +270,24 @@ function AudioScreen() {
   return (
     <SafeAreaView >
       <ScrollView>
+        {audioArray && (
         <View style={{backgroundColor:"#D8A623",borderBottomStartRadius:80,borderBottomEndRadius:80}}>
+
         <View style={{ alignItems: 'center' }}>
           <View style={styles.coverContainer}>
             <Image
               source={{
-                uri: playlist[current_track].cover,
+                uri: playlist[current_track].photo_link,
               }}
               style={styles.cover}
             />
           </View>
 
           <View style={styles.trackname}>
-            <Text style={[styles.textDark, { fontSize: 20, fontWeight: '500' }]}>
+            <Text style={[styles.textDark, { fontSize: 24, fontWeight: '500' }]}>
+              {playlist[current_track].title}
+            </Text>
+            <Text style={{ fontSize: 20 ,alignSelf:'center'}}>
               {playlist[current_track].title}
             </Text>
           </View>
@@ -319,8 +330,8 @@ function AudioScreen() {
           </TouchableOpacity>
         </View>
 
-        </View>
-
+        </View>)
+        }
 
 
         {
@@ -455,13 +466,18 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     borderRadius: 15
   },
   name: {
     fontSize: 16,
     marginTop: 5,
+  },
+
+  spinnerTextStyle: {
+    color: '#FFF',
+    justifyContent:'center'
   },
 
 });
