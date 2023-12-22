@@ -1,80 +1,75 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {
-  StyleSheet,
-  Text,
+
   SafeAreaView,
-  ScrollView,
-  StatusBar,FlatList,View,TextInput
+  ScrollView,View
 } from 'react-native';
+import LanguageListItem from '../components/LanguageListItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-import * as data from '../assets/language_data.json';
-
-const Item = ({title}) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
-  const renderHeader = ({title}) => (
-    <View
-        style={{
-          backgroundColor: '#fff',
-          padding: 10,
-          marginVertical: 10,
-          borderRadius: 20
-        }}
-      >
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          clearButtonMode="always"
-          value={query}
-          onChangeText={queryText => handleSearch(queryText)}
-          placeholder="Search"
-          style={{ backgroundColor: '#fff', paddingHorizontal: 20 }}
-        />
-    </View>
-  );
+const languages = [
+  {
+    locale: 'en',
+    name: 'English'
+  },
+  {
+    locale: 'de',
+    name: 'Deutsch',
+    englishName: 'German'
+  }
+];
 
 const LanguageSelect = () => {
 
+ 
+  const [currentLocale, setCurrentLocalesetLanguage] = useState();
+  
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+        let data = await AsyncStorage.getItem('locale');
+        if(data==null){
+          setCurrentLocalesetLanguage('en')
+        }else{
+          setCurrentLocalesetLanguage(data)
+        }
+        
+    }
+    fetchData();
+
+}, []);
+
   return (
-       <SafeAreaView style={styles.container}>
+      <SafeAreaView>
        <ScrollView>
-        <FlatList
-            data={data}
-            ListHeaderComponent={renderHeader}
-            renderItem={({item}) => <Item title={item.name} />}
-            keyExtractor={item => item.code}
-        />
+          <View style={{ marginTop: 15 }}>
+            {
+              languages.map((language) => (
+                <LanguageListItem
+                  key={language.locale}
+                  isActive={currentLocale}
+                  locale={language.locale}
+                  name={language.name}
+                  englishName={language.englishName}
+                  onChangeLocale={(locale) => {console.log("Selected locale",locale)}}
+                />
+              ))
+            }
+          </View>
+
          
        </ScrollView>
      </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: StatusBar.currentHeight,
-    },
-    scrollView: {
-      backgroundColor: 'pink',
-      marginHorizontal: 20,
-    },
-    text: {
-      fontSize: 42,
-    },
-    item: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-      },
-      title: {
-        fontSize: 32,
-      }
-  });
 
 export default LanguageSelect;
+
+
+
+
+
+

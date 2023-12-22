@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNavigation } from '@react-navigation/native';
 import { getProfile } from '../service/authService';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const AccountChips = () => {
   const navigation = useNavigation();
@@ -19,6 +20,7 @@ const AccountChips = () => {
 
   const [profile, setProfile] = useState();
   const [status, setStatus] = useState();
+  const [language, setLanguage] = useState();
 
 
   useEffect(() => {
@@ -34,6 +36,13 @@ const AccountChips = () => {
 
           }
 
+          let data = await AsyncStorage.getItem('language');
+          if(data==null){
+            setLanguage('English')
+          }else{
+            setLanguage(data)
+          }
+
 
 
       }
@@ -46,7 +55,7 @@ const AccountChips = () => {
 
 return (
   <>
-    <ScrollView>
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       <View style={styles.contentView}>
       
           <TouchableOpacity style={styles.roundButton}
@@ -89,19 +98,14 @@ return (
               // return if profile subscription is inactive or null
               <TouchableOpacity style={styles.roundButton}
               onPress={()=>{
-                if(status==='active'){
-                  navigation.navigate('Subscription');
-  
-                }else if(status!=='active' && status !=null){
-                  navigation.navigate('Subscription');
-  
-                }else{
-                  navigation.navigate('Login');
-  
-                }
+                navigation.navigate('LanguageSelect');
+
               }}
               >
-              <Text>Free trial</Text>
+              <View style={{flexDirection:"row"}}>
+                  <FontAwesome name="globe" size={20} color="#900" />
+                  <Text> Language - {language}</Text>
+              </View>
             </TouchableOpacity>
             )
         
@@ -122,7 +126,9 @@ const styles = StyleSheet.create({
       alignItems:'center',
       justifyContent: 'space-between',
       justifyContent: 'center',
-      marginVertical: 15
+      marginVertical: 15,
+      padding:5
+
 
     },
     roundButton: {

@@ -41,6 +41,7 @@ import * as RNLocalize from "react-native-localize";
 import i18n from "i18n-js";
 import memoize from "lodash.memoize"; // Use for caching/memoize for better performance
 import { getAudioArticles } from './src/service/devotionalService';
+import LanguageSelect from './src/screens/LanguageSelect';
 
 
 
@@ -147,6 +148,7 @@ function HomeStackNavigator() {
         />
       ))}
       <Stack.Screen name="My Wallet" component={WalletScreen} />
+      <Stack.Screen name="LanguageSelect" component={LanguageSelect} />
       <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>
 
@@ -239,7 +241,6 @@ function MoreStackNavigator() {
       
   };
 
-  console.log("Yyuuuddbcbcbcnbcb bkfj",name);
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="More Settings" component={MoreScreen} 
@@ -292,11 +293,12 @@ function MoreStackNavigator() {
 export default function App() {
 
   const [showRealApp, setShowRealApp] = useState<any>();
+  
    
   useEffect(() => {
 
       const fetchData = async () => {
-          const hasOnBoarded = await AsyncStorage.getItem('hasOnBoarded');   
+          const hasOnBoarded = await AsyncStorage.getItem('hasOnBoarded');
           setShowRealApp(hasOnBoarded);
           
       }

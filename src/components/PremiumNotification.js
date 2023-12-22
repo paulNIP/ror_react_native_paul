@@ -11,25 +11,28 @@ const db = DatabaseConnection.getdb();
 
 const PremiumNotification = () => {
 
-   let [rhapsodyData, setRhapsodyData] = useState({});
+   let [rhapsodyData, setRhapsodyData] = useState();
 
     const openRhapsodyReader = () => {
 
         var monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
         // get current month rhapsody
         var d = new Date();
-        var bk =monthNames[d.getMonth()]+" Rhapsody";
+        var bk =monthNames[d.getMonth()];
 
-        setRhapsodyData({})
+
         db.transaction((tx) => {
           tx.executeSql(
-            'SELECT * FROM book_download where book_download_title LIKE ? ORDER BY book_id DESC LIMIT 1',
-            [bk],
+            'SELECT * FROM book_download where book_download_title LIKE ?',
+            ['%' + bk + '%'],
             (tx, results) => {
               var len = results.rows.length;
-              console.log('len', len);
+              console.log('len000', results.rows.item(0));
               if (len > 0) {
-                setRhapsodyData(results.rows.item(0));
+                setRhapsodyData(results.rows.item(0).book_download_title);
+                //open Rhapsody using Epub Reader
+                navigation.navigate('EpubReader',{file:results.rows.item(0).book_download_title,location:''})
+
               } else {
                 Alert.alert("The "+bk+" Rhapsody is not available in your Library. \nPlease download it from the Store");
               }

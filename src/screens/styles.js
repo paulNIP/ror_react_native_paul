@@ -59,9 +59,7 @@ const styles = StyleSheet.create({
         right: 15
     },
     moreInfo:{
-        backgroundColor: '#FFF',
-        width: screenWidth,
-        height: screenHeight,
+        backgroundColor:'#F6F6F6',
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
         flexDirection: "row",

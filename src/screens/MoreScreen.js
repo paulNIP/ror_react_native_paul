@@ -30,8 +30,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 
 
+
 const MoreScreen = () => {
   const navigation = useNavigation();
+
+  const settings = [
+    {
+      name: 'Display language'
+    },
+    {
+      name: 'About'
+    }
+  ];
 
   const [name, setName] = useState();
   const [subscription, setSubscription] = useState();
@@ -247,6 +257,11 @@ const MoreScreen = () => {
           </View>
         </TouchableOpacity>
 
+        {
+          settings.map((item) => (
+            <Text key={item.name}>{item.name}</Text>
+          ))
+        }
 
       </View>
 
