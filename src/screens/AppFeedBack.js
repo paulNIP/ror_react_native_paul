@@ -10,133 +10,32 @@ import {
 import { Divider } from "react-native-paper";
 import { TextInput } from 'react-native-paper';
 import { useFormik } from 'formik';
-import {Picker} from '@react-native-picker/picker';
-import { Button, Title } from 'react-native-paper';
-
-const ExpandableListItem = ({ item }) => { 
-    const [expanded, setExpanded] = useState(false); 
-    const [text, setText] = React.useState("");
-  
-    const toggleExpand = () => { 
-        setExpanded(!expanded); 
-    }; 
-  
-    return ( 
-        <View style={styles.itemContainer}> 
-            <TouchableOpacity 
-                onPress={toggleExpand} 
-                style={styles.itemTouchable} 
-            > 
-                <Text style={styles.itemTitle}> 
-                    {item.title} 
-                </Text> 
-            </TouchableOpacity> 
-            {expanded && ( 
-                <Text style={styles.itemContent}> 
-                    {item.content} 
-                </Text> 
-            )} 
-        </View> 
-    ); 
-}; 
-  
-const ExpandableList = ({ data }) => { 
-    const renderItem = ({ item }) => ( 
-        <ExpandableListItem item={item} /> 
-    ); 
-  
-    return ( 
-        <FlatList 
-            data={data} 
-            renderItem={renderItem} 
-            keyExtractor={(item) => item.id.toString()} 
-        /> 
-    ); 
-};
+import axios from 'axios';
+import { Formik } from 'formik';
+import {Dropdown} from 'sharingan-rn-modal-dropdown';
+import { getOSVersion,getAppVersion,getDeviceModel } from "../utils/Utils";
+import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
+import VersionCheck from 'react-native-version-check'
+import DeviceInfo from 'react-native-device-info'
 
 const AppFeedBack = () => {
 
-    const cities = [
-        {name:"Los Angeles", id: 1},
-        {name:"Philadelphia", id: 2},
-        {name:"Chicago", id: 3},
-        {name:"Washington DC", id: 4},
-        {name:"New York", id: 5},
-        {name:"San Diego", id: 6},
-        {name:"Fort Worth", id: 7},
-        {name:"Houston", id: 8},
-        {name:"Cleveland", id: 9},
-        {name:"Pittsburg", id: 10},
-        {name:"Detroit", id: 11},
-        {name:"Jacksonville", id: 12},
-        {name:"Denver", id: 13},
-        {name:"Columbus", id: 14},
-        {name:"El Paso", id: 15},
-        {name:"New Orleans", id: 16},
-        {name:"Cincinnati", id: 17},
-        {name:"Nashville", id: 18},
-        {name:"Miami", id: 19},
-        {name:"Tampa", id: 20},
-        {name:"Bakersfield", id: 22},
-        {name:"Tuscon", id: 23},
-        {name:"Baltimore", id: 25},
-        {name:"St Louis", id: 26},
-        {name:"Las Vegas", id: 27},
-        {name:"Memphis", id: 28},
-        {name:"Seatle", id: 29},
-        {name:"San Fransisco", id: 30},
-   ];
+  const [showDropDown, setShowDropDown] = useState(false);
+  const {gender, setGender} = useState('');
+
+    //new variables
+  const [valueSS, setValueSS] = useState('');
 
 
+  const onChangeSS = (value) => {
+    setValueSS(value);
+  };
 
-    const data = [ 
-        { 
-            id: 1, 
-            title: "SUBSCRIPTION ISSUES", 
-            content: 
-                `JavaScript (JS) is the most popular  
-                lightweight, interpreted compiled  
-                programming language. It can be used  
-                for both Client-side as well as  
-                Server-side developments. JavaScript  
-                also known as a scripting language  
-                for web pages.`, 
-        }, 
-        { 
-            id: 2, 
-            title: "LOGIN ISSUES", 
-            content: 
-                `A Computer Science portal for geeks.  
-                It contains well written, well thought  
-                and well explained computer science and  
-                programming articles`, 
-        }, 
-        { 
-            id: 2, 
-            title: "OTHER ISSUES", 
-            content: 
-                `Python is a high-level, general-purpose,  
-                and very popular programming language.  
-                Python programming language (latest  
-                Python 3) is being used in web development,  
-                Machine Learning applications, along with 
-                all cutting-edge technology in Software  
-                Industry.`, 
-        }, 
-        { 
-            id: 3, 
-            title: "IN-APP INQUIRIES", 
-            content: 
-                `Python is a high-level, general-purpose,  
-                and very popular programming language.  
-                Python programming language (latest  
-                Python 3) is being used in web development,  
-                Machine Learning applications, along with 
-                all cutting-edge technology in Software  
-                Industry.`, 
-        }, 
-        // ...more items 
-    ]; 
+  console.log("App version",VersionCheck.getCurrentVersion());
+  console.log("OS version",DeviceInfo.getSystemVersion());
+  console.log("Device model",DeviceInfo.getModel());
+
+
 
     const formik = useFormik({
         initialValues: {
@@ -150,74 +49,273 @@ const AppFeedBack = () => {
       });
 
 
+      const data2 = [
+        {
+          value: '1',
+          label: 'It Crashed',
+        },
+        {
+          value: '2',
+          label: 'It hangs or not Responding',
+
+        },
+        {
+          value: '3',
+          label: 'Missing Books',
+
+        },
+        {
+          value: '4',
+          label: 'Subscription',
+
+        },
+        {
+            value: '5',
+            label: 'Login',
+
+          },
+          {
+            value: '6',
+            label: 'Other',
+          },
+      ];
+      
+
+
 
 
   return (
-       <SafeAreaView style={styles.container}>
+    //    <SafeAreaView style={styles.container}>
 
         <ScrollView style={styles.scrollView} >
 
         <View > 
 
            <Image
-                style={{width:150,height:150,alignSelf:"center"}}
+                style={{width:100,height:100,alignSelf:"center",marginTop:25,marginBottom:25}}
                 source={require('../assets/logo.png')}
             />
 
             <Text style={{alignSelf:'center',fontSize:22,marginBottom:10,marginTop:10}}>FAQ</Text>
             <Divider/>
 
-            <ExpandableList data={data} /> 
-            <Text>CONTACT ROR APP CARE DIRECTLY</Text>
+
+
+            <Collapse>
+                <CollapseHeader>
+                <View style={{height:50,backgroundColor:'#d2f2d4',alignContent:"center",marginBottom:10}}>
+                    <Text style={{alignContent:'center',marginLeft:40,marginTop:15}}>SUBSCRIPTION ISSUES</Text>
+                </View>
+                </CollapseHeader>
+                <CollapseBody>
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}How to cancel subscription</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    To process subscription cancellation, you need to do this from your Apple store account. 
+                    Under your settings, you will find an option to cancel a subscription</Text>
+
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                How to renew or upgrade subscription</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap',marginBottom:10}}>
+                    To renew or upgrade subscription cancellation,check your profile pageon the App and select the new subscription option. 
+                    </Text>
+                </CollapseBody>
+            </Collapse>
+
+
+            <Collapse>
+                <CollapseHeader>
+                <View style={{height:50,backgroundColor:'#d2f2d4',alignContent:"center",marginBottom:10}}>
+                    <Text style={{alignContent:'center',marginLeft:40,marginTop:15}}>LOGIN ISSUES</Text>
+                </View>
+                </CollapseHeader>
+                <CollapseBody>
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}How to change password</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    To change your password, simply select forgot password on the login page using the email address you signed up with and you will be sent a password reset code.</Text>
+
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                No password and reset email</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    If you selected to reset the password but have not yet recieved the reset password email yet, Please check and ensure the following. 
+                    </Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Make sure you are trying to login to the right account. 
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Check your junk / spam email folder(s) for the message
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    If you have unsubscribed us from the our emails, then you may not be able to recieve the password reset link. 
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Please check your email settings and go into unsubscribe list and remove us from that list.
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap',marginBottom:10}}>
+                    or Download the App from the app store and try to login again 
+                    </Text>
+                </CollapseBody>
+            </Collapse>
+
+
+            <Collapse>
+                <CollapseHeader>
+                <View style={{height:50,backgroundColor:'#d2f2d4',alignContent:"center",marginBottom:10}}>
+                    <Text style={{alignContent:'center',marginLeft:40,marginTop:15}}>OTHER ISSUES</Text>
+                </View>
+                </CollapseHeader>
+                <CollapseBody>
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}Blank home page</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Check your internet connection</Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Clear your cache memory</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Reopen your App</Text>
+
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                Rhapsody in other languages</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    New languages can be acessed by selecting the language setting to change the language. 
+                    </Text>
+
+                    <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                App is crushing (IOS)</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Check that your IOS version can support the app
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Ensure you have the latest version of the app
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Clear the cached memory of your phoneand try to reopen it.
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap',marginBottom:10}}>
+                    Contact support here if the issue persists.
+                    </Text>
+                </CollapseBody>
+            </Collapse>
+
+            <Collapse>
+                <CollapseHeader>
+                <View style={{height:50,backgroundColor:'#d2f2d4',alignContent:"center",marginBottom:10}}>
+                    <Text style={{alignContent:'center',marginLeft:40,marginTop:15}}>IN-APP INQUIRIES</Text>
+                </View>
+                </CollapseHeader>
+                <CollapseBody>
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5,flexWrap:'wrap'}}>{`\u25CF `}How to search for past Rhapsody of Realities editions</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    As a premium subscriber, click on the store icon to access the previous Rhapsody available for free there</Text>
+
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    As a Basic subscriber, simply upgrade to Prmium to gain acess to this feature</Text>
+                <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                How to search for related articles</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    As a Premium Subscriber, simply check under the daily R articles on the home page and click on the button that says View all related Article type in the topic you are interested in and click search 
+                    </Text>
+                    <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                How to recover saved notes on a different/new device</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    Open Rhapsody app more tab select notes and sync notes. 
+                    </Text>
+
+                    <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                How to change fonts, decrease/increase fonts</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    To change the font size on the Rhapsody Reader, Select A+ option on the menu ribon at the top of the reader. This option enables you not only increase the font size but also change the font. 
+                    </Text>
+                    <Text style={{marginLeft:20,flexWrap:'wrap'}}>
+                    This option is available on the Rhapsody reader for Premium Subscribers only, to acess it simply upgrade to Premium
+                     
+                    </Text>
+
+                    <Text style={{marginLeft:20,marginBottom:10,fontWeight:"bold",marginTop:5}}>{`\u25CF `}
+                How to download Rhapsody of Realities book</Text>
+                <Text style={{marginLeft:20,flexWrap:'wrap',marginBottom:10}}>
+                    Collapse the menu bar by clicking on the menu icon,select the Rhapsody or book of your choice,
+                     after making the purchase, click to download and then select to open in Rhapsody Reader. 
+                     
+                    </Text>
+                </CollapseBody>
+            </Collapse>
+
+
+            <Text style={{alignSelf:'center',marginBottom:20,marginTop:40}}>CONTACT ROR APP CARE DIRECTLY</Text>
             <Divider/>
-            <Text>TEL: +1(601) 600-2363</Text>
+            <Text style={{marginTop:10}}>TEL: +1(601) 600-2363</Text>
             <Text>KingsChat: @rhapsodyappcare</Text>
             <Text>Email: rhapsodyappsupport@rhapsodyofrealities.org</Text>
 
         </View> 
 
-        <View>
-                {/* <Picker
-                        enabled={true}
-                        mode="dropdown"
-                        placeholder="Select City"
-                        onValueChange={formik.handleChange('city_name')}
-                        selectedValue={formik.values.city_name}
+        <View style={{marginTop:40}}>
+               
+                {/* Inqiury / Query Form */}
+                <Formik
+                    initialValues={{ email: '' }}
+                    onSubmit={values => console.log("",values)}
                 >
-                {cities.map((item) => {
-                    return
-                    (<Picker.Item
-                        label={item.name.toString()}
-                        value={item.name.toString()}
-                        key={item.id.toString()} />)
-                    })}
+                    {({ handleChange, handleBlur, handleSubmit, values }) => (
+                    <View>
+                        <View style={{marginBottom:20}}>
+                            <TextInput
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                        value={values.email}
+                        placeholder="Phone  Number"
+                        left={<TextInput.Icon icon="eye" />}
+                        />
+                        </View>
 
-                </Picker> */}
+                        <View style={{marginBottom:20}}>
+                                <Dropdown
+                                    label="Choose Error Type"
+                                    data={data2}
+                                    value={valueSS}
+                                    onChange={onChangeSS}
+                                    
+                                />
+                                </View>
 
-                <Picker
-                selectedValue={null}
-                onValueChange={null}>
-                {cities.map((item) => {
-                    return
-                    (<Picker.Item
-                        label={item.name}
-                        value={item.name}
-                        key={item.id} />)
-                    })}
-                </Picker>
+                        
+                        <View style={{marginBottom:20}}>
+                                <TextInput
+                                onChangeText={handleChange('email')}
+                                onBlur={handleBlur('email')}
+                                value={values.email}
+                                placeholder="How long it has happened"
+                                left={<TextInput.Icon icon="eye" />}
+                                />
+                        </View>
 
-                <Button
-                        mode="contained"
-                        title='submit'
-                        onPress={formik.handleSubmit}
-                >
-                    Enter
-                </Button>
+                        <View style={{marginBottom:20}}>
+                            <TextInput
+                            onChangeText={handleChange('email')}
+                            onBlur={handleBlur('email')}
+                            value={values.email}
+                            placeholder="Detailed description of issue"
+                            left={<TextInput.Icon icon="search" />}
+                            />
+
+                        </View>
+                        
+                        <View style={{marginBottom:20}}>
+                        <TouchableOpacity onPress={handleSubmit} style={{backgroundColor:'#55aaff',borderRadius:5,height:40}}>
+                            <Text style={{alignSelf:'center',color:'white',verticalAlign:'middle'}}>Submit</Text>
+                        </TouchableOpacity>
+                            
+                        </View>
+                    </View>
+                    )}
+                </Formik>
         </View>
+
+        
+
             
         </ScrollView>
 
-        </SafeAreaView>
+        // </SafeAreaView>
   );
 };
 

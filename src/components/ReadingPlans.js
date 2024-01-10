@@ -1,23 +1,34 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, ScrollView, ImageBackground, StyleSheet, Dimensions, 
-  TextInput, TouchableOpacity,Alert, Image,FlatList,Button } from 'react-native';
+  TextInput, TouchableOpacity,Alert,Modal, Image,FlatList,Button } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import HTMLView from 'react-native-htmlview';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
+import {Overlay } from '@rneui/themed';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 import styles from '../screens/styles'
 import SubscriptionPlanDetails from './SubscriptionPlanDetails';
 
+const windowHeight = Dimensions.get('window').height*0.4;
+const windowWidth = Dimensions.get('window').width*0.8;
+
+
+
 
 const ReadingPlans = () => {
 
-  const carouselRef = useRef(null)
+   const carouselRef = useRef(null)
+   const [visible, setVisible] = useState(false);
+
+   const toggleOverlay = () => {
+    setVisible(!visible);
+   };
+
+
 
     const [lista, setLista] = useState([
         {
@@ -118,7 +129,8 @@ const ReadingPlans = () => {
                                     />
                                 </View>
                                 <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,marginLeft:20,marginRight:20,marginBottom:50}}>
-                                    <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>Subscribe to this package and get access to 30+ life Changing article</Text>
+                                    <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
+                                        Subscribe to this package and get access to 30+ life Changing article</Text>
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>Benefits</Text>
 
                                     <View style={{ padding: 10 }}>
@@ -179,7 +191,7 @@ const ReadingPlans = () => {
                                         <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text>
                                         <TouchableOpacity style={{alignItems: 'center',
                                             backgroundColor: '#12A3B4',
-                                            padding: 10,borderRadius:5}} onPress={()=>{}}>
+                                            padding: 10,borderRadius:5}} onPress={()=>toggleOverlay()}>
                                             <Text>USE VOUCHER CODE</Text>
                                         </TouchableOpacity>
 
@@ -192,6 +204,45 @@ const ReadingPlans = () => {
 
                             </View>
                         </View>
+
+                        <Overlay ModalComponent={Modal} fullScreen={false}
+                            isVisible={visible} 
+                            onBackdropPress={toggleOverlay} overlayStyle={{width:windowWidth,height:windowHeight}}>
+                                <Image
+                                    source={require('../assets/logo.png')}
+                                    style={{alignSelf:"center",width:50,height:50,marginTop:-30}}
+                                />
+                                <Text style={{alignSelf:"center",fontWeight:'bold',fontSize:20,marginTop:10}}>
+                                    Fill in Voucher Code
+                                </Text>
+
+                                <Input
+                                    placeholder='Enter Voucher Here'
+                                    leftIcon={
+                                        <Icon
+                                        name='fa fa-qrcode'
+                                        size={24}
+                                        color='black'
+                                        />
+                                    }
+                                    errorStyle={{ color: 'red' }}
+                                    errorMessage='Enter a valid code'
+                                    containerStyle={{marginTop:20}}
+                                    />
+
+                                <TouchableOpacity style={{alignItems: 'center',
+                                            backgroundColor: '#D8A623',
+                                            padding: 10,borderRadius:5}} onPress={()=>toggleOverlay()}>
+                                            <Text>Submit Code</Text>
+                                </TouchableOpacity>
+                                <Text style={{alignSelf:'center',color:"#007FFF"}}>
+                                     Get a Subscription Voucher Code from
+                                </Text>
+                                <Text style={{alignSelf:'center',color:"#007FFF"}}>
+                                    Vouchers.rhapsodyofrealities.org
+                                </Text>
+                                
+                        </Overlay> 
                 </View>
             </View>
         </ScrollView>
