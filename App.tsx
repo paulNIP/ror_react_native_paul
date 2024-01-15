@@ -42,6 +42,7 @@ import i18n from "i18n-js";
 import memoize from "lodash.memoize"; // Use for caching/memoize for better performance
 import { getAudioArticles } from './src/service/devotionalService';
 import LanguageSelect from './src/screens/LanguageSelect';
+import VideoDetail from './src/screens/VideoDetail';
 
 
 
@@ -158,6 +159,7 @@ function HomeStackNavigator() {
       <Stack.Screen name="Search Article" component={SearchArticles} />
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
+      <Stack.Screen name="VideoDetail" component={VideoDetail} />
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
       }} />

@@ -18,7 +18,7 @@ import {
   TouchableOpacity,
   LogBox,ScrollView,Share,Modal
 } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import Video from 'react-native-video';
 import RelatedScreen from './RelatedScreen';
 import CommentScreen from './CommentScreen';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -120,20 +120,21 @@ const VideoDetail= ({ route, navigation }) => {
         return (
           <View>
             <View>
-        {/* Video Component */}
+
 
         <View style={styles.container}>
+
         <Video
-          ref={video}
-          style={styles.video}
-          source={{
-            uri: {vid},
-          }}
-          useNativeControls
-          // resizeMode={ResizeMode.COVER}
-          isLooping
-          onPlaybackStatusUpdate={status => setStatus(() => status)}
-        />
+            controls={true}
+            source={{
+              uri: video,
+            }}
+            resizeMode={"stretch"}
+            style={styles.video}
+            onError={(e) => console.log("error", e)}
+          />
+
+
         <View style={{flex:1,justifyContent:'space-between'}}>
             
                 <Text style={{marginLeft:10,fontWeight:'bold'}}>{item.title}</Text>

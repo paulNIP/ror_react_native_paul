@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { Text, Image, ImageBackground,TouchableOpacity ,Platform,KeyboardAvoidingView,StyleSheet} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from 'react-native-paper';
@@ -7,6 +7,24 @@ import axios from 'axios';
 import Strings from '../../constants/Strings';
 import { useNavigation } from '@react-navigation/native';
 import { Snackbar } from 'react-native-paper';
+import { PulseLoader,
+  DotsLoader,
+  TextLoader,
+  BubblesLoader,
+  CirclesLoader,
+  BreathingLoader,
+  RippleLoader,
+  LinesLoader,
+  MusicBarLoader,
+  EatBeanLoader,
+  DoubleCircleLoader,
+  RotationCircleLoader,
+  RotationHoleLoader,
+  CirclesRotationScaleLoader,
+  NineCubesLoader,
+  LineDotsLoader,
+  ColorDotsLoader,
+  OpacityDotsLoader } from 'react-native-indicator';
 
 
 
@@ -14,6 +32,7 @@ import { Snackbar } from 'react-native-paper';
 function LoginPage() {
 
   const [email, setUserEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   //snack bar component
@@ -26,6 +45,7 @@ function LoginPage() {
 
   //function to check user email
   const getUserInfo = (email) => {
+        setIsLoading(true);
 
         return new Promise((resolve, reject) => {
 
@@ -36,6 +56,7 @@ function LoginPage() {
             .then((res) => {
               //console.log(res.data.is_registered)
               resolve(res.data)
+              setIsLoading(false);
               //login logic
               if (res.data.status == 1) {
                 if(res.data.is_registered==="yes"){
@@ -53,7 +74,7 @@ function LoginPage() {
 
                     }
                 }else{
-                            navigation.navigate('Register',{
+                            navigation.navigate('Registration',{
                               email:email
 
                             })
@@ -88,12 +109,19 @@ function LoginPage() {
     <Text style={{  marginRight:20,marginLeft:20 }}>By clicking continue , you agree to our Terms and</Text>
     <Text>Conditions and Privacy policy</Text>
 
+    {isLoading ? (
+
+      <DotsLoader/>
+
+      ) : (
+      // Show login Button
       <TouchableOpacity
         style={styles.button}
         onPress={() => getUserInfo(email)}
       >
         <Text style={{color:'white'}}>Continue</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>)}
+      
 
       <Snackbar
         visible={visible}

@@ -1,6 +1,7 @@
 import React ,{useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View,Button,Image, ImageBackground,TouchableOpacity ,Platform,KeyboardAvoidingView,StyleSheet} from "react-native";
+import { Text, View,Button,Image, ImageBackground,
+  TouchableOpacity ,Platform,KeyboardAvoidingView,StyleSheet} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from 'react-native-paper';
 import {Dimensions} from 'react-native';
@@ -9,6 +10,7 @@ import { Snackbar } from 'react-native-paper';
 import axios from 'axios';
 import Strings from '../../constants/Strings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SnackBar from 'react-native-snackbar-component';
 
 
 
@@ -25,9 +27,9 @@ const EmailCodeAuth=({ route, navigation })=> {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);    // Move focus to the next box if the current one has a value
-      // if (value && index < newOtp.length - 1) {
-      //   this.inputs[index + 1].focus();
-      // }
+      if (value && index < newOtp.length - 1) {
+        inputs[index + 1].focus();
+      }
 
 
 
@@ -37,6 +39,7 @@ const EmailCodeAuth=({ route, navigation })=> {
     React.useEffect(() => {
       async function setData() {
         const appData = await AsyncStorage.getItem("hasOnBoarded");
+        
         if (appData == null) {
           setFirstLaunch(true);
           AsyncStorage.setItem("hasOnBoarded", "false");
@@ -69,6 +72,52 @@ const EmailCodeAuth=({ route, navigation })=> {
 
       await AsyncStorage.setItem('hasLoggedIn',"true");
       
+    }
+
+    const resendCode =() => {
+
+      // tv_resend_code.setEnabled(false);
+      //   codeStartTimer(60000);
+      //   setButtonStates(p, 0);
+
+      //   String url_send_code = Constant_Api.rs_send_code;
+      //   JSONObject jsonObject = null;
+      //   try {
+      //       jsonObject = new JSONObject();
+      //       jsonObject.put("type", "send_verification_code");
+      //       jsonObject.put("email", email);
+      //   } catch (JSONException e) {
+      //       e.printStackTrace();
+      //   }
+
+      //   StringEntity stringEntity = null;
+      //   try {
+      //       stringEntity = new StringEntity(jsonObject.toString());
+      //   } catch (UnsupportedEncodingException e) {
+      //       e.printStackTrace();
+      //   }
+      //   client.post(getBaseContext(), url_send_code, stringEntity, "application/json", new AsyncHttpResponseHandler() {
+      //       @Override
+      //       public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+      //           String res = new String(responseBody);
+      //           Log.e("code resend success", res);
+      //           setButtonStates(p2, 1);
+      //           try {
+      //               int status = new JSONObject(res).getInt("status");
+      //               if(status == 1){
+      //                   showSnackBar("Check your inbox for code. Or check spam if not seen in inbox");
+      //               }
+      //           } catch (JSONException e) {
+      //               throw new RuntimeException(e);
+      //           }
+      //       }
+      //       @Override
+      //       public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+      //           setButtonStates(p2, 1);
+      //           Toast.makeText(EmailCodeAuthActivity.this, "Network error occurred! Please retry", Toast.LENGTH_SHORT).show();
+      //       }
+      //   });
+
     }
 
       //function to check user email
@@ -134,9 +183,17 @@ const EmailCodeAuth=({ route, navigation })=> {
         >
           <Text style={{color:'white'}}>Next</Text>
         </TouchableOpacity>
+        <View style={{flexDirection:'row', marginTop:20,alignContent:'center'}}>
+          <Text>Didnt get code</Text>
+          <TouchableOpacity
+          onPress={() => resendCode()}
+          >
+          <Text style={{color:'#0096FF'}}>  Resend Code</Text>
+        </TouchableOpacity>
+        </View>
 
 
-        <Snackbar
+        {/* <Snackbar
           visible={visible}
           onDismiss={onDismissSnackBar}
           action={{
@@ -146,7 +203,10 @@ const EmailCodeAuth=({ route, navigation })=> {
             },
           }}>
           Invalid verification code. Try again
-        </Snackbar>
+        </Snackbar> */}
+
+        <SnackBar visible={true} textMessage="Check your Email for the 6 digit Code" 
+        actionHandler={()=>{console.log("snackbar button clicked!")}} actionText="OKAY"/>
   
         </KeyboardAvoidingView>
         </ImageBackground>

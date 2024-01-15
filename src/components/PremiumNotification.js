@@ -4,12 +4,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import RNFS from 'react-native-fs';
 import { TouchableOpacity } from 'react-native';
 
+
 import { DatabaseConnection } from '../database/database-connection';
 
 const db = DatabaseConnection.getdb();
 
 
-const PremiumNotification = () => {
+const PremiumNotification = ({navigation}) => {
 
    let [rhapsodyData, setRhapsodyData] = useState();
 
@@ -52,7 +53,19 @@ return (
        <Text style={styles.titleText} >
         Open in Rhapsody Reader</Text>
         </TouchableOpacity>
+        
       </View>
+      <View style={{flexDirection:'row'}}>
+          <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
+           name="information" size={35} color="#D8A623" /> 
+          <Text style={{flexWrap:'wrap'}}>To unlock the complete devotional for the month and enjoy its full features,
+           subscribe to the Premium Plan 
+            <TouchableOpacity onPress={()=>{ navigation.navigate('Subscription');}}>
+              <Text style={{color:'#FF0000',marginTop:10}}> UPGRADE </Text>
+            </TouchableOpacity>
+           </Text>
+          
+        </View>
   </>
 );
 };

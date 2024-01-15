@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     slideView:{
         width: '100%',
-        height: 320,
+        height: 300,
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',

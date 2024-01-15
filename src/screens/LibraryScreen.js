@@ -1,12 +1,8 @@
 import React ,{useState,useEffect} from "react";
 import {View,FlatList,Image,ScrollView,Alert, Text,TouchableOpacity,StyleSheet} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Divider} from '@rneui/themed';
 import { getLibrary } from "../service/libraryService";
-import { Button } from '@rneui/themed';
-import EpubReader from "./EpubReader";
-import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import { DatabaseConnection } from '../database/database-connection';
 
