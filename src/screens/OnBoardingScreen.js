@@ -73,12 +73,9 @@ const _renderItem = ({item}) => {
 const _keyExtractor = (item) => item.title;
 
 
-const OnboardingScreen = () => {
+const OnboardingScreen = ({navigation}) => {
 
 
-  const navigation = useNavigation();
-
-  
 
   const completeOnboarding = async() =>{
     //Flip Onboarding

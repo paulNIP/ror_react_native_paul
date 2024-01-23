@@ -13,6 +13,17 @@ const db = DatabaseConnection.getdb();
 const PremiumNotification = ({navigation}) => {
 
    let [rhapsodyData, setRhapsodyData] = useState();
+   const [subscribed, setSubscribed] = React.useState(null);
+
+   useEffect(() => {
+    async function setData() {
+      const subscribe = await AsyncStorage.getItem("subscription");
+      setSubscribed(subscribe);
+
+    }
+    setData();
+
+  }, []);
 
     const openRhapsodyReader = () => {
 
@@ -45,6 +56,7 @@ const PremiumNotification = ({navigation}) => {
 
 return (
   <>
+     {subscribed==='active' ? (
       <View style={styles.contentView}> 
        <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
        name="book-open-variant" size={25} color="#0099e5" />    
@@ -54,7 +66,9 @@ return (
         Open in Rhapsody Reader</Text>
         </TouchableOpacity>
         
-      </View>
+      </View>):(null)}
+
+      {subscribed==='inactive' || !subscribed  ? (
       <View style={{flexDirection:'row'}}>
           <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
            name="information" size={35} color="#D8A623" /> 
@@ -65,7 +79,7 @@ return (
             </TouchableOpacity>
            </Text>
           
-        </View>
+        </View>):(null)}
   </>
 );
 };

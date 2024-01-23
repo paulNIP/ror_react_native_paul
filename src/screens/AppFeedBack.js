@@ -1,15 +1,14 @@
 
-import React, { useState } from "react"; 
+import React, { useState,useEffect } from "react"; 
 import { 
     View, 
     Text, 
     TouchableOpacity, 
-    FlatList, Image,
+    FlatList, Image,ActivityIndicator,
     StyleSheet, ScrollView,SafeAreaView
 } from "react-native";
 import { Divider } from "react-native-paper";
-import { TextInput } from 'react-native-paper';
-import { useFormik } from 'formik';
+import { TextInput,HelperText } from 'react-native-paper';
 import axios from 'axios';
 import { Formik } from 'formik';
 import {Dropdown} from 'sharingan-rn-modal-dropdown';
@@ -17,11 +16,15 @@ import { getOSVersion,getAppVersion,getDeviceModel } from "../utils/Utils";
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import VersionCheck from 'react-native-version-check'
 import DeviceInfo from 'react-native-device-info'
+import Strings from "../constants/Strings";
+import SnackBar from 'react-native-snackbar-component';
+
 
 const AppFeedBack = () => {
 
   const [showDropDown, setShowDropDown] = useState(false);
   const {gender, setGender} = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
     //new variables
   const [valueSS, setValueSS] = useState('');
@@ -31,51 +34,131 @@ const AppFeedBack = () => {
     setValueSS(value);
   };
 
-  console.log("App version",VersionCheck.getCurrentVersion());
-  console.log("OS version",DeviceInfo.getSystemVersion());
-  console.log("Device model",DeviceInfo.getModel());
 
 
 
-    const formik = useFormik({
-        initialValues: {
-          firstName: '',
-          lastName: '',
-          email: '',
-        },
-        onSubmit: values => {
-          alert(JSON.stringify(values, null, 2));
-        },
-      });
+  const [phone,setPhone]  = useState('');
+  const [duration,setDuration]  = useState('');
+  const [description,setDescription]  = useState('');
+
+
+  const [subscription,setSubcription]  = useState();
+  const [userid,setSetUserID]  = useState('');
+  const [country,setCountry] = useState('');
+  const [email,setEmail]  = useState('');
+  const [name,setName]  = useState('');
+
+  const [regMessage,setRegMessage]  = useState('');
+  const [regError,setRegError]  = useState(false);
+     //form submitted
+    const [isSubmit, setIsSubmit] = useState(false);
+
+  
+
+  useEffect(() => {
+  
+    const fetchData = async () => {
+        const country = await AsyncStorage.getItem('country');
+        const email = await AsyncStorage.getItem('email');
+        const name = await AsyncStorage.getItem('name');
+        const userid =  await AsyncStorage.getItem('user_id');
+        const sub =  await AsyncStorage.getItem('subscription');
+
+        //set user data from 
+        setCountry(country);
+        setEmail(email);
+        setName(name);
+        setSetUserID(userid);
+        if(sub==='active'){
+
+            setSubcription(1);
+        }else if(sub==='inactive'){
+            setSubcription(0);
+
+        }else{
+            setSubcription(0);
+        }
+
+    }
+    fetchData();
+
+}, []);
+
+
+
+    const handleSubmit=()=>{
+        //send data online
+        setIsSubmit(true);
+        setIsLoading(true);
+
+        const data = {
+            email:email,
+            name:name,
+            phone:phone,
+            country:country,
+            user_id:userid,
+            device_model:DeviceInfo.getModel(),
+            android_api_version:DeviceInfo.getSystemVersion(),
+            app_version:VersionCheck.getCurrentVersion(),
+            how_long:duration,
+            error_type:valueSS,
+            detailed_description:description,
+            subscription_status:subscription
+
+        };
+
+
+        console.log("Feed Back Data",data);
+        axios.post(Strings.SUBMIT_SUPPORT, data)
+        .then(response => {
+          console.log("Resend Response:",response.data);
+          if(response.data.status == 1){
+            setIsLoading(false);
+            setRegMessage('Submitted Successfully');
+            setRegError(true)
+          }else{
+            setIsLoading(false);
+            setRegMessage('An error occurred, please try again.');
+            setRegError(true)
+          }
+  
+        })
+        .catch(error => {
+            setRegMessage('An error occurred, please try again.');
+            setRegError(true)
+  
+        });
+        
+    }
 
 
       const data2 = [
         {
-          value: '1',
+          value: 'It Crashed',
           label: 'It Crashed',
         },
         {
-          value: '2',
+          value: 'It hangs or not Responding',
           label: 'It hangs or not Responding',
 
         },
         {
-          value: '3',
+          value: 'Missing Books',
           label: 'Missing Books',
 
         },
         {
-          value: '4',
+          value: 'Subscription',
           label: 'Subscription',
 
         },
         {
-            value: '5',
+            value: 'Login',
             label: 'Login',
 
           },
           {
-            value: '6',
+            value: 'Other',
             label: 'Other',
           },
       ];
@@ -85,9 +168,9 @@ const AppFeedBack = () => {
 
 
   return (
-    //    <SafeAreaView style={styles.container}>
 
-        <ScrollView style={styles.scrollView} >
+
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} >
 
         <View > 
 
@@ -251,20 +334,17 @@ const AppFeedBack = () => {
         <View style={{marginTop:40}}>
                
                 {/* Inqiury / Query Form */}
-                <Formik
-                    initialValues={{ email: '' }}
-                    onSubmit={values => console.log("",values)}
-                >
-                    {({ handleChange, handleBlur, handleSubmit, values }) => (
                     <View>
                         <View style={{marginBottom:20}}>
                             <TextInput
-                        onChangeText={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        value={values.email}
+                        value={phone}
+                        onChangeText={newText => setPhone(newText)}
                         placeholder="Phone  Number"
                         left={<TextInput.Icon icon="eye" />}
                         />
+                        {isSubmit && phone === "" ? <HelperText type="error" visible={true}>
+                            Phone number is Required
+                            </HelperText> : null} 
                         </View>
 
                         <View style={{marginBottom:20}}>
@@ -277,45 +357,77 @@ const AppFeedBack = () => {
                                 />
                                 </View>
 
+                                {isSubmit && valueSS === "" ? <HelperText type="error" visible={true}>
+                            Error type is Required
+                            </HelperText> : null} 
+
                         
                         <View style={{marginBottom:20}}>
                                 <TextInput
-                                onChangeText={handleChange('email')}
-                                onBlur={handleBlur('email')}
-                                value={values.email}
+                                value={duration}
+                                onChangeText={newText => setDuration(newText)}
                                 placeholder="How long it has happened"
                                 left={<TextInput.Icon icon="eye" />}
                                 />
+
+                            {isSubmit && duration === "" ? <HelperText type="error" visible={true}>
+                                                        Duration is Required
+                                                        </HelperText> : null} 
                         </View>
 
                         <View style={{marginBottom:20}}>
                             <TextInput
-                            onChangeText={handleChange('email')}
-                            onBlur={handleBlur('email')}
-                            value={values.email}
+                            value={description}
+                            multiline={true}
+                            onChangeText={newText => setDescription(newText)}
                             placeholder="Detailed description of issue"
                             left={<TextInput.Icon icon="search" />}
                             />
+                            {isSubmit && description === "" ? <HelperText type="error" visible={true}>
+                            Description is Required
+                            </HelperText> : null} 
 
                         </View>
                         
                         <View style={{marginBottom:20}}>
-                        <TouchableOpacity onPress={handleSubmit} style={{backgroundColor:'#55aaff',borderRadius:5,height:40}}>
-                            <Text style={{alignSelf:'center',color:'white',verticalAlign:'middle'}}>Submit</Text>
+                        <TouchableOpacity onPress={handleSubmit} style={{backgroundColor:'#55aaff',
+                        borderRadius:5,height:45}}>
+                            <Text style={{alignSelf:'center',color:'white',verticalAlign:'middle',marginTop:15}}>Submit</Text>
                         </TouchableOpacity>
                             
                         </View>
                     </View>
-                    )}
-                </Formik>
+
         </View>
+
+        {isLoading && (
+        <View style={{  
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+          <ActivityIndicator
+            style={{ height: 80 }}
+            color="#C00"
+            size="large"
+          />
+          </View>
+        )}
+
+              {/* failed Registration snack bar */}
+        <SnackBar visible={regError} textMessage={regMessage} 
+        actionHandler={()=>{setRegError(false);}} actionText="OKAY"/>
 
         
 
             
         </ScrollView>
 
-        // </SafeAreaView>
+
   );
 };
 

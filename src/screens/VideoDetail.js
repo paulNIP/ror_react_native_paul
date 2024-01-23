@@ -126,9 +126,7 @@ const VideoDetail= ({ route, navigation }) => {
 
         <Video
             controls={true}
-            source={{
-              uri: video,
-            }}
+            source=''
             resizeMode={"stretch"}
             style={styles.video}
             onError={(e) => console.log("error", e)}

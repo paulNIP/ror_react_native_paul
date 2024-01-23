@@ -101,6 +101,11 @@ function LoginPage() {
             <Text style={{alignSelf:"flex-start",fontSize:18,marginBottom:40}}>Provide your email to signin or sign up</Text>
               <TextInput
                   label="Email"
+                  autoCapitalize="none"
+                  autoCompleteType="email"
+                  textContentType="emailAddress"
+                  keyboardType="email-address"
+                  returnKeyType="next"
                   onChangeText={newText => setUserEmail(newText)}
                   style={{width:Dimensions.get('window').width*0.9,marginBottom:40}}
                   left={<TextInput.Icon icon="email" />}

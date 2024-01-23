@@ -1,20 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View,Image,ImageBackground,StyleSheet,TouchableOpacity,ScrollView } from "react-native";
+import { Text, View,Image,ImageBackground,StyleSheet,TouchableOpacity,ScrollView,ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TextInput } from 'react-native-paper';
+import { TextInput,HelperText } from 'react-native-paper';
 import {Dimensions} from 'react-native';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PhoneInput from "react-native-phone-number-input";
 import {Dropdown} from 'sharingan-rn-modal-dropdown';
+import { useNetInfo } from "@react-native-community/netinfo";
+import Strings from '../../constants/Strings';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import SnackBar from 'react-native-snackbar-component';
+import { DatabaseConnection } from '../../database/database-connection';
+import { NetworkInfo } from "react-native-network-info";
+import * as RNLocalize from "react-native-localize";
+import { getContinentCode, getContinentName } from '@brixtol/country-continent';
+import DeviceInfo from 'react-native-device-info';
 
+
+const userDB = DatabaseConnection.getuserDB();
 
 
 const  RegistrationPage=({ route, navigation })=>  {
 
-  const [value, setValue] = useState("");
-  const [email, setEmail] = useState("");
+  const { type, isConnected } = useNetInfo();
+
   const phoneInput = useRef(null);
+  const [countryCode, setCountryCode] = useState('');
+  const [ipAddress, setIpAddress] = useState('');
+  const [internetCheck, setInternetCheck] = useState(false);
+  const [regError, setRegError] = useState(false);
+  const [regMessage, setRegMessage] = useState(''); 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [value, setValue] = useState("");
+
+
 
   const zones = [
     {
@@ -22233,9 +22254,33 @@ const  RegistrationPage=({ route, navigation })=>  {
 ];
 
     //new variables
-  const [zoneSS, setZoneSS] = useState('');
-  const [groupSS, setGroupSS] = useState('');
-  const [churchSS, setChurchSS] = useState('');
+
+   const [names,setNames]=useState('');
+   const [username,setUserName]=useState('');
+   const { email } = route.params;
+   const [zoneSS, setZoneSS] = useState('');
+   const [groupSS, setGroupSS] = useState('');
+   const [churchSS, setChurchSS] = useState('');
+   const [password,setPassword]=useState('');
+   const [passwordconfirm,setConfirmPassword]=useState('');
+   const [formattedValue, setFormattedValue] = useState("");
+
+   //form submitted
+   const [isSubmit, setIsSubmit] = useState(false);
+
+
+   //Error messages
+   const [namesError,setNamesError]=useState(false);
+   const [usernameError,setUserNameError]=useState(false);
+   const [emailError,setEmailError]=useState(false);
+//    const [zoneSS, setZoneSS] = useState('');
+//    const [groupSS, setGroupSS] = useState('');
+//    const [churchSS, setChurchSS] = useState('');
+   const [passwordError,setPasswordError]=useState(false);
+   const [passwordconfirmError,setConfirmPasswordError]=useState(false);
+   const [formattedValueError, setFormattedValueError] = useState(false);
+   const [phone, setPhone] = useState('');
+
 
   const onChangeZone = (value) => {
     setZoneSS(value);
@@ -22252,10 +22297,293 @@ const  RegistrationPage=({ route, navigation })=>  {
 
   //function to register user
   const getUserInfo = () => {
-     console.log("Navigation clicked");
-      navigation.navigate('HomeApp');
+        console.log("Formatted text", formattedValue);
+        setIsSubmit(true);
+
+        if(names===""){
+            setNamesError(true);
+
+        }else if(username===""){
+            setUserNameError(true);
+
+        }else if(email===""){
+            setEmailError(true);
+
+        }else if(password===""){
+            setPasswordError(true);
+
+        }else if(passwordconfirm===""){
+            setConfirmPasswordError(true);
+
+        }else if(formattedValue===""){
+            setFormattedValueError(true);
+            setCountryCode(phoneInput.current);
+
+        }else if(password!==passwordconfirm){
+            setConfirmPasswordError(true);
+            
+
+        }else{
+            //check if network is available
+            if(isConnected===true){
+                //Register user 
+                  register(names, email, password, countryCode, formattedValue, username);
+                //Register Rhapsdy plus user
+                registerRhapsodyPlusUser();
+
+
+            }else{
+                //Internet Error Message 
+                setInternetCheck(true);
+            }
+
+        }
+
 
   };
+
+
+  const registerRhapsodyPlusUser=()=>{
+
+    // Get IPv4 IP (priority: WiFi first, cellular second)
+    NetworkInfo.getIPV4Address().then(ipv4Address => {
+        console.log('IP Address',ipv4Address);
+        setIpAddress(ipv4Address);
+    });
+
+    const data = {
+        fullname:names,
+        password:password,
+        login:username,
+        email:email,
+        continent:getContinentName(RNLocalize.getCountry()),
+        country:DeviceInfo.getDeviceCountry(),
+        city:"",
+        countrycode:countryCode,
+        phone:formattedValue,
+        zone_id:zoneSS,
+        group_id:groupSS,
+        church_id:churchSS,
+        src:"app",
+        referencetype:"personal",
+        referenceid:"self",
+        ip_address:ipAddress,
+        password:"rabadaba"
+      };
+
+      console.log("Rhapsody plus user data",data);
+
+
+
+      
+
+
+//     Util.checkReadAndEarn(RegisterActivity.this, 
+// Constant_Api.register_rhapsodyplus_user, jsonObject, new VolleyResultCallBack() {
+//         @Override
+//         public void onResultSuccess(JSONObject jsonObject) throws JSONException {
+//             Log.e("Rhapsody Plus Success", jsonObject.toString());
+//             //{"status":1,"shareid":"testermarch333759"}
+//             int status = jsonObject.getInt("status");
+//             if (status == 1) {
+//                 editor.putBoolean("plus_registered", true);
+//                 editor.commit();
+//             } else if (status == 0 && jsonObject.getString("response").contains("already in use!")) {
+//                 editor.putBoolean("plus_registered", true);
+//                 editor.commit();
+//             }
+//         }
+
+//         @Override
+//         public void onResultError(VolleyError volleyError) throws JSONException {
+//             Log.e("Rhapsody Plus Error", volleyError.toString());
+//         }
+//     }, null);
+// }
+if(Strings.REGISTER_RHAPSODYPLUS_USER==='https://backend3.rhapsodyofrealities.org/question/'){
+    //request_method = Request.Method.GET;
+
+}else{
+    //request_method = Request.Method.POST
+
+
+}
+
+//     String key_string = "bGS6lzFqvvSQJhdslLOxatm7/Vk7mLQyzqaS34Q4oR1ew=";
+//     SecretKey key = Keys.hmacShaKeyFor(key_string.getBytes());
+
+//     //set specific issuer
+//     let  issuer = "readandearn.reachoutworld.org";
+//     if (url.equalsIgnoreCase(Constant_Api.universal_voucher_wallet_balance) ||
+//             url.equalsIgnoreCase(Constant_Api.universal_voucher_deduct_from_wallet)){
+//         issuer = "universalvoucher.org";
+//     }
+
+//     String jws = Jwts.builder()
+//             //.setSubject(email)
+//             .signWith(key)
+//             .setIssuer(issuer)
+//             .setIssuedAt(new Date(System.currentTimeMillis())) //new Date()
+//             .setNotBefore(new Date(System.currentTimeMillis() + 100))
+//             .setExpiration(new Date(System.currentTimeMillis() + 360000000))
+//             .setId(String.valueOf(UUID.randomUUID()))
+//             .claim("data", map_data)
+//             .compact();
+
+//     Log.e("Credentials", jws);
+//     headers.put("Authorization", "Bearer " + jws);
+//     headers.put("Content-Type", "application/json");
+
+// const config = {
+//          headers: {
+//              "Content-type": "application/json",
+//               "Authorization": `Bearer ${Cookies.get("jwt")}`,
+//          },
+//     }; 
+
+axios.post(Strings.REGISTER_RHAPSODYPLUS_USER, data)
+.then(response => {
+  console.log("Registration Plus Response:",response.data.EBOOK_APP[0]);
+//   if(response.data.EBOOK_APP[0].success==='1'){
+
+//     let device_date= new Date().toDateString()
+//     console.log("Device Date :",device_date);
+
+//   }else {
+//     setRegMessage(response.data.EBOOK_APP[0].msg); 
+//     setRegError(true);
+//     setIsLoading(false);
+//   }
+
+})
+.catch(error => {
+  console.error("Error sending data: 000 ", error);
+  setIsLoading(false);
+});
+
+
+}
+
+
+  const register =(names, email, password, countryCode, formattedValue, username)=>{
+
+    const data = {
+        name:names,
+        email:email,
+        username:username,
+        password:password,
+        code:countryCode,
+        phone:formattedValue,
+        src:"app",
+        zone:zoneSS,
+        church:churchSS,
+        group:groupSS
+      };
+
+      console.log("Registration information",data);
+      setIsLoading(true);
+      
+      axios.post(Strings.API_URL+'/registration', data)
+        .then(response => {
+          console.log("Registration Response:",response.data.EBOOK_APP[0]);
+          if(response.data.EBOOK_APP[0].success==='1'){
+
+            let device_date= new Date().toDateString()
+            console.log("Device Date :",device_date);
+                
+            //insert data to database
+                userDB.transaction(function (tx) {
+                    tx.executeSql(
+                    'INSERT INTO user (names,email,phone,password,lastlogin) VALUES (?,?,?,?,?)',
+                    [username,email,formattedValue, password, device_date],
+                    (tx, results) => {
+                        console.log('Results', results.rowsAffected);
+                        if (results.rowsAffected > 0) {
+                            console.log("SQL inserted sucessfully");
+                        } else {
+                            console.log("SQL Error Failed to insert to sql");
+                        }
+                    }
+                    );
+                });
+
+                login(email, password);
+
+          }else {
+            setRegMessage(response.data.EBOOK_APP[0].msg); 
+            setRegError(true);
+            setIsLoading(false);
+          }
+
+        })
+        .catch(error => {
+          console.error("Error sending data: ", error);
+          setIsLoading(false);
+        });
+    
+  }
+
+  //Login functionality
+  const login =(email, password)=>{
+    const loginData = {
+        email:email,
+        string:password,
+      };
+
+    let device_date= new Date().toDateString()
+    console.log("Device Date :",device_date);
+
+    axios.post(Strings.API_URL+'/login', loginData)
+        .then(response => {
+          console.log("Login Response Response:",response.data.result[0].success);
+          let stat=response.data.result[0].subscription;
+          if(response.data.result[0].success==='1'){
+
+            userDB.transaction(function (txn) {
+                txn.executeSql(
+                  "SELECT email FROM user WHERE email=? ",
+                  [email],
+                  function (tx, res) {
+                    console.log('item:', res.rows.length);
+                    if (res.rows.length > 0) {
+                        
+                        txn.executeSql(
+                            'UPDATE user set status=?, lastlogin=?  where email=?',
+                            [stat, device_date, email],
+                            (tx, results) => {
+                              
+                              if (results.rowsAffected > 0) {
+                                console.log("User DB Update Sucessfully ");
+                                // Navigate to main Page
+                                navigation.navigate('Welcome');
+                                
+                              } else{
+                                console.log("User DB Update failed");
+                              } 
+                            }
+                          );
+
+                    }
+                  }
+                );
+              });
+
+
+          }else {
+
+            setRegError('An error occured while logging in. Please try again');
+            regError(true);
+
+          }
+
+        })
+        .catch(error => {
+          console.error("Error sending data: ", error);
+          setIsLoading(false);
+        });
+
+
+  }
 
  
 
@@ -22272,12 +22600,20 @@ const  RegistrationPage=({ route, navigation })=>  {
           style={{width:Dimensions.get('window').width*0.9,marginBottom:10}}
         />
 
+{isSubmit && names === "" ? <HelperText type="error" visible={true}>
+           full name is Required
+        </HelperText> : null} 
+
       <TextInput
         label="Username"
         onChangeText={newText => setUserName(newText)}
         left={<TextInput.Icon icon="account-circle" />}
         style={{width:Dimensions.get('window').width*0.9,marginBottom:10}}
       />
+
+{isSubmit && username === "" ? <HelperText type="error" visible={true}>
+           user name is Required
+        </HelperText> : null} 
 
       <TextInput
         label="Email"
@@ -22286,7 +22622,11 @@ const  RegistrationPage=({ route, navigation })=>  {
         style={{width:Dimensions.get('window').width*0.9,marginBottom:10}}
       />
 
-      <View style={{marginBottom:20}}>
+{isSubmit && email === "" ? <HelperText type="error" visible={true}>
+           email is Required
+        </HelperText> : null} 
+
+    <View style={styles.dropdowncontainer}>
           <Dropdown
               label="Select Zone (Optional)"
               enableSearch
@@ -22295,9 +22635,10 @@ const  RegistrationPage=({ route, navigation })=>  {
               onChange={onChangeZone}
               
           />
-      </View>
+     </View>
 
-      {/* <View style={{marginBottom:20}}>
+
+     <View style={styles.dropdowncontainer}>
           <Dropdown
               label="Select Group (Optional)"
               enableSearch
@@ -22306,9 +22647,10 @@ const  RegistrationPage=({ route, navigation })=>  {
               onChange={onChangeGroup}
               
           />
-      </View>
+        </View>
 
-      <View style={{marginBottom:20}}>
+
+    <View style={styles.dropdowncontainer}>
           <Dropdown
               label="Select Church (Optional)"
               enableSearch
@@ -22317,29 +22659,45 @@ const  RegistrationPage=({ route, navigation })=>  {
               onChange={onChangeChurch}
               
           />
-      </View> */}
-          
+
+    </View>
+  
+
       <TextInput
         label="Password"
-        onChangeText={newText => setNames(newText)}
+        onChangeText={newText => setPassword(newText)}
+        secureTextEntry={true}
         left={<TextInput.Icon icon="lock" />}
         style={{width:Dimensions.get('window').width*0.9,marginBottom:10}}
       />
 
+{isSubmit && password === "" ? <HelperText type="error" visible={true}>
+           password is Required
+        </HelperText> : null} 
+
         <TextInput
           label="Confirm Password"
-          onChangeText={newText => setNames(newText)}
+          onChangeText={newText => setConfirmPassword(newText)}
+          secureTextEntry={true}
           left={<TextInput.Icon icon="lock" />}
           style={{width:Dimensions.get('window').width*0.9,marginBottom:10}}
         />
 
+{isSubmit && passwordconfirm === "" ? <HelperText type="error" visible={true}>
+           Confirm Password is Required
+        </HelperText> : null} 
+
+        {isSubmit && (password !== passwordconfirm) ? <HelperText type="error" visible={true}>
+           name is Required
+        </HelperText> : null} 
+
         <PhoneInput
             ref={phoneInput}
             defaultValue={value}
-            defaultCode="DM"
             layout="first"
             onChangeText={(text) => {
-              setValue(text);
+              setPhone(text);
+              setCountryCode(phoneInput.current?.getCountryCode() || '');
             }}
             onChangeFormattedText={(text) => {
               setFormattedValue(text);
@@ -22352,6 +22710,10 @@ const  RegistrationPage=({ route, navigation })=>  {
             }}
             
           />
+
+{/* {isSubmit && name === "" ? <HelperText type="error" visible={true}>
+           name is Required
+        </HelperText> : null}  */}
          
 
       <TouchableOpacity
@@ -22360,6 +22722,32 @@ const  RegistrationPage=({ route, navigation })=>  {
       >
         <Text style={{color:'white'}}>Register</Text>
       </TouchableOpacity>
+
+      {/* Network snack bar */}
+      <SnackBar visible={internetCheck} textMessage="Registration Failed  Check Your Internet Conncetion" 
+        actionHandler={()=>{setInternetCheck(false);}} actionText="OKAY"/>
+      
+      {/* failed Registration snack bar */}
+      <SnackBar visible={regError} textMessage={regMessage} 
+        actionHandler={()=>{setRegError(false);}} actionText="OKAY"/>
+
+      {isLoading && (
+        <View style={{  
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+          <ActivityIndicator
+            style={{ height: 80 }}
+            color="#C00"
+            size="large"
+          />
+          </View>
+        )}
 
       
 
@@ -22375,6 +22763,11 @@ const  RegistrationPage=({ route, navigation })=>  {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  dropdowncontainer:{
+     width:'90%',
+     marginBottom:10
   },
   image: {
     flex: 1,

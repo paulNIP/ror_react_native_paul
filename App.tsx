@@ -152,7 +152,6 @@ function HomeStackNavigator() {
       <Stack.Screen name="LanguageSelect" component={LanguageSelect} />
       <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>
-
       <Stack.Screen name="Past Articles" component={PastArticles} />
       <Stack.Screen name="Related Articles" component={RelatedArticles} />
       <Stack.Screen name="Saved Articles" component={SavedArticles} />

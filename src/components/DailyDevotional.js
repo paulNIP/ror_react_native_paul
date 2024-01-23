@@ -32,14 +32,16 @@ const DailyDevotional = () => {
   const [status, setStatus] = useState();
   const [points, setPoints] = useState();
   const [loggedIn, setLoggedIn] = React.useState(null);
+  const [subscribed, setSubscribed] = React.useState(null);
 
 
 
   React.useEffect(() => {
     async function setData() {
       const logData = await AsyncStorage.getItem("hasLoggedIn");
+      const subscribe = await AsyncStorage.getItem("subscription");
 
-
+      setSubscribed(subscribe);
       if (logData == null) {
         setLoggedIn(false);
         AsyncStorage.setItem("hasLoggedIn", "false");
@@ -320,6 +322,39 @@ const DailyDevotional = () => {
               </Overlay>
 
           </View>) }
+
+          {subscribed==='inactive' ? (<Overlay ModalComponent={Modal} fullScreen={false}
+              isVisible={visibleCongs} 
+              onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
+                
+                <View style={{alignSelf:'center'}}>
+                   <Image style={styles.sunrays} source={require('../assets/sunrays.png')} />
+                   <Image  style={styles.logo} source={require('../assets/logo.png')} />
+                   
+                </View>
+                <View style={{flexDirection:'row',alignSelf:'center',marginTop:70}}>
+                   <Image style={styles.wing} source={require('../assets/left_wing.png')} />
+                   <Text style={{color:'#D8A623'}}>
+                     Upgrade
+                   </Text>
+                   <Image style={styles.wing} source={require('../assets/right_wing.png')} />
+                </View>
+                
+                <Text style={{alignSelf:'center'}}>
+                    To unlock the full bible, enjoy the Further
+                </Text>
+                <Text style={{alignSelf:'center'}}>Study and Daily Bible Reading, Upgrade to a</Text>
+                <Text style={{alignSelf:'center'}}>Premium Plan.</Text>
+                <Button
+                  title="Subscribe Now"
+                  color="#D8A623"
+                  onPress={() => {
+                    navigation.navigate('Subscription');
+                    setVisibleCongs(!visibleCongs);
+                  }}
+                />
+              </Overlay>)
+         : null}
        
       </View>
     );
