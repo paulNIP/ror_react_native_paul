@@ -109,25 +109,35 @@ const AppFeedBack = () => {
 
 
         console.log("Feed Back Data",data);
-        axios.post(Strings.SUBMIT_SUPPORT, data)
-        .then(response => {
-          console.log("Resend Response:",response.data);
-          if(response.data.status == 1){
+
+        if(email!==null && phone!==''&&description!==''&& duration !==''&& valueSS!==''){
+            axios.post(Strings.SUBMIT_SUPPORT, data)
+            .then(response => {
+            console.log("Resend Response:",response.data);
+            if(response.data.status == 1){
+                setIsLoading(false);
+                setRegMessage('Submitted Successfully');
+                setRegError(true)
+            }else{
+                setIsLoading(false);
+                setRegMessage('An error occurred, please try again.');
+                setRegError(true)
+            }
+
+            })
+            .catch(error => {
+                setRegMessage('An error occurred, please try again.');
+                setRegError(true)
+
+            });
+
+        }else{
+            setRegMessage('Kindly Login before Submitting feedback');
             setIsLoading(false);
-            setRegMessage('Submitted Successfully');
             setRegError(true)
-          }else{
-            setIsLoading(false);
-            setRegMessage('An error occurred, please try again.');
-            setRegError(true)
-          }
-  
-        })
-        .catch(error => {
-            setRegMessage('An error occurred, please try again.');
-            setRegError(true)
-  
-        });
+
+        }
+        
         
     }
 

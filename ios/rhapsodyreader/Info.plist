@@ -4,18 +4,7 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>fonts/AntDesign.tff</string>
-		<string>fonts/Entypo.tff</string>
-		<string>fonts/EvilIcons.tff</string>
-		<string>fonts/Feather.tff</string>
-		<string>fonts/FontAwesome.tff</string>
-		<string>fonts/FontAwesome5_Brands.tff</string>
-		<string>fonts/FontAwesome5_Regular.tff</string>
-		<string>fonts/FontAwesome5_Solid.tff</string>
-		<string>fonts/MaterialCommunityIcons.tff</string>
-		<string>fonts/MaterialIcons.tff</string>
-		<string>fonts/Ionicons.tff</string>
-		<string>fonts/Foundation.tff</string>
+		<string>MaterialCommunityIcons.ttf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>

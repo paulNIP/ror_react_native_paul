@@ -1,10 +1,11 @@
 import React ,{useState,useEffect} from "react";
 import {View,FlatList,Image,ScrollView,Alert, Text,TouchableOpacity,StyleSheet} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Divider} from '@rneui/themed';
 import { getLibrary } from "../service/libraryService";
 import RNFS from 'react-native-fs';
 import { DatabaseConnection } from '../database/database-connection';
+import {Dimensions} from 'react-native';
 
 
 const db = DatabaseConnection.getdb();
@@ -15,11 +16,22 @@ const LibraryScreen = ({navigation}) => {
   const [books, setBooks] = useState([]);
   const [currentProgress, setProgress] = useState(0);
   const [loadingState, setLoadingState] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [listAlign, setListAlign] = useState(false);
 
     useEffect(() => {
       const fetchData = async () => {
-          const data = await getLibrary()
-          setBooks(data)
+          const data = await getLibrary();
+          setBooks(data);
+          const email= await AsyncStorage.getItem('email');
+          if(email==null){
+            setLoggedIn(false);
+
+          }else{
+            setLoggedIn(true);
+
+          }
+          
 
       }
       fetchData();
@@ -29,7 +41,7 @@ const LibraryScreen = ({navigation}) => {
     const dayOfWeekName = new Date().toLocaleString(
       'default', {weekday: 'long'}
     );
-    console.log(dayOfWeekName); // 👉️ Sunday
+    console.log("Books",books); // 👉️ Sunday
 
 
   const renderBooks = ({ item }) => {
@@ -183,27 +195,141 @@ const LibraryScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-        <View style={{ flexDirection: 'row',backgroundColor:"#F9A825"}}>
-          <View style={{  alignSelf:"flex-start"}}>
-            <Text>
+        <View style={{ flexDirection: 'row',backgroundColor:"#D8A623",height:50}}>
+          <View style={{  alignSelf:"flex-start",justifyContent:'center',alignSelf:'center'}}>
+          {loggedIn? (
+            <Text style={{color:'#FFFFFF',marginLeft:10}}>
               1 Books in your Library
+            </Text>):(
+              <Text style={{color:'#FFFFFF',marginLeft:10}}>
+              0 Books in your Library
             </Text>
 
+            )}
+
           </View>
-          <View style={{ flexDirection: 'row',alignSelf:"flex-end",marginLeft:'auto' }}>
-            <Divider orientation="vertical" width={5} />
-            <TouchableOpacity>
-              <MaterialCommunityIcons  name="view-comfy" size={30} color="white" />
+          {/* {loggedIn? ( */}
+          <View style={{ flexDirection: 'row',alignSelf:"flex-end",marginLeft:'auto',justifyContent:'center',alignSelf:'center' }}>
+            <Divider orientation="vertical" width={2} />
+            <TouchableOpacity onPress={()=>{
+              setListAlign(false);
+            }}>
+              <Icon  name="view-comfy" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <MaterialCommunityIcons  name="view-list" size={30} color="white" />
+            <TouchableOpacity onPress={()=>{
+              setListAlign(true);
+            }}>
+              <Icon  name="view-list" size={30} color="white" />
             </TouchableOpacity>
           </View>
+          {/* ):null
+          } */}
          </View>
-        <ScrollView showsHorizontalScrollIndicator={false} style={{padding:10}}>
+         {/* {loggedIn? ( */}
+          <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{padding:10}}>
+            {!listAlign &&(
+            <FlatList data={books} renderItem={renderBooks} numColumns={3} ItemSeparatorComponent={() => <View style={{height: 5}} />}/>)}
       
-         <FlatList data={books} renderItem={renderBooks} numColumns={3} ItemSeparatorComponent={() => <View style={{height: 5}} />}/>
-         </ScrollView>
+          
+          {
+              listAlign && books.map((l, i) => {
+
+                return i === 0 ?
+                
+          <View>
+            <View style={{flexDirection:'row'}}>
+              <View style={{width:Dimensions.get('window').width*0.3,
+                    borderRadius: 5, overflow: "hidden" }}>
+              <Image
+                  source={{uri:l.book_image}}
+                  style={{
+                    height: Dimensions.get('window').height*0.2,
+                    width: '100%'
+                  }}
+                  // resizeMode="contain"
+                />
+
+              </View>
+              <View style={{width:Dimensions.get('window').width*0.65,marginLeft:10}}>
+                <View >
+
+                     <Text style={{flexWrap:'wrap',marginBottom:5}}>{l.title}</Text>
+                     <Text style={{flexWrap:'wrap',marginBottom:5,color:'#A9A9A9'}} numberOfLines={3}>
+                      {l.book_description}</Text>
+                     <Text style={{flexWrap:'wrap',marginBottom:5,color:'#A9A9A9'}}>{l.author}</Text>
+
+                     <View style={{marginTop:Dimensions.get('window').height*0.05}}>
+                     <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/>
+                     <TouchableOpacity onPress={()=>{}} 
+                              style={{      
+                              alignItems: 'center',
+                              backgroundColor: '#D8A623',
+                              height: 30,
+                              width:130,
+                              borderRadius:15,
+                              marginTop: 5,
+                              marginRight:10,
+                              justifyContent: 'center'}}>
+
+                          <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Download Book</Text>
+                     </TouchableOpacity>
+                     <View style={{flexDirection:'row',marginTop:5}}>
+                         <Icon  name="timer-outline" size={25} color="#A9A9A9" />
+                         <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>Already Downloaded</Text>
+                     </View>
+                     
+                     <View style={{flexDirection:'row'}}>
+                         <TouchableOpacity onPress={()=>{}} 
+                              style={{      
+                              alignItems: 'center',
+                              backgroundColor: '#D8A623',
+                              height: 30,
+                              width:130,
+                              borderRadius:15,
+                              marginTop: 5,
+                              marginRight:10,
+                              justifyContent: 'center'}}>
+
+                          <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Open / Read Book</Text>
+                         </TouchableOpacity>
+                         <TouchableOpacity onPress={()=>{}} 
+                            style={{      
+                              alignItems: 'center',
+                              backgroundColor: '#FFFFFF',
+                              borderBlockColor:'red',
+                              height: 30,
+                              width:130,
+                              borderRadius:15,
+                              marginTop: 5,
+                              justifyContent: 'center'}}
+                              >
+                          <Text style={{alignSelf:"center",color:'red'}}>Delete Book</Text>
+                         </TouchableOpacity>
+                         
+                     </View>
+
+                     </View>
+                     
+
+                     
+
+                </View>
+                
+              </View>
+
+            </View>
+          </View> : null})}
+
+
+          </ScrollView>
+        {/* //  ):
+        //  (<ScrollView showsHorizontalScrollIndicator={false}  */}
+        {/* //  contentContainerStyle={{ flexGrow: 1, justifyContent: 'center',alignItems:'center' }}>
+        //      <Text>You Currently have no books in your Library</Text>
+      
+          
+        //   </ScrollView>)} */}
+        
     </View>
   );
 };

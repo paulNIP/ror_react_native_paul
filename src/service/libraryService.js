@@ -29,7 +29,7 @@ const getLibrary = async () => {
 
               })
               .then((res) => {
-                //console.log(res.data.result)
+                console.log("Library Books",res.data.result);
                 resolve(res.data.result)
             })
               .catch((err) => {

@@ -1,5 +1,5 @@
 import React , { useEffect, useState,useRef,useCallback } from 'react';
-import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button, Image } from 'react-native';
+import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration } from 'react-native';
 import Strings from '../constants/Strings';
 import { getDailyDevotional } from '../service/devotionalService';
 import AccountChips from './AccountChips';
@@ -33,6 +33,20 @@ const DailyDevotional = () => {
   const [points, setPoints] = useState();
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [subscribed, setSubscribed] = React.useState(null);
+
+  // Vibration after reading
+  const ONE_SECOND_IN_MS = 1000;
+
+  const PATTERN = [
+    1 * ONE_SECOND_IN_MS,
+    2 * ONE_SECOND_IN_MS,
+    3 * ONE_SECOND_IN_MS,
+  ];
+
+  const PATTERN_DESC =
+    Platform.OS === 'android'
+      ? 'wait 1s, vibrate 2s, wait 3s'
+      : 'wait 1s, vibrate, wait 2s, vibrate, wait 3s';
 
 
 
@@ -146,6 +160,7 @@ const DailyDevotional = () => {
   const timerCallbackFunc = (timerFlag) => {
 
       setTimerEnd(timerFlag);
+      Vibration.vibrate(10 * ONE_SECOND_IN_MS);
       toggleReadingOverlay();
 
 
