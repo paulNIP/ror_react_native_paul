@@ -148,9 +148,9 @@ const getPopularBooks = async () => {
 const getTranslatedBooks = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL+'/store/translated')
             .then((res) => {
-              resolve(res.data.EBOOK_APP.translated_books);
+              resolve(res.data.EBOOK_APP);
           })
             .catch((err) => {
               reject(err)
@@ -158,9 +158,39 @@ const getTranslatedBooks = async () => {
   });
 };
 
+const getAllTranslatedBooks = async () => {
+  return new Promise((resolve, reject) => {
+
+          axios.get(Strings.BOOKS_URL+'/store/translated/all')
+            .then((res) => {
+              resolve(res.data.EBOOK_APP);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
+const getLangaugeTranslatedBooks = async (language) => {
+  console.log("API Language",language.lang);
+  return new Promise((resolve, reject) => {
+          axios.post('https://books-api.rhapsodyofrealities.org/books/lang', {
+            lang: language.lang
+          })
+          .then((res) => {
+            resolve(res.data.result)
+        })
+          .catch((err) => {
+            reject(err)
+        });
+  });
+};
 
 
-export { getBooks
+
+
+
+export { getBooks,getTranslatedBooks,getAllTranslatedBooks,getLangaugeTranslatedBooks
   // ,
   // getCategories,getProsperity,
   // getHolySpirit,getDivineHealing,

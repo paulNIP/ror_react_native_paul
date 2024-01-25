@@ -234,6 +234,15 @@ const LibraryScreen = ({navigation}) => {
           {
               listAlign && books.map((l, i) => {
 
+
+                // Check if file is downloaded for app folder
+                const url = l.url;
+                const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                console.log("File Name Downloaded",filePath);
+                console.log("File Name Downloaded2",url.split("/").pop());
+
+
+
                 return i === 0 ?
                 
           <View>
@@ -258,9 +267,11 @@ const LibraryScreen = ({navigation}) => {
                       {l.book_description}</Text>
                      <Text style={{flexWrap:'wrap',marginBottom:5,color:'#A9A9A9'}}>{l.author}</Text>
 
-                     <View style={{marginTop:Dimensions.get('window').height*0.05}}>
+                     <View style={{marginTop:Dimensions.get('window').height*0.02}}>
                      <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/>
-                     <TouchableOpacity onPress={()=>{}} 
+
+
+                     {/* <TouchableOpacity onPress={()=>{}} 
                               style={{      
                               alignItems: 'center',
                               backgroundColor: '#D8A623',
@@ -272,12 +283,14 @@ const LibraryScreen = ({navigation}) => {
                               justifyContent: 'center'}}>
 
                           <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Download Book</Text>
-                     </TouchableOpacity>
+                     </TouchableOpacity> */}
+
+                    
+                    <View>
                      <View style={{flexDirection:'row',marginTop:5}}>
                          <Icon  name="timer-outline" size={25} color="#A9A9A9" />
                          <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>Already Downloaded</Text>
-                     </View>
-                     
+                     </View> 
                      <View style={{flexDirection:'row'}}>
                          <TouchableOpacity onPress={()=>{}} 
                               style={{      
@@ -307,6 +320,8 @@ const LibraryScreen = ({navigation}) => {
                          </TouchableOpacity>
                          
                      </View>
+                     </View>
+
 
                      </View>
                      

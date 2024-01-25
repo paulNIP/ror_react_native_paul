@@ -43,6 +43,7 @@ import memoize from "lodash.memoize"; // Use for caching/memoize for better perf
 import { getAudioArticles } from './src/service/devotionalService';
 import LanguageSelect from './src/screens/LanguageSelect';
 import VideoDetail from './src/screens/VideoDetail';
+import LanguageBooks from './src/screens/LanguageBooks';
 
 
 
@@ -56,7 +57,8 @@ export type StackParamList = {
   Login:undefined;
   OnboardingScreen:undefined;
   RecipeDetail:{ id: string };
-  Registration:{email:string}
+  Registration:{email:string};
+  LanguageBooks:{lang:string}
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -199,9 +201,55 @@ function LibraryStackNavigator() {
 }
 
 function StoreStackNavigator() {
+
+  const navigation = useNavigation<StackNavigation>();
+
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Rhapsody Store" component={StoreScreen} />
+      <Stack.Screen name="Rhapsody Store" component={StoreScreen}
+      options={{
+        title: '',
+        headerLeft: () => (
+          <View style={{flexDirection:"row"}}>
+            <Text style={{color:'white',fontWeight:"bold",marginLeft:30,marginRight:30,fontSize:18,marginTop:5}}>Rhapsody</Text>
+            <Text style={{color:'black',fontWeight:"bold",fontSize:18,marginTop:5}}>Store</Text>
+           <Image
+                style={{width:40,height:40,marginLeft:10}}
+                source={require('./src/assets/prof.png')}
+              />
+            {/* <Text style={{fontSize:18,color:"white",fontWeight:"bold",marginLeft:10}}>Welcome Guest</Text> */}
+          </View>
+         ),
+        headerRight: () => (
+          <View style={{marginRight:10}}>
+                  <TouchableOpacity onPress={()=>{
+                    navigation.navigate('AppFeedBack');
+                  }}>
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                  </TouchableOpacity>
+
+          </View>
+         )}}
+      
+      />
+      <Stack.Screen name="LanguageBooks" component={LanguageBooks}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
+                      </TouchableOpacity>
+              </View>
+            )}}
+      
+      />
     </Stack.Navigator>
   );
 }

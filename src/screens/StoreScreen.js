@@ -6,13 +6,14 @@ import { Button } from '@rneui/themed';
 
 
 
-import { getBooks
+import { getBooks,getTranslatedBooks
   //  getCategories, getChildrenDevotional, getChistianLiving,
   //  getDivineHealing, getHolySpirit, getPopularBooks, getPrayer, getProsperity, getSoulWining,
   //   getTeenDevotional, getTranslatedBooks
   
   } from "../service/storeService";
 import {Dimensions} from 'react-native';
+import TranslatedBooks from '../components/TranslatedBooks';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -21,16 +22,21 @@ const StoreScreen = ({ navigation }) => {
 
 
   const [books, setBooks] = useState([]);
+  const [translatedBooks, setTranslatedBooks] = useState([]);
   useEffect(() => {
 
     const fetchData = async () => {
         const data = await getBooks();
         setBooks(data);
+        const translated = await getTranslatedBooks();
+        setTranslatedBooks(translated.languages);
 
     }
     fetchData();
 
   }, []);
+
+  console.log("Translated Books :",translatedBooks);
 
 
   const renderCategories = ({ item }) => {
@@ -390,6 +396,7 @@ const StoreScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
     <ScrollView style={styles.scrollView}>
+        <TranslatedBooks/>
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
@@ -593,9 +600,6 @@ const StoreScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginHorizontal:10}}>
-            <FlatList data={books.translated_books} renderItem={renderTranslatedBooks} numColumns={700} ItemSeparatorComponent={() => <View style={{height: 5}} />}/>
-        </ScrollView>
         
         </ScrollView>
     </SafeAreaView>
