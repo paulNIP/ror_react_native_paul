@@ -27,6 +27,41 @@ const LanguageBooks = ({ route, navigation }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [listAlign, setListAlign] = useState(true);
 
+  const capitalize=(str)=>{
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  const checkIfExist = async (str)=>{
+    // if (await RNFS.exists(str)){
+    //     return true;
+    // } else {
+    //     return false;
+    // }
+    // RNFS.exists(str)
+    // .then( (exists) => {
+    //     if (exists) {
+    //         return true;
+    //     } else {
+
+    //     }
+    // });
+
+
+
+    RNFS.exists(str)
+        .then((exists) => {
+            if (exists) {
+                return 'File exists';
+            } else {
+                return 'File does not exist';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    
+  }
+
 useEffect(() => {
       const fetchData = async () => {
           setIsLoading(true);
@@ -36,6 +71,9 @@ useEffect(() => {
 
       }
       fetchData();
+      navigation.setOptions({
+        title: capitalize(lang.lang),
+      });
 
     }, [navigation]);
 
@@ -45,6 +83,25 @@ useEffect(() => {
   
 
     const imgr = item.book_image;
+    const id = item.id;
+    const url = item.url;
+    const filePath = RNFS.DocumentDirectoryPath + "/"+item.id+".epub";
+    
+    let exist='';
+    //check if file exists
+    RNFS.exists(filePath)
+        .then((exists) => {
+            if (exists) {
+                exist= 'File exists';
+            } else {
+                exist= 'File does not exist';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+    });
+
+
 
     return (
      <View style={{flexDirection:'row'}}>
@@ -64,12 +121,12 @@ useEffect(() => {
                 </View>
                 </View>
         </View>
-        <View style={{marginEnd:10,width:windowWidth*0.7,marginBottom:10,marginRight:"auto"}}>
+        <View style={{marginEnd:10,width:windowWidth*0.67,marginBottom:10,marginRight:"auto"}}>
             <View >
                 <Text style={{ marginBottom: 5,marginTop:5,flexWrap: 'wrap' }} numberOfLines={2}>{item.title}
                 </Text>
                 <Text style={{ marginBottom: 5,marginTop:5,
-                     flexWrap: 'wrap',color:'#DAA520'}} numberOfLines={2}>{item.book_description}
+                     flexWrap: 'wrap',color:'#A9A9A9'}} numberOfLines={2}>{item.book_description}
                 </Text>
             </View>
 
@@ -77,50 +134,65 @@ useEffect(() => {
 
                 {/* list view */}
 
-                <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/>     
+                    
                     <View>
-                     <View style={{flexDirection:'row',marginTop:5}}>
-                         <Icon  name="timer-outline" size={25} color="#A9A9A9" />
-                         <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>Already Downloaded</Text>
+                     <View style={{flexDirection:'row',marginTop:5,marginBottom:5,}}>
+                         <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>
+                            {item.author}</Text>
                      </View> 
-                     <View style={{flexDirection:'row'}}>
-                         <TouchableOpacity onPress={()=>{}} 
-                              style={{      
-                              alignItems: 'center',
-                              backgroundColor: '#D8A623',
-                              height: 30,
-                              width:130,
-                              borderRadius:15,
-                              marginTop: 5,
-                              marginRight:10,
-                              justifyContent: 'center'}}>
+                     <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/> 
 
-                          <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Open / Read Book</Text>
-                         </TouchableOpacity>
-                         <TouchableOpacity onPress={()=>{}} 
-                            style={{      
-                              alignItems: 'center',
-                              backgroundColor: '#FFFFFF',
-                              borderBlockColor:'red',
-                              height: 30,
-                              width:130,
-                              borderRadius:15,
-                              marginTop: 5,
-                              justifyContent: 'center'}}
-                              >
-                          <Text style={{alignSelf:"center",color:'red'}}>Delete Book</Text>
-                         </TouchableOpacity>
+                     <View style={{flexDirection:'row',marginTop:10}}>
 
-                         <View style={{backgroundColor:'#4B4E53',marginStart:10,
-                            marginEnd:10,height:30, borderRadius:50,
-                            marginTop:5,marginBottom:10}}>
-                                <TouchableOpacity 
-                                onPress={()=>{
-                                }}>
-                                <Text style={{alignSelf:"center",color:'white',
-                                marginTop:5,marginBottom:10}}>Download</Text>
+                        {exist && (
+                            <View style={{flexDirection:'row'}}>
+                            <TouchableOpacity onPress={()=>{}} 
+                                style={{      
+                                alignItems: 'center',
+                                backgroundColor: '#D8A623',
+                                height: 30,
+                                width:130,
+                                borderRadius:15,
+                                marginTop: 5,
+                                marginRight:10,
+                                justifyContent: 'center'}}>
+
+                                    <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Open / Read Book</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={()=>{}} 
+                                    style={{      
+                                        alignItems: 'center',
+                                        backgroundColor: '#FFFFFF',
+                                        borderBlockColor:'red',
+                                        height: 30,
+                                        width:130,
+                                        borderRadius:15,
+                                        marginTop: 5,
+                                        justifyContent: 'center'}}
+                                        >
+                                    <Text style={{alignSelf:"center",color:'red'}}>Delete Book</Text>
+                                </TouchableOpacity>
+                       </View>
+
+                        )}
+                         
+                        {!exist && (
+                            <TouchableOpacity onPress={()=>{
+                                navigation.navigate('BookDetails',{book_id:id});
+                            }} 
+                                style={{      
+                                alignItems: 'center',
+                                backgroundColor: '#4B4E53',
+                                borderBlockColor:'red',
+                                height: 30,
+                                width:130,
+                                borderRadius:15,
+                                marginTop: 5,
+                                justifyContent: 'center'}}
+                                >
+                            <Text style={{alignSelf:"center",color:'#FFFFFF'}}>Download</Text>
                             </TouchableOpacity>
-                        </View>
+                         )}
                          
                      </View>
 
@@ -138,6 +210,23 @@ useEffect(() => {
   
 
     const imgr = item.book_image;
+    const id = item.id;
+    const url = item.url;
+    const filePath = RNFS.DocumentDirectoryPath + "/"+item.id+".epub";
+    
+    let exist='';
+    //check if file exists
+    RNFS.exists(filePath)
+        .then((exists) => {
+            if (exists) {
+                exist= 'File exists';
+            } else {
+                exist= 'File does not exist';
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+    });
 
     return (
 
@@ -157,16 +246,45 @@ useEffect(() => {
                 alignSelf:'center',width:100 }} numberOfLines={2}>{item.title}</Text>
               </View>
 
-              <View style={{backgroundColor:'#4B4E53',marginStart:10,
+              {exist && (
+            <View>
+              <View style={{backgroundColor:'#D8A623',marginStart:10,
                 marginEnd:10,height:30, borderRadius:50,
                 marginTop:5,marginBottom:10}}>
                     <TouchableOpacity 
                     onPress={()=>{
                     }}>
                     <Text style={{alignSelf:"center",color:'white',
-                    marginTop:5,marginBottom:10}}>Download</Text>
+                    marginTop:5,marginBottom:5}}>Read Book</Text>
                 </TouchableOpacity>
                 </View>
+
+                <View style={{backgroundColor:'#FFFFFF',marginStart:10,
+                marginEnd:10,height:30, borderRadius:50,
+                marginTop:5,marginBottom:10}}>
+                    <TouchableOpacity 
+                    onPress={()=>{
+                    }}>
+                    <Text style={{alignSelf:"center",color:'#FF0000',
+                    marginTop:5,marginBottom:5}}>Delete Book</Text>
+                </TouchableOpacity>
+                </View>
+                
+                </View>
+            )}
+
+            {!exist && (
+              <View style={{backgroundColor:'#4B4E53',marginStart:10,
+                marginEnd:10,height:30, borderRadius:50,
+                marginTop:5,marginBottom:10}}>
+                    <TouchableOpacity 
+                    onPress={()=>{
+                        navigation.navigate('BookDetails',{book_id:id});
+                    }}>
+                    <Text style={{alignSelf:"center",color:'white',
+                    marginTop:5,marginBottom:10}}>Download</Text>
+                </TouchableOpacity>
+                </View>)}
 
             </View>
             </View>

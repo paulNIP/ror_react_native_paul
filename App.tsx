@@ -25,6 +25,7 @@ import ArticleDetails from './src/screens/ArticleDetails';
 import ProfileScreen from './src/screens/ProfileScreen';
 import RhapsodyTVScreen from './src/screens/RhapsodyTVScreen';
 import Testimony from './src/screens/Testimony';
+import BookDetails from './src/screens/BookDetails';
 import PrayerRequest from './src/screens/PrayerRequest';
 import Favourites from './src/screens/Favourites';
 import StudyTracker from './src/screens/StudyTracker';
@@ -58,7 +59,8 @@ export type StackParamList = {
   OnboardingScreen:undefined;
   RecipeDetail:{ id: string };
   Registration:{email:string};
-  LanguageBooks:{lang:string}
+  LanguageBooks:{lang:string};
+  BookDetails:{book_id:string};
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -233,6 +235,25 @@ function StoreStackNavigator() {
       
       />
       <Stack.Screen name="LanguageBooks" component={LanguageBooks}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
+                      </TouchableOpacity>
+              </View>
+            )}}
+      
+      />
+
+    <Stack.Screen name="BookDetails" component={BookDetails}
           options={{
             headerRight: () => (
               <View style={{marginRight:10,flexDirection:'row'}}>
