@@ -14,6 +14,9 @@ import { getBooks,getTranslatedBooks
   } from "../service/storeService";
 import {Dimensions} from 'react-native';
 import TranslatedBooks from '../components/TranslatedBooks';
+import FeaturedBooks from '../components/FeaturedBooks';
+import KidsBooks from '../components/KidsBooks';
+import BookCategories from '../components/BookCategories';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -23,6 +26,7 @@ const StoreScreen = ({ navigation }) => {
 
   const [books, setBooks] = useState([]);
   const [translatedBooks, setTranslatedBooks] = useState([]);
+
   useEffect(() => {
 
     const fetchData = async () => {
@@ -396,6 +400,10 @@ const StoreScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
     <ScrollView style={styles.scrollView}>
+        <FeaturedBooks/>
+        <BookCategories/>
+
+        <KidsBooks/>
         <TranslatedBooks/>
         <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
           <Divider orientation="vertical" width={5} />

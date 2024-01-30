@@ -5,31 +5,31 @@ import { Divider} from '@rneui/themed';
 import RNFS from 'react-native-fs';
 import { DatabaseConnection } from '../database/database-connection';
 import {Dimensions} from 'react-native';
-import { getAllTranslatedBooks, getLangaugeTranslatedBooks } from "../service/storeService";
+import { getAllTranslatedBooks, getCategorySelectedBooks, getLangaugeTranslatedBooks } from "../service/storeService";
 
 
 const db = DatabaseConnection.getdb();
 
 
-const LanguageBooks = ({ route, navigation }) => {
+const GroupedBooks = ({ route, navigation }) => {
 
-  const lang = route.params;
-  console.log("Language selected",lang);
-
+  const cat_id = route.params;
 
   const [books, setBooks] = useState([]);
+  const [titleHeader, setTitle] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
 
   const [currentProgress, setProgress] = useState(0);
-  const [loadingState, setLoadingState] = useState(false);
+  const [loadingState, setLoadingState] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [listAlign, setListAlign] = useState(true);
 
-  const capitalize=(str)=>{
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+//   const capitalize=(str)=>{
+//     //capitalize
+//     return str.charAt(0).toUpperCase() + str.slice(1);
+//   }
 
   const checkIfExist = async (str)=>{
 
@@ -50,14 +50,16 @@ const LanguageBooks = ({ route, navigation }) => {
 useEffect(() => {
       const fetchData = async () => {
           setIsLoading(true);
-          const data = await getLangaugeTranslatedBooks(lang);
+          const data = await getCategorySelectedBooks(cat_id.cat_id);
+          const bookcat=data[0].category_name;
           setBooks(data);
+          setTitle(bookcat);
           setIsLoading(false);
 
       }
       fetchData();
       navigation.setOptions({
-        title: capitalize(lang.lang),
+        title: titleHeader,
       });
 
     }, [navigation]);
@@ -71,6 +73,7 @@ useEffect(() => {
     const id = item.id;
     const url = item.url;
     const filePath = RNFS.DocumentDirectoryPath + "/"+item.id+".epub";
+    const price =item.price;
     
     let exist='';
     //check if file exists
@@ -92,7 +95,7 @@ useEffect(() => {
      <View style={{flexDirection:'row'}}>
         <View style={{marginEnd:10,width:windowWidth*0.3,marginBottom:10,marginRight:"auto"}}>
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
-                <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+                <View style={{ backgroundColor: "#FEFEFA", borderRadius: 5, overflow: "hidden" }}>
                     <Image
                     source={{uri:imgr}}
                     style={{
@@ -161,7 +164,7 @@ useEffect(() => {
 
                         )}
                          
-                        {!exist && (
+                        {!exist &&  (
                             <TouchableOpacity onPress={()=>{
                                 navigation.navigate('BookDetails',{book_id:id});
                             }} 
@@ -175,7 +178,8 @@ useEffect(() => {
                                 marginTop: 5,
                                 justifyContent: 'center'}}
                                 >
-                            <Text style={{alignSelf:"center",color:'#FFFFFF'}}>Download</Text>
+                            {price !=0 ?(<Text style={{alignSelf:"center",color:'#FFFFFF'}}>Buy ${price}</Text>)
+                            :(<Text style={{alignSelf:"center",color:'#FFFFFF'}}>Download</Text>)}
                             </TouchableOpacity>
                          )}
                          
@@ -198,6 +202,7 @@ useEffect(() => {
     const id = item.id;
     const url = item.url;
     const filePath = RNFS.DocumentDirectoryPath + "/"+item.id+".epub";
+    const price =item.price;
     
     let exist='';
     //check if file exists
@@ -266,8 +271,13 @@ useEffect(() => {
                     onPress={()=>{
                         navigation.navigate('BookDetails',{book_id:id});
                     }}>
-                    <Text style={{alignSelf:"center",color:'white',
-                    marginTop:5,marginBottom:10}}>Download</Text>
+
+                    {
+                    price!=0?(<Text style={{alignSelf:"center",color:'white',
+                    marginTop:5,marginBottom:10}}>Buy ${price}</Text>):
+                    (<Text style={{alignSelf:"center",color:'white',
+                    marginTop:5,marginBottom:10}}>Download</Text>)}
+                    
                 </TouchableOpacity>
                 </View>)}
 
@@ -281,7 +291,7 @@ useEffect(() => {
     container: {
       flex: 1,
       justifyContent: 'center',
-      backgroundColor: '#D8D9DA',
+    //   backgroundColor: '#D8D9DA',
     },
     
     buttons: {
@@ -371,4 +381,4 @@ useEffect(() => {
 
 
 
-export default LanguageBooks;
+export default GroupedBooks;

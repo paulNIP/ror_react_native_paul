@@ -45,6 +45,9 @@ import { getAudioArticles } from './src/service/devotionalService';
 import LanguageSelect from './src/screens/LanguageSelect';
 import VideoDetail from './src/screens/VideoDetail';
 import LanguageBooks from './src/screens/LanguageBooks';
+import GroupedBooks from './src/components/GroupedBooks';
+import BookCategories from './src/components/BookCategories';
+import AllCategories from './src/components/AllCategories';
 
 
 
@@ -61,6 +64,9 @@ export type StackParamList = {
   Registration:{email:string};
   LanguageBooks:{lang:string};
   BookDetails:{book_id:string};
+  GroupedBooks:{cat_id:string,category:string};
+  BookCategories:undefined;
+  AllCategories:undefined;
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -242,6 +248,62 @@ function StoreStackNavigator() {
                         navigation.navigate('AppFeedBack');
                       }}>
                         <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
+                      </TouchableOpacity>
+              </View>
+            )}}
+      
+      />
+
+<Stack.Screen name="GroupedBooks" component={GroupedBooks}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <Text style={{fontWeight:"bold",color:'#FFFFFF'}}>FEEDBACK</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
+                      </TouchableOpacity>
+              </View>
+            )}}
+      
+      />
+    <Stack.Screen name="BookCategories" component={BookCategories}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <Text style={{fontWeight:"bold",color:'#FFFFFF'}}>FEEDBACK</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
+                      </TouchableOpacity>
+              </View>
+            )}}
+      
+      />
+
+<Stack.Screen name="AllCategories" component={AllCategories}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('AppFeedBack');
+                      }}>
+                        <Text style={{fontWeight:"bold",color:'#FFFFFF'}}>FEEDBACK</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={()=>{
                         navigation.navigate('AppFeedBack');

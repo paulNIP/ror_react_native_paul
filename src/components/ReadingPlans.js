@@ -17,6 +17,9 @@ const windowHeight = Dimensions.get('window').height*0.4;
 const windowWidth = Dimensions.get('window').width*0.8;
 
 
+// SKU RhapsodyReader
+
+
 
 
 const ReadingPlans = () => {

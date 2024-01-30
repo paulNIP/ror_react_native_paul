@@ -1,11 +1,16 @@
 import React,{useState,useEffect} from "react";
 import { getAllTranslatedBooks, getTranslatedBooks } from "../service/storeService";
 import { ScrollView,Text,View,Dimensions,
-    TouchableOpacity,Image,FlatList,Modal,TextInput } from "react-native";
+    TouchableOpacity,Image,FlatList,Modal,TextInput,StyleSheet } from "react-native";
 import { Divider,ListItem} from '@rneui/themed';
 import { Button } from '@rneui/themed';
 import {Overlay } from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+  } from 'react-native-responsive-screen';
+
 
 
 
@@ -24,7 +29,7 @@ const TranslatedBooks = () => {
     const [translatedDescription, setTranslatedDescription] = useState();
     const [translatedBooks, setTranslatedBooks] = useState();
     const [allTranslatedLanguages, setAllTranslatedLanguages] = useState();
-    const [search, setSearch] = useState('');
+    const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
   
@@ -43,7 +48,7 @@ const TranslatedBooks = () => {
 
     // console.log("Books Translated",translatedBooks);
     // console.log("Books Title",translatedTitle);
-    // console.log("Books Description",translatedDescription);
+    console.log("Books Description Languages",allTranslatedLanguages);
 
 
     const toggleOverlay = () => {
@@ -59,6 +64,18 @@ const TranslatedBooks = () => {
         navigation.navigate('LanguageBooks',{lang:language});
 
     }
+
+    const searchFunction = (text) => {
+        setSearchText(text);
+        text = text.toLowerCase();
+        if (text === "") {
+            setAllTranslatedLanguages(allTranslatedLanguages);
+        }
+        else {
+          let filteredLanguages = allTranslatedLanguages.filter(allTranslatedLanguage => (allTranslatedLanguage.lang.toLowerCase().startsWith(text)))
+          setAllTranslatedLanguages(filteredLanguages);
+        }
+      }
         
 
     const renderBooks = ({ item }) => {
@@ -121,10 +138,33 @@ const TranslatedBooks = () => {
                 <Text style={{alignSelf:'center',marginTop:20,fontWeight:'bold'}}>
                         Choose Language
                 </Text>
+                <TextInput 
+                placeholderTextColor="black"
+                placeholder="Search available languages"
+                value={searchText}
+                style={{height:40}}
+                onChangeText={text => searchFunction(text)}
+                />
+                <FlatList   
+                data={allTranslatedLanguages} 
+                extraData={ allTranslatedLanguages }
+                showsVerticalScrollIndicator={ false }
+                keyExtractor={(item) => item.lang} 
+                 renderItem={({item}) =>   
+                 <ListItem bottomDivider onPress={()=>{
+                    navigation.navigate('LanguageBooks',{lang:item.lang});
+                    setVisible(false);
+
+                 }}>
+                 <ListItem.Content>
+                   <ListItem.Title>{item.lang} ({item.total})</ListItem.Title>
+                 </ListItem.Content>
+               </ListItem>} />
             </Overlay> 
 
 
             </ScrollView>  
+            <Divider />
 
         </View>
 
@@ -133,5 +173,22 @@ const TranslatedBooks = () => {
         
     );
 }
+
+const styles = StyleSheet.create({
+    searchBar: {
+      width: wp(80),
+      height: hp(6),
+      borderWidth: wp(0.2),
+      borderRadius: wp(3),
+      borderColor: '#999999',
+      backgroundColor: '#ffffff',
+      marginTop: wp(7),
+      paddingLeft: wp(4.5),
+      fontSize: wp(4),
+      color: 'black'
+    },
+
+  });
+  
 
 export default TranslatedBooks;
