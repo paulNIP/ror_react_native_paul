@@ -112,7 +112,7 @@ useEffect(() => {
            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center',marginTop:5 }}>
             <View style={styles.scrollViewContainer}>
                 <FlatList data={books} renderItem={renderBooks} numColumns={3} columnWrapperStyle={styles.row}
-                contentContainerStyle={{flexGrow:1,justifyContent:'center'}}  />
+                contentContainerStyle={{padding:'auto',marginLeft:"auto"}}  />
             </View>
 
           </ScrollView>

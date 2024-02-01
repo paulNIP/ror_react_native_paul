@@ -488,6 +488,7 @@ backgroundColor='#D8A623'
  ) : (
   <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="OnBoardingScreen" component={OnboardingScreen}  options={{headerShown: false}}/>
+      <Stack.Screen name="HomeScreen" component={HomeStackNavigator}  options={{headerShown: false}}/>
   </Stack.Navigator>
 )}
 </NavigationContainer>

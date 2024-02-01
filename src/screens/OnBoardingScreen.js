@@ -73,7 +73,9 @@ const _renderItem = ({item}) => {
 const _keyExtractor = (item) => item.title;
 
 
-const OnboardingScreen = ({navigation}) => {
+const OnboardingScreen = () => {
+
+  const navigation =useNavigation();
 
 
 
@@ -82,7 +84,7 @@ const OnboardingScreen = ({navigation}) => {
     await AsyncStorage.setItem('hasOnBoarded',JSON.stringify({hasOnboarded:true}));
     //Set Theme
     await AsyncStorage.setItem('THEME_COLOR','#D8A623');
-    navigation.navigate("Welcome");
+    navigation.navigate("HomeScreen");
     
   
   }
