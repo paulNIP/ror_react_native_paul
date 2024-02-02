@@ -48,6 +48,10 @@ import LanguageBooks from './src/screens/LanguageBooks';
 import GroupedBooks from './src/components/GroupedBooks';
 import BookCategories from './src/components/BookCategories';
 import AllCategories from './src/components/AllCategories';
+import PrivacyPolicy from './src/screens/PrivacyPolicy';
+import AboutUs from './src/screens/AboutUs';
+import EditProfile from './src/screens/EditProfile';
+import Settings from './src/screens/Settings';
 
 
 
@@ -68,7 +72,8 @@ export type StackParamList = {
   BookCategories:undefined;
   AllCategories:undefined;
   Settings:undefined;
-  EditProfile:{id:string};
+  EditProfile:{email:string};
+  PrivacyPolicy:undefined;
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -343,6 +348,7 @@ function MoreStackNavigator() {
 
   const [name, setName] = useState<any>();
   const navigation = useNavigation<StackNavigation>();
+  const [email, setEmail] = useState<any>();
    
   useEffect(() => {
 
@@ -354,6 +360,10 @@ function MoreStackNavigator() {
           }else{
             setName(data)
           }
+
+          let mail = await AsyncStorage.getItem('email');
+          setEmail(mail);
+
           
       }
       fetchData();
@@ -417,7 +427,7 @@ options={{
                <MaterialCommunityIcons  name='refresh' size={25} color='#FFFFFF' />
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{
-              navigation.navigate('EditProfile');
+              navigation.navigate('EditProfile',{email:email});
             }} >
                <MaterialCommunityIcons  name='dots-vertical' size={25} color='#FFFFFF' />
             </TouchableOpacity>
@@ -428,6 +438,25 @@ options={{
       />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
       <Stack.Screen name="Testimony" component={Testimony} />
+
+      <Stack.Screen name="EditProfile" component={EditProfile}
+      options={{
+        title: 'Edit Profile ',
+        
+      }} />
+      <Stack.Screen name="AboutUs" component={AboutUs} 
+      options={{
+        title: 'About Us ',
+        
+      }}/>
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} 
+      options={{
+        title: 'Privacy Policy ',
+        
+      }}
+      />
+      <Stack.Screen name="Settings" component={Settings} />
+
       <Stack.Screen name="Prayer Request" component={PrayerRequest} />
       <Stack.Screen name="Favourite Books" component={Favourites} />
       <Stack.Screen name="Study Tracker" component={StudyTracker}    
@@ -446,6 +475,7 @@ options={{
 export default function App() {
 
   const [showRealApp, setShowRealApp] = useState<any>();
+  
   
    
   useEffect(() => {

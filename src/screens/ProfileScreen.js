@@ -10,8 +10,11 @@ import {
   TouchableOpacity,
   LogBox,Image,ActivityIndicator,FlatList
 } from 'react-native';
+import {Dimensions,Alert} from 'react-native';
 import { Icon } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {launchImageLibrary} from 'react-native-image-picker';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
@@ -21,20 +24,13 @@ import { getProfile } from '../service/authService';
 
 
 
-const renderItem = ({ item }) => {
-  return (
-    <View>
-        
-    </View>
 
-  );
-
-}
 const ProfileScreen = ({navigation}) => {
 
   const [profile, setProfile] = useState();
   const [email, setEmail] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
 
     useEffect(() => {
@@ -53,6 +49,28 @@ const ProfileScreen = ({navigation}) => {
       fetchData();
 
     }, []);
+
+    const openImagePicker = () => {
+      const options = {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 2000,
+        maxWidth: 2000,
+      };
+  
+      launchImageLibrary(options, (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('Image picker error: ', response.error);
+        } else {
+          let imageUri = response.uri || response.assets?.[0]?.uri;
+          setSelectedImage(imageUri);
+          Alert.alert(selectedImage);
+
+        }
+      });
+    };
 
 
 
@@ -80,10 +98,6 @@ const ProfileScreen = ({navigation}) => {
         </View>
 
 
-        <FlatList data={profile} renderItem={renderItem} />
-
-
-
 
     {isLoading && (
         <View style={{  
@@ -97,26 +111,36 @@ const ProfileScreen = ({navigation}) => {
                 }}>
           <ActivityIndicator
             style={{ height: 80 }}
-            color="#C00"
+            color="#FFFFFF"
             size="large"
           />
           </View>
         )}
 
-<View style={styles.ncontainer}>
-          <Image style={{width:'auto',height:150}}
+{profile &&(
+  <View>
+    <View style={styles.ncontainer}>
+          <Image style={{width:'auto',height:Dimensions.get('window').height*0.2}}
             source={require('../assets/greybands.jpeg')} />
           <Image
             style={styles.logoStyle}
             source={require('../assets/prof.png')}
           />
+          <TouchableOpacity onPress={()=>{openImagePicker}} 
+          style={{alignSelf:'center',backgroundColor:'#F9A825',width:40,marginTop:-15,height:40,borderRadius:20}}
+          >
+              <MaterialCommunityIcons  style={{alignContent:'center',marginTop:5,
+              justifyContent:'center',alignSelf:'center',verticalAlign:'middle'}}
+                                      name="camera" size={30} color="#FFFFFF" /> 
+          </TouchableOpacity>
+
           <Text style={{marginLeft:10,marginTop:30,alignSelf:'center'}}>My Profile</Text>
           <Text style={{marginLeft:10,alignSelf:'center',color:'#89CFF0'}}>Personal Information</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate('Edit Profile')}} 
+          <TouchableOpacity onPress={()=>{navigation.navigate('EditProfile')}} 
           style={{alignSelf:'center',backgroundColor:'#F9A825',width:100}}
           >
             <View style={{flexDirection:'row'}}>
-            <Icon style={{marginEnd:10, marginStart:20}} name="lead-pencil" type="material-community" color="grey" />
+            <Icon style={{marginEnd:10, marginStart:20}} name="lead-pencil" type="material-community" color="#FFFFFF" />
             <Text style={{color:'grey',marginTop:3,color:'#FFFFFF'}}>Edit</Text>
             </View>
           </TouchableOpacity>
@@ -159,7 +183,10 @@ const ProfileScreen = ({navigation}) => {
         </View>
         <Text style={{marginStart:10,marginTop:5,marginBottom:5}}>{profile.subscription.end_date}</Text>
 
-    <TouchableOpacity style={{alignSelf:'center',backgroundColor:'#F9A825',padding:10,marginBottom:10}}>
+    <TouchableOpacity style={{alignSelf:'center',
+    backgroundColor:'#F9A825',padding:10,marginBottom:10}} onPress={()=>{
+      navigation.navigate('SubscriptionsScreen');
+    }}>
         <View style={{flexDirection:'row',backgroundColor:'F9A825'}}>
         <Text style={{color:'grey',marginTop:3,color:'#FFFFFF'}}>UPDATE SUBSCRIPTION</Text>
         </View>
@@ -167,6 +194,11 @@ const ProfileScreen = ({navigation}) => {
 
 
     </View>
+  </View>
+
+
+)}
+
 
 
 

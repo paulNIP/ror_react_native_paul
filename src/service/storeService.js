@@ -236,6 +236,19 @@ const getCategorySelectedBooks = async (cat) => {
   });
 };
 
+const getPrivacyPolicy = async () => {
+  return new Promise((resolve, reject) => {
+
+          axios.get(Strings.API_URL+'/app/details')
+            .then((res) => {
+              resolve(res.data.EBOOK_APP[0].app_privacy_policy);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
 
 
 
@@ -245,6 +258,6 @@ export { getBooks,getTranslatedBooks,getAllTranslatedBooks,getLangaugeTranslated
   getHolySpirit,getDivineHealing,
   getSoulWining,getChildrenDevotional,
   getChistianLiving,getPrayer,getTeenDevotional,
-  getKidsBooks,getCategorySelectedBooks
+  getKidsBooks,getCategorySelectedBooks,getPrivacyPolicy
   // getPopularBooks,getTranslatedBooks
  }
