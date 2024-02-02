@@ -16,12 +16,13 @@ import { NetworkInfo } from "react-native-network-info";
 import * as RNLocalize from "react-native-localize";
 import { getContinentCode, getContinentName } from '@brixtol/country-continent';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const userDB = DatabaseConnection.getuserDB();
 
 
-const  RegistrationPage=({ route, navigation })=>  {
+const  RegistrationPage=({ route })=>  {
 
   const { type, isConnected } = useNetInfo();
 
@@ -22268,6 +22269,8 @@ const  RegistrationPage=({ route, navigation })=>  {
    //form submitted
    const [isSubmit, setIsSubmit] = useState(false);
 
+   const navigation = useNavigation();
+
 
    //Error messages
    const [namesError,setNamesError]=useState(false);
@@ -22293,6 +22296,19 @@ const  RegistrationPage=({ route, navigation })=>  {
   const onChangeChurch = (value) => {
     setChurchSS(value);
   };
+
+
+  const completeLogin = async() =>{
+
+    await AsyncStorage.setItem('email',email);
+    await AsyncStorage.setItem('name',names);
+    await AsyncStorage.setItem('platform',"app");
+    await AsyncStorage.setItem('hasLoggedIn',"true");
+
+    navigation.navigate("HomeScreen");
+    
+  
+  }
 
 
   //function to register user
@@ -22328,8 +22344,7 @@ const  RegistrationPage=({ route, navigation })=>  {
             if(isConnected===true){
                 //Register user 
                   register(names, email, password, countryCode, formattedValue, username);
-                //Register Rhapsdy plus user
-                registerRhapsodyPlusUser();
+
 
 
             }else{
@@ -22343,126 +22358,7 @@ const  RegistrationPage=({ route, navigation })=>  {
   };
 
 
-  const registerRhapsodyPlusUser=()=>{
 
-    // Get IPv4 IP (priority: WiFi first, cellular second)
-    NetworkInfo.getIPV4Address().then(ipv4Address => {
-        console.log('IP Address',ipv4Address);
-        setIpAddress(ipv4Address);
-    });
-
-    const data = {
-        fullname:names,
-        password:password,
-        login:username,
-        email:email,
-        continent:getContinentName(RNLocalize.getCountry()),
-        country:DeviceInfo.getDeviceCountry(),
-        city:"",
-        countrycode:countryCode,
-        phone:formattedValue,
-        zone_id:zoneSS,
-        group_id:groupSS,
-        church_id:churchSS,
-        src:"app",
-        referencetype:"personal",
-        referenceid:"self",
-        ip_address:ipAddress,
-        password:"rabadaba"
-      };
-
-      console.log("Rhapsody plus user data",data);
-
-
-
-      
-
-
-//     Util.checkReadAndEarn(RegisterActivity.this, 
-// Constant_Api.register_rhapsodyplus_user, jsonObject, new VolleyResultCallBack() {
-//         @Override
-//         public void onResultSuccess(JSONObject jsonObject) throws JSONException {
-//             Log.e("Rhapsody Plus Success", jsonObject.toString());
-//             //{"status":1,"shareid":"testermarch333759"}
-//             int status = jsonObject.getInt("status");
-//             if (status == 1) {
-//                 editor.putBoolean("plus_registered", true);
-//                 editor.commit();
-//             } else if (status == 0 && jsonObject.getString("response").contains("already in use!")) {
-//                 editor.putBoolean("plus_registered", true);
-//                 editor.commit();
-//             }
-//         }
-
-//         @Override
-//         public void onResultError(VolleyError volleyError) throws JSONException {
-//             Log.e("Rhapsody Plus Error", volleyError.toString());
-//         }
-//     }, null);
-// }
-if(Strings.REGISTER_RHAPSODYPLUS_USER==='https://backend3.rhapsodyofrealities.org/question/'){
-    //request_method = Request.Method.GET;
-
-}else{
-    //request_method = Request.Method.POST
-
-
-}
-
-//     String key_string = "bGS6lzFqvvSQJhdslLOxatm7/Vk7mLQyzqaS34Q4oR1ew=";
-//     SecretKey key = Keys.hmacShaKeyFor(key_string.getBytes());
-
-//     //set specific issuer
-//     let  issuer = "readandearn.reachoutworld.org";
-//     if (url.equalsIgnoreCase(Constant_Api.universal_voucher_wallet_balance) ||
-//             url.equalsIgnoreCase(Constant_Api.universal_voucher_deduct_from_wallet)){
-//         issuer = "universalvoucher.org";
-//     }
-
-//     String jws = Jwts.builder()
-//             //.setSubject(email)
-//             .signWith(key)
-//             .setIssuer(issuer)
-//             .setIssuedAt(new Date(System.currentTimeMillis())) //new Date()
-//             .setNotBefore(new Date(System.currentTimeMillis() + 100))
-//             .setExpiration(new Date(System.currentTimeMillis() + 360000000))
-//             .setId(String.valueOf(UUID.randomUUID()))
-//             .claim("data", map_data)
-//             .compact();
-
-//     Log.e("Credentials", jws);
-//     headers.put("Authorization", "Bearer " + jws);
-//     headers.put("Content-Type", "application/json");
-
-// const config = {
-//          headers: {
-//              "Content-type": "application/json",
-//               "Authorization": `Bearer ${Cookies.get("jwt")}`,
-//          },
-//     }; 
-
-axios.post(Strings.REGISTER_RHAPSODYPLUS_USER, data)
-.then(response => {
-  console.log("Registration Plus Response:",response.data.EBOOK_APP[0]);
-//   if(response.data.EBOOK_APP[0].success==='1'){
-
-//     let device_date= new Date().toDateString()
-//     console.log("Device Date :",device_date);
-
-//   }else {
-//     setRegMessage(response.data.EBOOK_APP[0].msg); 
-//     setRegError(true);
-//     setIsLoading(false);
-//   }
-
-})
-.catch(error => {
-  console.error("Error sending data: 000 ", error);
-  setIsLoading(false);
-});
-
-
-}
 
 
   const register =(names, email, password, countryCode, formattedValue, username)=>{
@@ -22553,12 +22449,18 @@ axios.post(Strings.REGISTER_RHAPSODYPLUS_USER, data)
                             (tx, results) => {
                               
                               if (results.rowsAffected > 0) {
+                                setIsLoading(false);
+                                //Flip Onboarding
+
+
+
                                 console.log("User DB Update Sucessfully ");
                                 // Navigate to main Page
-                                navigation.navigate('Welcome');
+                                completeLogin();
                                 
                               } else{
                                 console.log("User DB Update failed");
+                                setIsLoading(false);
                               } 
                             }
                           );

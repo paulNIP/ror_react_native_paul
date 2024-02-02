@@ -67,6 +67,8 @@ export type StackParamList = {
   GroupedBooks:{cat_id:string,category:string};
   BookCategories:undefined;
   AllCategories:undefined;
+  Settings:undefined;
+  EditProfile:{id:string};
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -122,7 +124,7 @@ function HomeStackNavigator() {
 
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Home" component={HomeScreen} 
+      <Stack.Screen name="HomeScreen" component={HomeScreen} 
       options={{
         title: '',
         headerLeft: () => (
@@ -362,13 +364,14 @@ function MoreStackNavigator() {
     //clear email from local storage
     try {
         await AsyncStorage.removeItem("email");
+         //redirect user
+        navigation.navigate('Welcome');
         return true;
     }
     catch(exception) {
         return false;
     }
-    //redirect user
-    navigation.navigate('Welcome');
+   
     
       
   };
@@ -378,15 +381,6 @@ function MoreStackNavigator() {
       <Stack.Screen name="More Settings" component={MoreScreen} 
       options={{
         title: 'Welcome ' +name,
-        headerLeft: () => (
-          <View style={{flexDirection:"row"}}>
-           <Image
-                style={{width:35,height:35,marginLeft:10}}
-                source={require('./src/assets/prof.png')}
-              />
-            {/* <Text style={{fontSize:18,color:"white",fontWeight:"bold",marginLeft:10}}>Welcome Guest</Text> */}
-          </View>
-         ),
         headerRight: () => (
           <View style={{marginRight:10}}>
             
@@ -408,12 +402,39 @@ function MoreStackNavigator() {
           </View>
          ),
       }}/>
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} 
+
+options={{
+  title: 'My Profile ',
+  headerRight: () => (
+    <View style={{marginRight:10,flexDirection:'row'}}>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('Settings');
+            }} >
+              <MaterialCommunityIcons  name='cog-outline' size={25} color='#FFFFFF' />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{}} >
+               <MaterialCommunityIcons  name='refresh' size={25} color='#FFFFFF' />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('EditProfile');
+            }} >
+               <MaterialCommunityIcons  name='dots-vertical' size={25} color='#FFFFFF' />
+            </TouchableOpacity>
+    </View>
+   ),
+}}
+      
+      />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
       <Stack.Screen name="Testimony" component={Testimony} />
       <Stack.Screen name="Prayer Request" component={PrayerRequest} />
       <Stack.Screen name="Favourite Books" component={Favourites} />
-      <Stack.Screen name="Study Tracker" component={StudyTracker} />
+      <Stack.Screen name="Study Tracker" component={StudyTracker}    
+            options={{
+              title: 'Rhapsody Study Tracker',
+            }}
+      />
       <Stack.Screen name="Bookmarked Articles" component={BookmarkedArticles} />
       
     </Stack.Navigator>

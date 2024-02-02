@@ -71,6 +71,37 @@ const StudyTracker = () => {
 
             </View>
 
+
+            {/* public String rankReaderPerformancePercent(int numberOfDaysInMonthsofar, 
+            int numberOfReadDays, String username) {
+
+
+int readDaysRanking = (numberOfReadDays * 100) / numberOfDaysInMonthsofar; // percentage ranking
+Log.d("Month Days ...", "" + numberOfDaysInMonthsofar + "");// test if the days are correct
+Log.d("Read Days ...", "" + numberOfReadDays + "");// test if the days are correct
+Log.d("Ranking Result ...", "" + readDaysRanking + "");// test if the ranking function works
+String[] rankingResponse = new String[1];
+
+if (readDaysRanking == 0) {// No days read
+    String lowRank = "You haven't read Rhapsody yet this month";
+    rankingResponse[0] = lowRank;
+
+} else if (readDaysRanking <= 30) {
+    String lowRank = "You can do better " + username + ". Your study score is " + readDaysRanking + "%";
+    rankingResponse[0] = lowRank;
+
+} else if ((readDaysRanking > 30) && (readDaysRanking <= 70)) {
+
+    String moderateRank = "Keep working on it " + username + ". You're improving. Your study score is now " + readDaysRanking + "%";
+    rankingResponse[0] = moderateRank;
+} else if (readDaysRanking > 70) {
+    String highRank = "Good job " + username + "! Your Read Score is " + readDaysRanking + "%";
+    rankingResponse[0] = highRank;
+
+}
+return rankingResponse[0];// return the string message from this array
+} */}
+
          </View>
        </View>
   );

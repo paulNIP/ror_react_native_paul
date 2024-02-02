@@ -113,7 +113,7 @@ const EmailCodeAuth=({ route, navigation })=> {
               //insert data into user DB local storage sqlite
 
               saveUserData();
-              navigation.navigate('Welcome')
+              navigation.navigate('HomeScreen');
               
             } else {
               //toggle snack bar

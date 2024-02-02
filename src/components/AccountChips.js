@@ -55,7 +55,7 @@ const AccountChips = () => {
 
 return (
   <>
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+    
       <View style={styles.contentView}>
       
           <TouchableOpacity style={styles.roundButton}
@@ -114,7 +114,6 @@ return (
           
 
       </View>
-    </ScrollView>
   </>
 );
 };
@@ -124,10 +123,12 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection:'row',
       alignItems:'center',
-      justifyContent: 'space-between',
+      alignSelf:'center',
+      // justifyContent: 'space-between',
       justifyContent: 'center',
       marginVertical: 15,
-      padding:5
+      padding:5,
+      alignContent:"center"
 
 
     },
