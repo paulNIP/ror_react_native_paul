@@ -199,15 +199,28 @@ const ReadingPlans = () => {
                                     <Image
                                         style={{width:Dimensions.get('window').width,marginTop:-5,
                                         resizeMode:'contain',height:Dimensions.get('window').width*0.5,
-                                        borderTopRightRadius:20,borderTopLeftRadius:20}}
+                                        borderTopRightRadius:30,borderTopLeftRadius:30}}
                                         source={lista[activeIndex].img_header}
                                     />
                                 </View>
-                                <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,marginLeft:20,marginRight:20,marginBottom:50}}>
-                                <Text>{isSubscribed ? 'You are subscribed!' : 'Not subscribed.'}</Text>
-                                {!isSubscribed && <Button title="Subscribe" onPress={purchaseSubscription} />}
+                                <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,
+                                    marginLeft:20,marginRight:20,marginBottom:50}}>
+                                {/* <Text>{isSubscribed ? 'You are subscribed!' : 'Not subscribed.'}</Text> */}
+
+                                {/* {!isSubscribed && <Button title="Subscribe" onPress={purchaseSubscription} />} */}
+
+                                {(activeIndex===0 || activeIndex===1) &&(
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
-                                        Subscribe to this package and get access to 30+ life Changing article</Text>
+                                        Subscribe to this package and get access to 30+ life Changing article</Text>)}
+
+                                {(activeIndex===2 || activeIndex===3) &&(
+                                        <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}> 
+                                        Subscribe to this package and get access to 150+ life Changing article</Text> )}
+
+                                        {(activeIndex===4 || activeIndex===5) &&(
+                                        <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
+                                        Subscribe to this package and get access to 365+ life Changing article</Text>)}
+
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>Benefits</Text>
 
                                     <View style={{ padding: 10 }}>
@@ -217,17 +230,11 @@ const ReadingPlans = () => {
                                                 { key: 'Get 1 point instantly!' },
                                                 { key: 'Read Rhapsody Daily & get 1 point each day!' },
                                                 { key: 'Redeemable Reading points' },
-                                                // { key: 'Mexico City' },
-                                                // { key: 'Cairo' },
-                                                // { key: 'Dhaka' },
-                                                // { key: 'Mumbai' },
-                                                // { key: 'Beijing' },
-                                                // { key: 'Osaka' },
                                             ]}
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -235,7 +242,7 @@ const ReadingPlans = () => {
                                         </View>
 
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>App features</Text>
-
+                                    {activeIndex===0 &&(
                                     <View style={{ padding: 10 }}>
                                         <FlatList
                                             data={[
@@ -244,21 +251,125 @@ const ReadingPlans = () => {
                                                 { key: 'Save and View your saved articles' },
                                                 { key: 'Take and save notes' },
                                                 { key: 'Reading Points' },
-                                                // { key: 'Cairo' },
-                                                // { key: 'Dhaka' },
-                                                // { key: 'Mumbai' },
-                                                // { key: 'Beijing' },
-                                                // { key: 'Osaka' },
                                             ]}
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
                                             />
-                                        </View>
+                                        </View>)}
+
+
+
+                                        {activeIndex===1 &&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Change theme' },
+                                                { key: 'Save and View your saved articles' },
+                                                { key: 'Take and save notes' },
+                                                { key: 'Past Articles' },
+                                                { key: 'Bookmark articles' },
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
+                                        {activeIndex===2 &&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Popup Bible' },
+                                                { key: 'Change theme' },
+                                                { key: 'Save and View your saved articles' },
+                                                { key: 'Take and save notes' },
+                                                { key: 'Reading Points' },
+                                               
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
+                                        {activeIndex===3 &&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                
+                                                { key: 'Change theme' },
+                                                { key: 'Save and View your saved articles' },
+                                                { key: 'Take and save notes' },
+                                                { key: 'Past articles' },
+                                                { key: 'Bookmark articles' },
+                                               
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
+
+                                        {activeIndex===4 &&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Popup Bible' },
+                                                { key: 'Change theme' },
+                                                { key: 'Save and View your saved articles' },
+                                                { key: 'Take and save notes' },
+                                                { key: 'Reading Points' },
+                                               
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
+
+                                        {activeIndex===5 &&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Change theme' },
+                                                { key: 'Save and View your saved articles' },
+                                                { key: 'Take and save notes' },
+                                                { key: 'Past Articles' },
+                                                { key: 'Bookmark articles' },
+                                               
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
 
                                         {/* if user is eligible for free trial */}
 
@@ -266,7 +377,7 @@ const ReadingPlans = () => {
                                         <View style={{marginTop:10,borderColor:'#26cc00',
                                         borderRadius:8,borderWidth:2,backgroundColor:'#d2f2d4'}}>
                                             <Text style={{alignSelf:'center',fontWeight:'bold',marginTop:5,marginBottom:5}}>
-                                                You are Eligibble for 7 days free
+                                                You are Eligible for 7 days free
                                             </Text>
                                             <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
                                                 1. To Begin your free trial, click the button below, provide the valid billing information.

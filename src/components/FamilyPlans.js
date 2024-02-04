@@ -92,58 +92,85 @@ const FamilyPlans = () => {
                                     <Image
                                         style={{width:Dimensions.get('window').width,marginTop:-5,
                                         resizeMode:'contain',height:Dimensions.get('window').width*0.5,
-                                        borderTopRightRadius:20,borderTopLeftRadius:20}}
+                                        borderTopRightRadius:30,borderTopLeftRadius:30}}
                                         source={lista[activeIndex].img_header}
                                     />
                                 </View>
                                 <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,marginLeft:20,marginRight:20,marginBottom:50}}>
-                                    <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>Subscribe to this package and get access to 30+ life Changing article</Text>
+                                    <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
+                                        Subscribe to this package and get access to 30+ life Changing article</Text>
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>Benefits</Text>
-
+                                    {activeIndex===0&&(
                                     <View style={{ padding: 10 }}>
                                         <FlatList
                                             data={[
-                                                { key: 'Acess to Rhapsody Daily Articles for 1 Month' },
-                                                { key: 'Get 1 point instantly!' },
-                                                { key: 'Read Rhapsody Daily & get 1 point each day!' },
-                                                { key: 'Redeemable Reading points' },
-                                                // { key: 'Mexico City' },
-                                                // { key: 'Cairo' },
-                                                // { key: 'Dhaka' },
-                                                // { key: 'Mumbai' },
-                                                // { key: 'Beijing' },
-                                                // { key: 'Osaka' },
+                                                { key: 'Acess to adult,teens and kids Rhaspsody on the store' },
+                                                { key: 'Get 1 point ' },
+                                                { key: '1 month premium access' },
                                             ]}
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
                                             />
-                                        </View>
+                                        </View>)}
+
+                                    {activeIndex===1&&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Acess to adult,teens and kids Rhaspsody on the store' },
+                                                { key: 'Get 3 points ' },
+                                                { key: '3 month premium access' },
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
+                                    {activeIndex===2&&(
+                                        <View style={{ padding: 10 }}>
+                                        <FlatList
+                                            data={[
+                                                { key: 'Acess to adult,teens and kids Rhaspsody on the store' },
+                                                { key: 'Get 12 points ' },
+                                                { key: '1 year premium access' },
+                                            ]}
+                                            renderItem={({ item }) => {
+                                                return (
+                                                <View style={{ marginBottom: 5 }}>
+                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
+                                                </View>
+                                                );
+                                            }}
+                                            />
+                                        </View>)}
+
 
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>App features</Text>
 
-                                    <View style={{ padding: 10 }}>
+
+                                        <View style={{ padding: 10 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Popup Bible' },
                                                 { key: 'Change theme' },
                                                 { key: 'Save and View your saved articles' },
                                                 { key: 'Take and save notes' },
-                                                { key: 'Reading Points' },
-                                                // { key: 'Cairo' },
-                                                // { key: 'Dhaka' },
-                                                // { key: 'Mumbai' },
-                                                // { key: 'Beijing' },
-                                                // { key: 'Osaka' },
+                                                { key: 'Redeemable Reading Points' },
                                             ]}
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}

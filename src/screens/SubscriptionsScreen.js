@@ -178,7 +178,7 @@ const SubscriptionsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         
         <View style={styles.container}>
         {/* Simple Segmented Control*/}
