@@ -37,6 +37,7 @@ const StoreScreen = ({ navigation }) => {
 
   const [books, setBooks] = useState([]);
   const [translatedBooks, setTranslatedBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
 
@@ -48,6 +49,7 @@ const StoreScreen = ({ navigation }) => {
 
     }
     fetchData();
+    setIsLoading(false);
 
   }, []);
 
@@ -412,6 +414,8 @@ const StoreScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <FeaturedBooks/>
+
+
         <BookCategories/>
 
         <KidsBooks/>

@@ -9,6 +9,7 @@ const getBooks = async () => {
           axios.get(Strings.BOOKS_URL+'/fetch')
             .then((res) => {
               resolve(res.data.EBOOK_APP);
+              console.log("All Books",res.data.EBOOK_APP);
           })
             .catch((err) => {
               reject(err)
@@ -108,12 +109,27 @@ const getChistianLiving = async () => {
   });
 };
 
+const getFaithProsperity = async () => {
+  return new Promise((resolve, reject) => {
+
+          axios.get(Strings.BOOKS_URL+'/fetch')
+            .then((res) => {
+              resolve(res.data.EBOOK_APP.prayer);
+              console.log("Prayer Books",res.data.EBOOK_APP.prayer);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
 const getPrayer = async () => {
   return new Promise((resolve, reject) => {
 
           axios.get(Strings.BOOKS_URL+'/fetch')
             .then((res) => {
               resolve(res.data.EBOOK_APP.prayer);
+              console.log("Prayer Books",res.data.EBOOK_APP.prayer);
           })
             .catch((err) => {
               reject(err)
@@ -167,7 +183,7 @@ const getFeaturedBooks = async () => {
           axios.get(Strings.BOOKS_URL+'/featured')
             .then((res) => {
               resolve(res.data.response);
-              console.log("Featured Response Books",res.data.response);
+
           })
             .catch((err) => {
               reject(err)
@@ -181,7 +197,33 @@ const getKidsBooks = async () => {
           axios.get(Strings.BOOKS_URL+'/store/kids')
             .then((res) => {
               resolve(res.data.EBOOK_APP[0]);
-              console.log("Featured Response Books",res.data.EBOOK_APP[0]);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
+const getEarlyReaders = async () => {
+  return new Promise((resolve, reject) => {
+
+          axios.get(Strings.BOOKS_URL+'/store/early-readers')
+            .then((res) => {
+              resolve(res.data.EBOOK_APP[0]);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
+
+const getDailyDevotionalBooks = async () => {
+  return new Promise((resolve, reject) => {
+
+          axios.get(Strings.BOOKS_URL+'/store/devotionals')
+            .then((res) => {
+              resolve(res.data.EBOOK_APP[0]);
           })
             .catch((err) => {
               reject(err)
@@ -195,8 +237,6 @@ const getAllTranslatedBooks = async () => {
 
           axios.get(Strings.BOOKS_URL+'/store/translated/all')
             .then((res) => {
-
-              console.log("Meee",res.data.EBOOK_APP[0].languages);
               resolve(res.data.EBOOK_APP[0].languages);
           })
             .catch((err) => {
@@ -258,6 +298,7 @@ export { getBooks,getTranslatedBooks,getAllTranslatedBooks,getLangaugeTranslated
   getHolySpirit,getDivineHealing,
   getSoulWining,getChildrenDevotional,
   getChistianLiving,getPrayer,getTeenDevotional,
-  getKidsBooks,getCategorySelectedBooks,getPrivacyPolicy
+  getKidsBooks,getCategorySelectedBooks,getPrivacyPolicy,
+  getEarlyReaders,getDailyDevotionalBooks,getFaithProsperity
   // getPopularBooks,getTranslatedBooks
  }

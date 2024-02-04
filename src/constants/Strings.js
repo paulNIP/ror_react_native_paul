@@ -15,7 +15,8 @@ export default {
     READING:'',
     TABLE_NAME:"book",
     TABLE_NAME_DOWNLOAD:"book_download",
-    DATABASE_NAME:"MyBook.db"
+    DATABASE_NAME:"MyBook.db",
+    APP_SHARED_SECRET:'c827865bf7e74daeabb60c97b864620b'
 
 
 }

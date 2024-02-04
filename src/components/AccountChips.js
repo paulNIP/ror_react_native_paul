@@ -55,7 +55,7 @@ const AccountChips = () => {
 
 return (
   <>
-    
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
       <View style={styles.contentView}>
       
           <TouchableOpacity style={styles.roundButton}
@@ -92,28 +92,21 @@ return (
             <Text>Upgrade Subscription</Text>
           </TouchableOpacity>
 
-          { status==='active' ?(null):
-          
-            (
-              // return if profile subscription is inactive or null
-              <TouchableOpacity style={styles.roundButton}
-              onPress={()=>{
-                navigation.navigate('LanguageSelect');
+            <TouchableOpacity style={styles.roundButton}
+            onPress={()=>{
+              navigation.navigate('LanguageSelect');
 
-              }}
-              >
-              <View style={{flexDirection:"row"}}>
-                  <FontAwesome name="globe" size={20} color="#900" />
-                  <Text> Language - {language}</Text>
-              </View>
-            </TouchableOpacity>
-            )
-        
-        
-           }
-          
+            }}
+            >
+            <View style={{flexDirection:"row"}}>
+                <FontAwesome name="globe" size={20} color="#900" />
+                <Text> Language - {language}</Text>
+            </View>
+          </TouchableOpacity>
+
 
       </View>
+      </ScrollView>
   </>
 );
 };

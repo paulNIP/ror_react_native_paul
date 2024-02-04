@@ -6,9 +6,10 @@ import {
   StatusBar,View,TouchableOpacity,Image,Dimensions,FlatList
 } from 'react-native';
 import { Divider,Button} from '@rneui/themed';
-import { getKidsBooks } from "../service/storeService";
+import { getDailyDevotionalBooks, getKidsBooks } from "../service/storeService";
 import { useNavigation } from "@react-navigation/native";
-import DailyDevotional from "./DailyDevotional";
+import { getDailyDevotional } from "../service/devotionalService";
+
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -59,7 +60,7 @@ const DailyDevotionalBooks = () => {
     useEffect(() => {
 
         const fetchData = async () => {
-            const data = await getKidsBooks();
+            const data = await getDailyDevotionalBooks();
             setBooks(data.books);
             setBookCategory(data.category_name);
             setCategoryID(data.cat_id);

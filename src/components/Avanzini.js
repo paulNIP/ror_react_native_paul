@@ -6,8 +6,10 @@ import {
   StatusBar,View,TouchableOpacity,Image,Dimensions,FlatList
 } from 'react-native';
 import { Divider,Button} from '@rneui/themed';
-import { getKidsBooks } from "../service/storeService";
 import { useNavigation } from "@react-navigation/native";
+import { getChildrenDevotional } from "../service/storeService";
+
+
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -18,8 +20,8 @@ const renderItem = ({ item }) => {
 
     
     return (
-      <View style={{marginEnd:10,width:100}}>
-        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
+      <View style={{marginEnd:10,width:Dimensions.get('window').width*0.23}}>
+        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.aid})}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
             <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                 <Image
@@ -36,7 +38,7 @@ const renderItem = ({ item }) => {
                     flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
               </View>
               <Text style={{ marginBottom: 5,marginLeft:3}}>
-                  {item.author_name}
+              Pastor Chris Oyakhilome D.Sc., D.D.
               </Text>
             </View>
             </View>
@@ -58,11 +60,11 @@ const Avanzini = () => {
     useEffect(() => {
 
         const fetchData = async () => {
-            const data = await getKidsBooks();
-            setBooks(data.books);
-            setBookCategory(data.category_name);
-            setCategoryID(data.cat_id);
-            setBookDescription(data.category_description);
+            const data = await getChildrenDevotional();
+            setBooks(data);
+            setCategoryID(data[0].cat_id);
+
+            
 
 
         }
@@ -70,10 +72,10 @@ const Avanzini = () => {
 
         }, []);
 
-    console.log("Category mmmm",categoryID);
+    console.log("Prayer Books Good",books);
 
     const goToTranslatedBooks=(cat)=>{
-        navigation.navigate('GroupedBooks',{cat_id:cat,category:bookCategory});
+        navigation.navigate('GroupedBooks',{cat_id:categoryID});
 
     }
 
@@ -81,15 +83,15 @@ const Avanzini = () => {
 
   return (
     <View>
-        { bookCategory &&(
+        { books &&(
 
         <View>
             <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
             <Divider orientation="vertical" width={5} />
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
-                <Text style={{marginLeft:10,fontWeight:'bold',flexWrap:'wrap'}}>{bookCategory}</Text>
-                <Text style={{marginLeft:10,flexWrap:"wrap"}}>{bookDescription}</Text>
+                <Text style={{marginLeft:10,fontWeight:'bold',flexWrap:'wrap'}}>Dr John Avanzini</Text>
+                <Text style={{marginLeft:10,flexWrap:"wrap"}}>Books by Dr John Avanzini</Text>
                 </View>
                 <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
                   <Button title="VIEW ALL" type="outline"  color="warning" onPress={()=>{

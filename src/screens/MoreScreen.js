@@ -10,9 +10,10 @@ import { useNavigation } from '@react-navigation/native';
 import {Dimensions,ImageBackground,Image,View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Divider } from '@rneui/themed';
-//import Ionicons
-// import Icon from 'react-native-ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ListItem,Icon } from '@rneui/themed';
+
+
 
 import {
   ActionSheetCell,
@@ -26,7 +27,7 @@ import {
   SwitchCell,
   TextInputCell,
 } from 'react-native-forms';
-import Icon from 'react-native-vector-icons/Ionicons';
+// import Icon from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -121,16 +122,16 @@ const MoreScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView >
+    <ScrollView  showsVerticalScrollIndicator={false}>
 
       <ImageBackground source={require('../assets/menubar_blue.png')}resizeMode="cover" 
           style={{width:Dimensions.get('window').width,
            height:Dimensions.get('window').height*0.35,marginTop:-40}}>
-        <View style={{flexDirection:'row',marginStart:30}}>
-          <Image style={{width:100,height:100,marginTop:70}}
+        <View style={{flexDirection:'row',marginStart:30,marginTop:-30}}>
+          <Image style={{width:100,height:100,marginTop:120}}
               source={require('../assets/logo.png')}
             />
-            <View style={{marginTop:90,marginLeft:10}}>
+            <View style={{marginTop:140,marginLeft:10}}>
               <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>{name}</Text>
               <Text style={{marginBottom:5,fontSize:18,color:'white',fontWeight:'bold'}}>{subscription}</Text>
 
@@ -139,131 +140,165 @@ const MoreScreen = () => {
         </View>
         
       </ImageBackground>
-      <View style={{marginHorizontal:10}}>
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} 
-        onPress={()=>{navigation.navigate('Welcome')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="home" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Home</Text> 
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} 
-            onPress={()=>{
-             //Got to Profile if user is logged in
-             navigateTo('Profile')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="account" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Profile</Text> 
-          </View>
-        </TouchableOpacity>
-        <Divider style={{width:Dimensions.get('window').width, alignSelf:'center'}} color='gray' width={1}/>
 
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={()=>{
+
+      <View style={{borderRadius:15,marginLeft:10,marginRight:10}}>
+          <ListItem onPress={()=>{navigation.navigate('Welcome')}}  bottomDivider >
+                  <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="home" type="material-community" color="#FFFFFF" />
+                  </View>
+                    
+                    <ListItem.Content>
+                    <ListItem.Title>Home</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Chevron/>
+
+          </ListItem>
+
+          <ListItem onPress={()=>{
+             //Got to Profile if user is logged in
+             navigateTo('Profile')}}  bottomDivider >
+                  <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="account-circle" type="material-community" color="#FFFFFF" />
+                  </View>
+                    <ListItem.Content>
+                    <ListItem.Title>Profile</ListItem.Title>
+                    </ListItem.Content>
+                    <ListItem.Chevron/>
+      
+          </ListItem>
+      </View>
+
+     
+      <View style={{borderRadius:15,marginLeft:10,marginRight:10}}>
+      <ListItem onPress={()=>{
           //Got to Rhapsody if user is logged in
           navigation.navigate('Rhapsody TV');
           
-          }}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="television-play" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Rhapsody TV</Text> 
-          </View>
-        </TouchableOpacity>
-
-        <Divider style={{width:Dimensions.get('window').width, alignSelf:'center'}} color='gray' width={1}/>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={()=>{
-            //Got to Testimony if user is logged in
-            navigateTo('Testimony')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="microphone-variant" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Testimony</Text> 
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={
-          ()=>{
-            //Got to Testimony if user is logged in
-            navigateTo('Prayer Request')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="human-handsup" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Prayer Request</Text> 
-          </View>
-        </TouchableOpacity>
-
-        <Divider style={{width:Dimensions.get('window').width, alignSelf:'center'}} color='gray' width={1}/>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={
-          ()=>{
-            //Got to Testimony if user is logged in
-            navigateTo('Favourite Books')}
-          }>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="heart" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Favourite Books</Text> 
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={
-          ()=>{
-            //Got to Testimony if user is logged in
-            navigateTo('Study Tracker')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="timelapse" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Study Tracker</Text> 
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={
-          ()=>{
-            //Got to Testimony if user is logged in
-            navigateTo('Bookmarked Articles')}}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="bookmark-multiple" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Bookmarked Articles</Text> 
-          </View>
-        </TouchableOpacity>
-        <Divider style={{width:Dimensions.get('window').width, alignSelf:'center'}} color='gray' width={1}/>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={()=>{navigation.navigate('')}}>
-          <View style={{flexDirection:'row'}}>
-            {/* <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="file-find-outline" size={30} color="gray" /> */}
-              <Icon name="globe-outline" size={30} color="gray" style={{marginEnd:10}}  />
-              <Text style={{fontSize:18,marginTop:2}}>Language</Text> 
-             
-              {/* <View style={{flexDirection:'row'}}>
-
-                <Text style={{fontSize:18,marginTop:2}}>English</Text> 
-                <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="file-find-outline" size={30} color="gray" />
-              </View> */}
-              
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={{marginBottom:5,marginTop:5}} onPress={onShare}>
-          <View style={{flexDirection:'row'}}>
-            <MaterialCommunityIcons style={{marginEnd:10}} 
-              name="share" size={30} color="gray" />
-              <Text style={{fontSize:18,marginTop:2}}>Share App</Text> 
-          </View>
-        </TouchableOpacity>
-
-        {
-          settings.map((item) => (
-            <Text key={item.name}>{item.name}</Text>
-          ))
-        }
-
+          }
+      }  bottomDivider  style={{marginTop:10}}>
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="television-play" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Rhapsody TV</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
       </View>
+
+      <View style={{borderRadius:15,marginLeft:10,marginRight:10}}>
+      <ListItem onPress={()=>{
+            //Got to Testimony if user is logged in
+            navigateTo('Testimony')}}  bottomDivider  style={{marginTop:10}} >
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="microphone-variant" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Testimony</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+
+      <ListItem onPress={()=>{
+            //Got to Testimony if user is logged in
+            navigateTo('Prayer Request')}}  bottomDivider >
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="hands-pray" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Prayer Request</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+      </View>
+
+
+      <View style={{borderRadius:15,marginLeft:10,marginRight:10}}>
+
+      <ListItem onPress={
+        ()=>{
+          //Got to Testimony if user is logged in
+          navigateTo('Favourite Books')}
+      }  bottomDivider style={{marginTop:10}}>
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="heart" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Favourite Books</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+
+      <ListItem onPress={()=>{
+            //Got to Testimony if user is logged in
+            navigateTo('Study Tracker')}}  bottomDivider >
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="clock-time-eight-outline" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Study Tracker</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+
+      <ListItem onPress={
+        ()=>{
+            //Got to Testimony if user is logged in
+            navigateTo('Bookmarked Articles')}
+            }  bottomDivider >
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="bookmark-multiple" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Bookmarked Articles</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+      </View>
+
+      <View style={{borderRadius:15,marginLeft:10,marginRight:10}}>
+      <ListItem onPress={()=>{
+        //Got to Testimony if user is logged in
+        navigateTo('LanguageSelect')}}  bottomDivider style={{marginTop:10}}>
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="earth" type="material-community" color="#FFFFFF" />
+
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Language</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+      <ListItem onPress={onShare} >
+                <View style={{borderRadius:5,width:30,
+                    height:30,backgroundColor:'#D8A623',justifyContent:'center'}}>
+                    <Icon name="share" type="material-community" color="#FFFFFF" />
+                  </View>
+                <ListItem.Content>
+                <ListItem.Title>Share App</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron/>
+  
+      </ListItem>
+      </View>
+
 
     </ScrollView>
   </SafeAreaView>
