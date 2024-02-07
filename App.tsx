@@ -36,6 +36,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import OnboardingScreen from './src/screens/OnBoardingScreen';
 import AppFeedBack from './src/screens/AppFeedBack';
+import { Linking, Alert } from 'react-native'; // Import Alert from 'react-native'
+
+import VersionCheck from 'react-native-version-check';
 
 
 import * as RNLocalize from "react-native-localize";
@@ -475,11 +478,64 @@ options={{
 export default function App() {
 
   const [showRealApp, setShowRealApp] = useState<any>();
+  const [appUrl, setStoreUrl] = useState<any>();
   
   
    
   useEffect(() => {
 
+
+    const checkAppVersion = async () => {
+      try {
+const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.com/in/lookup?bundleId=com.rhapsody.dailydevotionals')
+                .then(r => r.json())
+                .then((res) => { return res?.results[0]?.version })
+                : await VersionCheck.getLatestVersion({
+                    provider: 'playStore',
+                    packageName: ' packageName like com.app',
+                    ignoreErrors: true,
+                });
+
+        const currentVersion = VersionCheck.getCurrentVersion();
+
+        if (latestVersion > currentVersion) {
+
+          VersionCheck.getStoreUrl({appID: '463739646'}).then(
+            storeUrl => {
+              console.log(storeUrl);
+              setStoreUrl(storeUrl);
+            },
+          );
+
+          Alert.alert(
+            'Update Required',
+'A new version of the app is available. Please update to continue using the app.',
+            [
+              {
+                text: 'Update Now',
+                onPress: () => {
+                  Linking.openURL(appUrl
+                    // Platform.OS === 'ios'? VersionCheck.getAppStoreUrl({ appID: '463739646' }): await VersionCheck.getPlayStoreUrl({ packageName: 'com.rhapsodyreader' })
+                  );
+                },
+              },
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              }
+            ],
+            { cancelable: true },
+            // { cancelable: false }
+          );
+        } else {
+          // App is up-to-date; proceed with the app
+        }
+      } catch (error) {
+        // Handle error while checking app version
+        console.error('Error checking app version:', error);
+      }
+    };
       const fetchData = async () => {
           const hasOnBoarded = await AsyncStorage.getItem('hasOnBoarded');
           setShowRealApp(hasOnBoarded);
@@ -491,6 +547,7 @@ export default function App() {
         
         
       }
+      checkAppVersion();
       fetchAudioDevotionals();
       fetchData();
 
