@@ -77,6 +77,7 @@ const DailyDevotional = () => {
           }else{
             const data = await getProfile(email);
             setStatus(data.subscription.status);
+            console.log("Profile data 0025",status);
 
           }
           
@@ -142,6 +143,8 @@ const DailyDevotional = () => {
       const fetchData = async () => {
           const data = await getDailyDevotional()
           setDevotional(data)
+          
+
 
       }
       fetchData();
@@ -182,7 +185,7 @@ const DailyDevotional = () => {
       
       <View >
         <Image
-          style={{width: 'auto', height: 180,borderRadius: 10}}
+          style={{width: 'auto', height: Dimensions.get('window').height*0.23,borderRadius: 5}}
           source={{
             uri: img,
           }}
@@ -307,7 +310,7 @@ const DailyDevotional = () => {
                 <WebView source={{ uri: Strings.READING }} style={{ flex: 1 }} />
               </Overlay> 
 
-              <Overlay ModalComponent={Modal} fullScreen={false}
+              {/* <Overlay ModalComponent={Modal} fullScreen={false}
               isVisible={visibleCongs} 
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
                 
@@ -334,7 +337,7 @@ const DailyDevotional = () => {
                   title="Ok"
                   onPress={() => setVisibleCongs(!visibleCongs)}
                 />
-              </Overlay>
+              </Overlay> */}
 
           </View>) }
 

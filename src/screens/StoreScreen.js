@@ -418,7 +418,7 @@ const StoreScreen = ({ navigation }) => {
 
         <BookCategories/>
 
-        <KidsBooks/>
+        {/* <KidsBooks/>
 
         <EarlyReaders/>
 
@@ -440,7 +440,7 @@ const StoreScreen = ({ navigation }) => {
 
         <ChildrenBooks/>
 
-        <Avanzini/>
+        <Avanzini/> */}
 
 
         <TranslatedBooks/>

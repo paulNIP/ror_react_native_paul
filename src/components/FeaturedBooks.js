@@ -42,7 +42,9 @@ const FeaturedBooks = () => {
                   <View style={{flexDirection:'row',marginLeft:10,marginTop:-170,marginBottom:10}}>
                             <Image source={{uri: a.book_cover_img}} style={{height: 160,
                                  width:width*0.25,borderRadius:10 }}/>
-                            <View style={{marginLeft:10,width:width*0.60,marginTop:100}}>
+                            <View style={{marginLeft:10,width:width*0.60,marginTop:100,
+                            backgroundColor:'#818589'
+                            }}>
                                 <Text style={{color:'#FFFFFF',flexWrap:'wrap'}}>{a.book_title}</Text>
                                 <Text style={{color:'#F9F6EE',flexWrap:'wrap'}}>{a.author_name}</Text>
                             </View>
@@ -58,7 +60,8 @@ const FeaturedBooks = () => {
                         <View style={{flexDirection:'row',marginLeft:10,marginTop:-170,marginBottom:10}}>
                             <Image source={{uri: a.book_cover_img}} style={{height: 160, width:width*0.25
                                 ,borderRadius:10}}/>
-                            <View style={{marginLeft:10,marginTop:100,width:width*0.60}}>
+                            <View style={{marginLeft:10,marginTop:100,width:width*0.60,
+                               backgroundColor:'#C0C0C0',justifyContent:'center',alignContent:'center',alignItems:'center'}}>
                                 <Text style={{color:'#FFFFFF'}}>{a.book_title}</Text>
                                 <Text style={{color:'#F9F6EE'}}>{a.author_name}</Text>
                             </View>

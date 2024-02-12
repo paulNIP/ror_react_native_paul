@@ -24,8 +24,11 @@ const FeedBack = ({ route, navigation }) => {
   
         }
         fetchData();
+        navigation.setOptions({
+          title: capitalize('Report Book'),
+        });
   
-      }, []);
+      }, [navigation]);
 
       const renderBook = ({ item }) => {
 

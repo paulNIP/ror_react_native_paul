@@ -8,6 +8,10 @@ import { Button } from '@rneui/themed';
 import Strings from '../constants/Strings';
 import { getBookDetails } from '../service/libraryService';
 import {Dimensions} from 'react-native';
+import { DatabaseConnection } from '../database/database-connection';
+import SnackBar from 'react-native-snackbar-component';
+import RNFS from 'react-native-fs';
+import * as Progress from 'react-native-progress';
 
 
 
@@ -17,7 +21,10 @@ const BookDetails = ({ route, navigation }) => {
   const { book_id } = route.params;
 
   const [book, setBook] = useState();
-  
+  const [visible, setVisible] = useState(false);
+  const [favouritesColor, setFavouritesColor] = useState('#808080');
+  const db = DatabaseConnection.getdb();
+  const [progress, setProgress] = useState(0);
 
 
     useEffect(() => {
@@ -31,6 +38,31 @@ const BookDetails = ({ route, navigation }) => {
   
       }, []);
 
+
+      const downloadFile = () => {
+        const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
+        const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
+    
+        RNFS.downloadFile({
+          fromUrl: url,
+          toFile: filePath,
+          background: true, // Enable downloading in the background (iOS only)
+          discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+          progress: (res) => {
+            // Handle download progress updates if needed
+            // const progress = (res.bytesWritten / res.contentLength) * 100;
+            setProgress((res.bytesWritten / res.contentLength) * 100);
+            console.log(`Progress: ${progress.toFixed(2)}%`);
+          },
+        })
+          .promise.then((response) => {
+            console.log('File downloaded!', response);
+          })
+          .catch((err) => {
+            console.log('Download error:', err);
+          });
+      };
+
   
 
       const renderRelatedBooks = ({ item }) => {
@@ -40,7 +72,7 @@ const BookDetails = ({ route, navigation }) => {
         
         return (
           <View style={{marginEnd:10,width:100}}>
-            <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
+            <TouchableOpacity onPress={()=>navigation.push('BookDetails',{book_id:item.id})}>
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
                 <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                     <Image
@@ -52,10 +84,11 @@ const BookDetails = ({ route, navigation }) => {
                       // resizeMode="contain"
                     />
                   <View style={{height:50}}>
-                    <Text style={{ marginBottom: 5,marginTop:5,fontSize:10, flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
+                    <Text style={{ marginBottom: 5,marginTop:5,fontSize:10, 
+                      flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
                   </View>
                   <Text style={{ marginBottom: 5,fontSize:10}}>
-                      By Pastor Chris {'\n'}Oyakhilome
+                      By {item.author_name}
                   </Text>
                 </View>
                 </View>
@@ -67,35 +100,57 @@ const BookDetails = ({ route, navigation }) => {
 
 
     const renderBook = ({ item }) => {
+        console.log("Selected Book Details" ,item);
+        const bg=item.book_bg_img;
+        const cover=item.book_cover_img;
+
+
+        const id=item.id;
+        const book_title=item.book_title;
+        const book_description=item.book_description;
+        const book_bg_img=item.book_bg_img;
+        const book_cover_img=item.book_cover_img;
+        const book_file_type=item.book_file_type;
+        const book_file_url=item.book_file_url;
+        const total_rate=item.total_rate;
+        const rate_avg=item.rate_avg;
+        const book_views=item.book_views;
+        const author_name=item.author_name;
+
 
         return (
     
           <View>
                 <Image
-                     style={{width: Dimensions.get('window').width, height: 220}}
-                     source={{uri: item.book_bg_img}} 
-                     resizeMode={"cover"} 
+                     style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height*0.25}}
+                     source={{uri: bg}} 
+                    //  resizeMode={"cover"} 
                 />
                 <View style={{flexDirection:"row",marginLeft:10,marginBottom:10}}>
                     <Image
-                        style={{width: 100, height: 150,borderRadius: 10, marginTop:-100}}
-                        source={{uri: item.book_cover_img}} 
-                        resizeMode={"cover"} 
+                        style={{width: Dimensions.get('window').width*0.2, height: 150,borderRadius: 10, marginTop:-100}}
+                        source={{uri: cover}} 
+                        // resizeMode={"cover"} 
                     />
-                    <View style={{marginTop:-40,marginBottom:20}}> 
-                        <Text style={{marginLeft:10,color:'#818589',fontWeight:'bold'}}>{item.book_title}</Text>
-                        <Text style={{marginLeft:10, color:'#818589'}}>By Pastor Chris Oyakhilome D.S.C D.D </Text>
+                    <View style={{marginTop:-50,marginBottom:20}}>
+                        <TouchableOpacity style={{backgroundColor:'#C0C0C0'}}>
+                        <Text style={{marginLeft:10,color:'#FFFFFF',fontWeight:'bold'}}>{item.book_title}</Text>
+                        <Text style={{marginLeft:10, color:'#FFFFFF'}}>By {item.author_name}</Text>
+                        </TouchableOpacity>
 
-                        <View style={{flexDirection:"row",alignContent:"space-between",marginTop:10}}>
-                            <Text style={{marginLeft:10,marginRight:10, marginTop:4}}>PRICE : </Text>
+                        <View style={{flexDirection:"row",alignContent:"space-between",marginTop:10,marginLeft:15}}>
+                            {/* <TouchableOpacity style={{borderRadius: 4,padding:4,height:40,
+                                                  backgroundColor: '#D8A623',marginEnd:20,justifyContent:'center',alignContent:'center'}}>
+                            <Text style={{marginLeft:10,marginRight:10}}>PRICE : </Text>
+                            </TouchableOpacity> */}
                            
-                           <TouchableOpacity style={{borderRadius: 4,padding:4,height:40,
-                                                  backgroundColor: '#F9A825',marginEnd:20}}>
-                                <Text>BUY US ${item.price}</Text>
+                           <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,
+                                                  backgroundColor: '#D8A623',marginEnd:10,justifyContent:'center',alignContent:'center'}}>
+                                <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>BUY US ${item.price}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:40,
-                                                  backgroundColor: '#F9A825',}}>
-                            <Text>PROMO CODE</Text>
+                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',
+                                                  backgroundColor: '#D8A623'}}>
+                            <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>VOUCHER</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -107,26 +162,75 @@ const BookDetails = ({ route, navigation }) => {
                       <TouchableOpacity  onPress={()=>{
                         
 
-// if (db.checkId(Constant_Api.scdLists.get(0).getId())) {
-//   method.addData(db, 0);
-//   image_favorite.setImageResource(R.drawable.ic_fav_hov);
-// } else {
-//   db.deleteDetail(Constant_Api.scdLists.get(0).getId());
-//   image_favorite.setImageResource(R.drawable.ic_favourite);
-//   Toast.makeText(BookDetailActivity.this, getResources().getString(R.string.remove_to_favourite), Toast.LENGTH_SHORT).show();
-// }
+db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT id FROM favourite_books WHERE id=?",
+        [item.id],
+        function (tx, res) {
+          console.log('item:', res.rows.length);
+          if (res.rows.length == 0) {
+            //insert into DB
+            txn.executeSql(
+              'INSERT INTO favourite_books (book_title,book_description, image, cover_image,book_file_type,book_file_url , book_rate ,book_rate_avg,book_view, book_author_name) VALUES(? ,?,?, ?, ?,? , ? ,?,?, ?)',
+              [
+                book_title,
+                book_description,
+                book_bg_img,
+                book_cover_img,
+                book_file_type,
+                book_file_url,
+                total_rate,
+                rate_avg,
+                book_views,
+                author_name]
+            );
+
+            setFavouritesColor('#FF0000');
+            Alert.alert(
+              'Success',
+              'Added to Favourites',
+              [
+                {
+                  text: 'Ok'
+                },
+              ],
+              { cancelable: false }
+            );
+            // setVisible(true);
+
+
+          }else{
+            Alert.alert(
+              'Success',
+              'Book already exists in favourites',
+              [
+                {
+                  text: 'Ok'
+                },
+              ],
+              { cancelable: false }
+            );
+
+          }
+        }
+      );
+    });
+
+                             
 
                       }}>
-                        <MaterialCommunityIcons  style={{alignSelf:"center"}} name="cards-heart" size={30} color="#808080" />
+                        <MaterialCommunityIcons  style={{alignSelf:"center"}} name="cards-heart" size={30} color={favouritesColor} />
                         <Text style={{alignSelf:"center"}}>Favourite</Text>
                         </TouchableOpacity>
                     </View>
                     <View>
-                      <TouchableOpacity onPress={()=>{}}
+                      <TouchableOpacity onPress={downloadFile}
                       >
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
                         <Text style={{alignSelf:"center"}}>Download</Text>
                         </TouchableOpacity>
+                        <Progress.Pie progress={progress} size={50} />
+                        <Text>{Math.round(progress * 100)}%</Text>
                     </View>
                     <View>
                      <TouchableOpacity  onPress={()=>{}}>
@@ -136,8 +240,8 @@ const BookDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                    <TouchableOpacity  onPress={()=>navigation.navigate("FeedBack",{book_id:book_id})}>
-                        <MaterialCommunityIcons style={{alignSelf:"center"}} name="information" size={30} color="#F9A825" />
+                    <TouchableOpacity  onPress={()=>navigation.navigate("FeedBack",{book_id:item.id})}>
+                        <MaterialCommunityIcons style={{alignSelf:"center"}} name="information" size={30} color="#D8A623" />
                         <Text style={{alignSelf:"center"}} >FeedBack</Text>
                         </TouchableOpacity>
                     </View>
@@ -166,6 +270,10 @@ const BookDetails = ({ route, navigation }) => {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginHorizontal:10}}>
                     <FlatList data={item.related_books} renderItem={renderRelatedBooks} numColumns={700} ItemSeparatorComponent={() => <View style={{height: 5}} />}/>
                 </ScrollView>
+
+                
+      <SnackBar visible={visible} textMessage="Added to Favourites" 
+        actionHandler={()=>{setVisible(false);}} actionText="OKAY"/>
           
           </View>
         );
@@ -175,7 +283,7 @@ const BookDetails = ({ route, navigation }) => {
 
         <SafeAreaView style={styles.container}>
 
-                <ScrollView 
+                <ScrollView showsVerticalScrollIndicator={false}
                 >
                    <FlatList data={book} renderItem={renderBook}  ItemSeparatorComponent={() => <View style={{height: 5}} />}/>
                 </ScrollView>
@@ -189,6 +297,13 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
+    absolute: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0
+    }
   });
 
 export default BookDetails;

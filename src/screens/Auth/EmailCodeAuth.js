@@ -35,17 +35,17 @@ const EmailCodeAuth=({ route, navigation })=> {
     };  
 
     React.useEffect(() => {
-      async function setData() {
-        const appData = await AsyncStorage.getItem("hasOnBoarded");
+      // async function setData() {
+      //   const appData = await AsyncStorage.getItem("hasOnBoarded");
         
-        if (appData == null) {
-          setFirstLaunch(true);
-          AsyncStorage.setItem("hasOnBoarded", "false");
-        } else {
-          setFirstLaunch(false);
-        }
-      }
-      setData();
+      //   if (appData == null) {
+      //     setFirstLaunch(true);
+      //     AsyncStorage.setItem("hasOnBoarded", "false");
+      //   } else {
+      //     setFirstLaunch(false);
+      //   }
+      // }
+      // setData();
     }, []);
     
     const inputs = [];

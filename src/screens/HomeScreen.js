@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionButton from 'react-native-action-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Overlay } from '@rneui/themed';
-import {Dimensions,Image} from 'react-native';
+import {Dimensions,Image,Animated,Easing} from 'react-native';
 
 const THEME_COLOR = '##D8A623';
 const windowHeight = Dimensions.get('window').height*0.6;
@@ -31,6 +31,31 @@ const toggleReadingOverlay = () => {
   setVisibleCongs(!visibleCongs);
 };
 
+const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
+
+
+Animated.timing(rotateAnimation, {
+    toValue: 1,
+    duration: 800,
+  }).start(() => {
+    rotateAnimation.setValue(0);
+  });
+
+const interpolateRotating = rotateAnimation.interpolate({
+  inputRange: [0, 1],
+  outputRange: ["0deg", "720deg"],
+});
+
+
+const animatedStyle = {
+  transform: [
+    {
+      rotate: interpolateRotating,
+    },
+  ],
+  width:150,
+  height:150
+};
 
 useEffect(() => {
   async function setExpiry() {
@@ -144,7 +169,7 @@ return (
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
                 
                 <View style={{alignSelf:'center'}}>
-                   <Image style={styles.sunrays} source={require('../assets/sunrays.png')} />
+                   <Animated.Image style={animatedStyle} source={require('../assets/sunrays.png')} />
                    <Image  style={styles.logo} source={require('../assets/logo.png')} />
                    
                 </View>
@@ -218,7 +243,9 @@ const styles = StyleSheet.create({
   },
   sunrays:{
     width:150,
-    height:150
+    height:150,
+    
+    
   },
   logo:{
     width:50,

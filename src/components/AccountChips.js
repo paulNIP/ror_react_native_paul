@@ -78,13 +78,13 @@ return (
           <TouchableOpacity style={styles.roundButton}
             onPress={()=>{
               if(status==='active'){
-                navigation.navigate('Subscription');
+                navigation.navigate('OldSubscription');
 
               }else if(status!=='active' && status !=null){
-                navigation.navigate('Subscription');
+                navigation.navigate('OldSubscription');
 
               }else{
-                navigation.navigate('Subscription');
+                navigation.navigate('OldSubscription');
 
               }
             }}

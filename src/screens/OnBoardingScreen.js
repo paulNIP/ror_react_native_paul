@@ -112,6 +112,15 @@ const OnboardingScreen = () => {
                 console.log("Create table error", error)
               }
             );
+
+
+            db.executeSql(
+              'CREATE TABLE IF NOT EXISTS favourite_books (id  INTEGER PRIMARY KEY,book_title  TEXT,book_description TEXT, image  TEXT, cover_image  TEXT,book_file_type  TEXT,book_file_url  TEXT, book_rate TEXT,book_rate_avg  TEXT,book_view  TEXT, book_author_name  TEXT)',[], (result) => {
+                console.log("book Table created successfully");
+              }, (error) => {
+                console.log("Create table error", error)
+              }
+            );
   
             db.executeSql(
               'CREATE TABLE IF NOT EXISTS book_download (book_id  INTEGER PRIMARY KEY,book_download_title  TEXT,image_download  TEXT, book_download_author_name TEXT, book_download_url  TEXT)',[], (result) => {

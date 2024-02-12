@@ -36,6 +36,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import OnboardingScreen from './src/screens/OnBoardingScreen';
 import AppFeedBack from './src/screens/AppFeedBack';
+import FeedBack from './src/screens/FeedBack';
 import { Linking, Alert } from 'react-native'; // Import Alert from 'react-native'
 
 import VersionCheck from 'react-native-version-check';
@@ -55,6 +56,7 @@ import PrivacyPolicy from './src/screens/PrivacyPolicy';
 import AboutUs from './src/screens/AboutUs';
 import EditProfile from './src/screens/EditProfile';
 import Settings from './src/screens/Settings';
+import { OldSubscription } from './src/screens/OldSubscription';
 
 
 
@@ -77,6 +79,7 @@ export type StackParamList = {
   Settings:undefined;
   EditProfile:{email:string};
   PrivacyPolicy:undefined;
+  FeedBack:{id:string};
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -89,7 +92,14 @@ export const screens = [
     title: "Subscription",
     component: withIAPContext(SubscriptionsScreen),
     section: "Context"
-  }
+  },
+  {
+    name: "OldSubscription",
+    title: "OldSubscription",
+    component: withIAPContext(OldSubscription),
+    section: "Context",
+    color: "#cebf38",
+  },
 ];
 
 
@@ -342,6 +352,9 @@ function StoreStackNavigator() {
               </View>
             )}}
       
+      />
+
+    <Stack.Screen name="FeedBack" component={FeedBack}
       />
     </Stack.Navigator>
   );
