@@ -57,6 +57,7 @@ import AboutUs from './src/screens/AboutUs';
 import EditProfile from './src/screens/EditProfile';
 import Settings from './src/screens/Settings';
 import { OldSubscription } from './src/screens/OldSubscription';
+import EpubReader from './src/screens/EpubReader';
 
 
 
@@ -80,6 +81,7 @@ export type StackParamList = {
   EditProfile:{email:string};
   PrivacyPolicy:undefined;
   FeedBack:{id:string};
+  EpubReader:{file:string};
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -221,9 +223,13 @@ function AudioStackNavigator() {
 
 
 function LibraryStackNavigator() {
+
+  const navigation = useNavigation<StackNavigation>();
+
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="Rhapsody Library" component={LibraryScreen} />
+      <Stack.Screen name="EpubReader" component={EpubReader} />
     </Stack.Navigator>
   );
 }

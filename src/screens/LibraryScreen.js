@@ -18,6 +18,7 @@ const LibraryScreen = ({navigation}) => {
   const [loadingState, setLoadingState] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [listAlign, setListAlign] = useState(false);
+  const [booksNo, setBooksNo] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -32,9 +33,12 @@ const LibraryScreen = ({navigation}) => {
 
           }
           
+          
 
       }
+      const header = booksNo+"";
       fetchData();
+
 
     }, []);
 
@@ -199,10 +203,10 @@ const LibraryScreen = ({navigation}) => {
           <View style={{  alignSelf:"flex-start",justifyContent:'center',alignSelf:'center'}}>
           {loggedIn? (
             <Text style={{color:'#FFFFFF',marginLeft:10}}>
-              1 Books in your Library
+               {books.length} Books in your Library
             </Text>):(
               <Text style={{color:'#FFFFFF',marginLeft:10}}>
-              0 Books in your Library
+              {books.length} Books in your Library
             </Text>
 
             )}

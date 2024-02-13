@@ -1,6 +1,13 @@
 PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
+  - CryptoSwift (1.5.1)
+  - DifferenceKit (1.3.0):
+    - DifferenceKit/Core (= 1.3.0)
+    - DifferenceKit/UIKitExtension (= 1.3.0)
+  - DifferenceKit/Core (1.3.0)
+  - DifferenceKit/UIKitExtension (1.3.0):
+    - DifferenceKit/Core
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.72.7)
   - FBReactNativeSpec (0.72.7):
@@ -69,6 +76,10 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
+  - Fuzi (3.1.3)
+  - GCDWebServer (3.7.5):
+    - GCDWebServer/Core (= 3.7.5)
+  - GCDWebServer/Core (3.7.5)
   - glog (0.3.5)
   - hermes-engine (0.72.7):
     - hermes-engine/Pre-built (= 0.72.7)
@@ -86,7 +97,25 @@ PODS:
   - libwebp/sharpyuv (1.3.2)
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
+  - Minizip (1.0.0)
   - OpenSSL-Universal (1.1.1100)
+  - R2Navigator (2.6.0):
+    - DifferenceKit (~> 1.0)
+    - R2Shared
+    - ReadiumInternal
+    - SwiftSoup (<= 2.5.3)
+  - R2Shared (2.6.0):
+    - Fuzi (~> 3.0)
+    - Minizip (~> 1.0)
+    - ReadiumInternal
+    - SwiftSoup (<= 2.5.3)
+  - R2Streamer (2.6.0):
+    - CryptoSwift (<= 1.5.1)
+    - Fuzi (~> 3.0)
+    - GCDWebServer (~> 3.0)
+    - Minizip (~> 1.0)
+    - R2Shared
+    - ReadiumInternal
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -398,6 +427,11 @@ PODS:
     - React-Core
   - react-native-network-info (5.2.1):
     - React
+  - react-native-readium (1.2.1):
+    - R2Navigator
+    - R2Shared
+    - R2Streamer
+    - React-Core
   - react-native-safe-area-context (4.7.4):
     - React-Core
   - react-native-slider (4.4.3):
@@ -414,7 +448,8 @@ PODS:
     - react-native-video/Video (= 5.2.1)
   - react-native-video/Video (5.2.1):
     - React-Core
-  - react-native-webview (13.6.2):
+  - react-native-webview (13.8.1):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - React-NativeModulesApple (0.72.7):
     - hermes-engine
@@ -530,6 +565,7 @@ PODS:
     - React
   - ReactNativeLocalization (2.3.2):
     - React-Core
+  - ReadiumInternal (2.6.0)
   - rn-fetch-blob (0.12.0):
     - React-Core
   - RNAudioRecorderPlayer (3.6.5):
@@ -550,7 +586,7 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.13.4):
+  - RNGestureHandler (2.15.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNIap (12.11.0):
@@ -639,6 +675,7 @@ PODS:
   - StripeUICore (23.21.1):
     - StripeCore (= 23.21.1)
   - SwiftAudioEx (1.0.0)
+  - SwiftSoup (2.5.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -668,10 +705,15 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitReactPlugin (= 0.182.0)
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.182.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.182.0)
+  - GCDWebServer (from `https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - Minizip
   - OpenSSL-Universal (= 1.1.1100)
+  - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec`)
+  - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec`)
+  - R2Streamer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -694,6 +736,7 @@ DEPENDENCIES:
   - react-native-ionicons (from `../node_modules/react-native-ionicons`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-network-info (from `../node_modules/react-native-network-info`)
+  - react-native-readium (from `../node_modules/react-native-readium`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-sqlite-storage (from `../node_modules/react-native-sqlite-storage`)
@@ -720,6 +763,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
   - ReactNativeLocalization (from `../node_modules/react-native-localization`)
+  - ReadiumInternal (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec`)
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
@@ -743,6 +787,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
+    - CryptoSwift
+    - DifferenceKit
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -752,8 +798,10 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - FlipperKit
     - fmt
+    - Fuzi
     - libevent
     - libwebp
+    - Minizip
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -767,6 +815,7 @@ SPEC REPOS:
     - StripePaymentsUI
     - StripeUICore
     - SwiftAudioEx
+    - SwiftSoup
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -778,11 +827,19 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
+  GCDWebServer:
+    :podspec: https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-08-07-RNv0.72.4-813b2def12bc9df02654b3e3653ae4a68d0572e0
+  R2Navigator:
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec
+  R2Shared:
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec
+  R2Streamer:
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -823,6 +880,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-network-info:
     :path: "../node_modules/react-native-network-info"
+  react-native-readium:
+    :path: "../node_modules/react-native-readium"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
@@ -875,6 +934,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/art"
   ReactNativeLocalization:
     :path: "../node_modules/react-native-localization"
+  ReadiumInternal:
+    :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec
   rn-fetch-blob:
     :path: "../node_modules/rn-fetch-blob"
   RNAudioRecorderPlayer:
@@ -917,6 +978,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
+  DifferenceKit: ab185c4d7f9cef8af3fcf593e5b387fb81e999ca
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 5fbbff1d7734827299274638deb8ba3024f6c597
   FBReactNativeSpec: 638095fe8a01506634d77b260ef8a322019ac671
@@ -929,11 +992,17 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
+  Fuzi: 4c10d6449c0b49a85cd75b13844c559c0fc71220
+  GCDWebServer: 5e989dbe6795b9975f378cc0eeeee49ef2c51b6f
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 9180d43df05c1ed658a87cc733dc3044cf90c00a
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  Minizip: 188cb3e39a1195c283ae03bf673d182596fefd0b
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
+  R2Navigator: 4b53a3d10dd7282c9d9cd6d2188e68f0041840fc
+  R2Shared: fa34e56aa6e67e34608bf6ef72acf2631cbc4b5e
+  R2Streamer: d2501f0395c868cb65329ec46e3ab604b8b98687
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 83bca1c184feb4d2e51c72c8369b83d641443f95
   RCTTypeSafety: 13c4a87a16d7db6cd66006ce9759f073402ef85b
@@ -954,13 +1023,14 @@ SPEC CHECKSUMS:
   react-native-ionicons: 7ce04a8e61c6de2fc3b6798e8b9621b865cb18b1
   react-native-netinfo: 8a7fd3f7130ef4ad2fb4276d5c9f8d3f28d2df3d
   react-native-network-info: d1290ffc0bd0709e11436f5b8d7f605dcc5c4530
+  react-native-readium: 7f71dab8b9c3eff510a2b7527e7a249691637215
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   react-native-slider: 1cdd6ba29675df21f30544253bf7351d3c2d68c4
   react-native-sqlite-storage: f6d515e1c446d1e6d026aa5352908a25d4de3261
   react-native-track-player: 97d76dbbd35f27cc709e5f04540615e54264b3f9
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
-  react-native-webview: 8fc09f66a1a5b16bbe37c3878fda27d5982bb776
+  react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-NativeModulesApple: b6868ee904013a7923128892ee4a032498a1024a
   React-perflogger: 31ea61077185eb1428baf60c0db6e2886f141a5a
   React-RCTActionSheet: 392090a3abc8992eb269ef0eaa561750588fc39d
@@ -980,6 +1050,7 @@ SPEC CHECKSUMS:
   ReactCommon: 5f704096ccf7733b390f59043b6fa9cc180ee4f6
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   ReactNativeLocalization: fb171138cdc80d5d0d4f20243d2fc82c2b3cc48f
+  ReadiumInternal: a74f61e9c0fbe2407f4e5c53aa032aa92193f3d5
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAudioRecorderPlayer: ba0aca62cd47c6f878313fdadb0edb23ef9dbf90
   RNBootSplash: 970faaa2ab1322758c6545c88d3b23f424b86a2f
@@ -989,7 +1060,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: db5c64a060e66e5db3102d041ebe3ef307a85120
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 6e46dde1f87e5f018a54fe5d40cd0e0b942b49ee
+  RNGestureHandler: 7909c50383a18f0cb10ce1db7262b9a6da504c03
   RNIap: fc9af04ee706894a80c9d8f979bae930b0dee191
   RNLocalize: 4222a3756cdbe2dc9a5bdf445765a4d2572107cb
   RNRate: ef3bcff84f39bb1d1e41c5593d3eea4aab2bd73a
@@ -1010,9 +1081,10 @@ SPEC CHECKSUMS:
   StripePaymentsUI: 1f8addf41697d0f298fd8a15e4edf3999fbc66bc
   StripeUICore: 95c5235db01a2d90b5bb72c85a804eaed4e64f17
   SwiftAudioEx: 6f511018b7a0fdfd14ed1bb4081f953588245cc0
+  SwiftSoup: 33e8d374021a6c332788f78fa29a93227d8a7699
   Yoga: 4c3aa327e4a6a23eeacd71f61c81df1bcdf677d5
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 499ec4cf113c64f37477fbf5486716484e9034e9
+PODFILE CHECKSUM: e2104be704e7550b161b85272fafc4394a0f5469
 
 COCOAPODS: 1.14.2
