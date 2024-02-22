@@ -1,23 +1,67 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Text, Platform } from 'react-native';
+import { StyleSheet, View, Text, Platform,ActivityIndicator } from 'react-native';
 import {
-  ReadiumView,
-  Settings,
+  ReadiumView
 } from 'react-native-readium';
 import type { Link, Locator, File } from 'react-native-readium';
+import RNFS from 'react-native-fs';
 
-import RNFS from '../utils/RNFS';
-import {
-  EPUB_URL,
-  EPUB_PATH,
-  INITIAL_LOCATION,
-  DEFAULT_SETTINGS,
-} from '../consts';
+// import RNFS from '../utils/RNFS';
+// import {
+//   EPUB_URL,
+//   EPUB_PATH,
+//   INITIAL_LOCATION,
+//   DEFAULT_SETTINGS,
+// } from '../consts';
 import { ReaderButton } from './ReaderButton';
 import { TableOfContents } from './TableOfContents';
 import { ReaderSetting as ReaderSettings } from './ReaderSetting'
+import { Notes } from './Notes';
+import { useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 
-export const EpubReader: React.FC = () => {
+import {
+  Settings,
+  Appearance,
+} from 'react-native-readium';
+
+export const INITIAL_LOCATION: Locator = {
+  href: '/OEBPS/Text/FebruaryROR03.xhtml',
+  title: 'SATURDAY 3 - PRODUCE VICTORY IN EVERY SITUATION',
+  type: 'application/xhtml+xml',
+  target: 27,
+  locations: {
+    position: 24,
+    progression: 0,
+    totalProgression: 0.03392330383480826
+  },
+};
+
+
+type RootStackParamList = {
+  EpubReader: { file2: string };
+};
+
+type MyScreenRouteProp = RouteProp<RootStackParamList, 'EpubReader'>;
+
+interface MyScreenProps {
+  route: MyScreenRouteProp;
+}
+
+
+
+export const EpubReader: React.FC<MyScreenProps> = ({route}) => {
+
+  const DEFAULT_SETTINGS = new Settings();
+  DEFAULT_SETTINGS.appearance = Appearance.DEFAULT;
+
+  const {file2}=route.params;
+
+  const EPUB_URL = route.params;
+  const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+file2.split("/").pop();
+
+  console.log("Passed content",EPUB_PATH);
+
   const [toc, setToc] = useState<Link[] | null>([]);
   const [file, setFile] = useState<File>();
   const [location, setLocation] = useState<Locator | Link>();
@@ -29,7 +73,7 @@ export const EpubReader: React.FC = () => {
 
       if (Platform.OS === 'web') {
         setFile({
-          url: EPUB_URL,
+          url: file2,
           initialLocation: INITIAL_LOCATION,
         });
       } else {
@@ -37,7 +81,7 @@ export const EpubReader: React.FC = () => {
         if (!exists) {
           console.log(`Downloading file: '${EPUB_URL}'`);
           const { promise } = RNFS.downloadFile({
-            fromUrl: EPUB_URL,
+            fromUrl: file2,
             toFile: EPUB_PATH,
             background: true,
             discretionary: true,
@@ -66,14 +110,41 @@ export const EpubReader: React.FC = () => {
           <View style={styles.button}>
             <TableOfContents
               items={toc}
+              onPress={ 
+                (loc) => {
+                  let location=loc.href;
+                  let title3 =loc.title;
+                  console.log("Location",location);
+                  console.log("Location Object ",loc);
+                  let goTo ={
+                    href: '/OEBPS/Text/FebruaryROR03.xhtml',
+                    title: 'MONDAY 5 - TELL IT EVERYWHERE',
+                    type: 'application/xhtml+xml',
+                    target: 27,
+                    locations: {
+                      position: 24,
+                      progression: 0,
+                      totalProgression: 0.03392330383480826
+                    },
+                  };
+                  setLocation(goTo);
+
+                  
+                }
+ 
+              }
+            />
+          </View>
+          <View style={styles.button}>
+            <Notes
+              items={toc}
               onPress={(loc) => {
-                // const location=loc.href;
-                // const title =loc.title;
+                const location=loc.href;
+                const title =loc.title;
 
                 // setLocation({ href: location, type: 'application/xhtml+xml', title: title })
+                (locator: Locator) => setLocation(locator)
               }
-                
-              
               }
             />
           </View>
@@ -118,8 +189,13 @@ export const EpubReader: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>downloading file</Text>
+    <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+      <ActivityIndicator
+            style={{ height: 80 }}
+            color="#FFFFFF"
+            size="large"
+        />
+        <Text style={{alignSelf:'center'}}>Downloading File ...</Text>
     </View>
   );
 }

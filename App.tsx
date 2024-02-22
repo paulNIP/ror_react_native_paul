@@ -102,6 +102,13 @@ export const screens = [
     section: "Context",
     color: "#cebf38",
   },
+  {
+    name: "BookDetails",
+    title: "BookDetails",
+    component: withIAPContext(BookDetails),
+    section: "Context",
+    color: "#cebf38",
+  },
 ];
 
 
@@ -229,7 +236,12 @@ function LibraryStackNavigator() {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="Rhapsody Library" component={LibraryScreen} />
-      <Stack.Screen name="EpubReader" component={EpubReader} />
+      <Stack.Screen name="EpubReader" component={EpubReader} 
+      options={{
+        title: 'Document Reader',
+        }}
+         
+         />
     </Stack.Navigator>
   );
 }
@@ -395,7 +407,16 @@ function MoreStackNavigator() {
   const logOutUser = async () => {
     //clear email from local storage
     try {
+        await AsyncStorage.removeItem("user_id");
+        await AsyncStorage.removeItem("country");
         await AsyncStorage.removeItem("email");
+        await AsyncStorage.removeItem("expiry_date");
+        await AsyncStorage.removeItem("is_registered");
+        await AsyncStorage.removeItem("name");
+        await AsyncStorage.removeItem("platform");
+        await AsyncStorage.removeItem("subscription");
+        await AsyncStorage.removeItem("hasLoggedIn");
+
          //redirect user
         navigation.navigate('Welcome');
         return true;
@@ -489,6 +510,41 @@ options={{
       <Stack.Screen name="Bookmarked Articles" component={BookmarkedArticles} />
       
     </Stack.Navigator>
+  );
+}
+
+function TabNavigator() {
+
+  return (
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName= "home";
+  
+        if (route.name === 'Home') {
+          iconName = 'home';
+        } else if (route.name === 'Audio') {
+          iconName = 'music-note';
+        } else if (route.name === 'Library') {
+          iconName = 'bookshelf';
+        }else if (route.name === 'Store') {
+          iconName = 'cart';
+          } else if (route.name === 'More') {
+          iconName = 'dots-horizontal';
+          }
+  
+        return <MaterialCommunityIcons  name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: '#D8A623',
+      tabBarInactiveTintColor: '#333333',
+      })}
+    >
+      <Tab.Screen name="Welcome" component={HomeStackNavigator} options={{headerShown: false}} />
+      <Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
+      <Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
+      <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />
+      <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
+    </Tab.Navigator>
   );
 }
 
@@ -615,7 +671,7 @@ backgroundColor='#D8A623'
  ) : (
   <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="OnBoardingScreen" component={OnboardingScreen}  options={{headerShown: false}}/>
-      <Stack.Screen name="HomeScreen" component={HomeStackNavigator}  options={{headerShown: false}}/>
+      <Stack.Screen name="HomeScreen" component={TabNavigator}  options={{headerShown: false}}/>
   </Stack.Navigator>
 )}
 </NavigationContainer>

@@ -12,6 +12,8 @@ import { DatabaseConnection } from '../database/database-connection';
 import SnackBar from 'react-native-snackbar-component';
 import RNFS from 'react-native-fs';
 import * as Progress from 'react-native-progress';
+import { Platform } from 'react-native';
+import * as RNIap from 'react-native-iap';
 
 
 
@@ -29,6 +31,7 @@ const BookDetails = ({ route, navigation }) => {
 
     useEffect(() => {
 
+
         const fetchData = async () => {
             const data = await getBookDetails(book_id);
             setBook(data);
@@ -37,6 +40,18 @@ const BookDetails = ({ route, navigation }) => {
         fetchData();
   
       }, []);
+
+
+      const purchaseProduct = async (productId) => {
+        try {
+          const purchase = await RNIap.requestPurchase(productId);
+          console.log('Purchase:', purchase);
+          // Handle successful purchase
+        } catch (error) {
+          console.log('Error purchasing:', error.message);
+          // Handle purchase error
+        }
+      };
 
 
       const downloadFile = () => {
@@ -116,6 +131,7 @@ const BookDetails = ({ route, navigation }) => {
         const rate_avg=item.rate_avg;
         const book_views=item.book_views;
         const author_name=item.author_name;
+        const product=item.apple_product_code;
 
 
         return (
@@ -145,7 +161,15 @@ const BookDetails = ({ route, navigation }) => {
                             </TouchableOpacity> */}
                            
                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,
-                                                  backgroundColor: '#D8A623',marginEnd:10,justifyContent:'center',alignContent:'center'}}>
+                                                  backgroundColor: '#D8A623',
+                               marginEnd:10,justifyContent:'center',alignContent:'center'}}
+                               
+                               onPress={()=>{
+                                console.log("product ID",product);
+                                purchaseProduct(product);
+                               
+                              }}
+                               >
                                 <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>BUY US ${item.price}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',

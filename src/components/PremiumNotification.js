@@ -3,6 +3,7 @@ import { View,Text, StyleSheet,Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNFS from 'react-native-fs';
 import { TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import { DatabaseConnection } from '../database/database-connection';

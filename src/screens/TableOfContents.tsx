@@ -52,7 +52,14 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
                   {item.title ? item.title : `Chapter ${idx + 1}`}
                 </ListItem.Title>
               </ListItem.Content>
-              <ListItem.Chevron/>
+              {/* <ListItem.Chevron/> */}
+              <MaterialCommunityIcons
+                  name="chevron-right"
+                  // type="font-awesome"
+                  // color='#D8A623'
+                  size={25}
+                  onPress={onToggleOpen}
+                />
             </ListItem>
           ))}
         </ScrollView>

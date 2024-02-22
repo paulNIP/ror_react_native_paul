@@ -7,13 +7,14 @@ import Strings from '../constants/Strings';
 const getDailyDevotional = async () => {
     return new Promise((resolve, reject) => {
 
-            axios.post(Strings.API_URL+'/devotional', {
+            axios.post(Strings.API_URL+'/v2/devotional', {
                 date: new Date().toISOString().slice(0, 10)
 
               })
               .then((res) => {
                 //console.log(res.data.result)
-                resolve(res.data.result)
+                resolve(res.data.result);
+                console.log("Devotional data",res.data.result)
             })
               .catch((err) => {
                 reject(err)
