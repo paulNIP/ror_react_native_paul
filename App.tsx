@@ -193,7 +193,7 @@ function HomeStackNavigator() {
       <Stack.Screen name="Registration" component={RegistrationPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Past Articles" component={PastArticles} />
       <Stack.Screen name="Related Articles" component={RelatedArticles} />
-      <Stack.Screen name="Saved Articles" component={SavedArticles} />
+      <Stack.Screen name="Saved Articles" component={BookmarkedArticles} />
       <Stack.Screen name="Search Article" component={SearchArticles} />
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />

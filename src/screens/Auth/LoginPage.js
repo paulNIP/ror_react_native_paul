@@ -126,6 +126,13 @@ function LoginPage() {
       >
         <Text style={{color:'white'}}>Continue</Text>
       </TouchableOpacity>)}
+
+      <TouchableOpacity
+        style={{marginTop:15}}
+        onPress={() => {navigation.navigate('HomeScreen')}}
+      >
+        <Text style={{color:'black'}}>Continue as Guest</Text>
+      </TouchableOpacity>
       
 
       <Snackbar
