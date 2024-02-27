@@ -14,14 +14,16 @@ import { getDailyDevotional } from "../service/devotionalService";
 
 const windowWidth = Dimensions.get('window').width;
 
-const renderItem = ({ item }) => {
 
+const renderItem = ({ item }) => {
     const imgr = item.book_cover_img;
 
     
     return (
       <View style={{marginEnd:10,width:100}}>
-        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
+        <TouchableOpacity onPress={()=>{
+          navigation.navigate("BookDetails",{book_id:item.id});
+        }}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
             <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                 <Image
@@ -54,7 +56,7 @@ const DailyDevotionalBooks = () => {
     const [categoryID, setCategoryID] = useState();
     const [bookDescription, setBookDescription] = useState();
 
-    const navigation =useNavigation()
+    const navigation =useNavigation();
 
 
     useEffect(() => {
@@ -72,7 +74,7 @@ const DailyDevotionalBooks = () => {
 
         }, []);
 
-    console.log("Category mmmm",categoryID);
+
 
     const goToTranslatedBooks=(cat)=>{
         navigation.navigate('GroupedBooks',{cat_id:cat,category:bookCategory});
@@ -83,7 +85,7 @@ const DailyDevotionalBooks = () => {
 
   return (
     <View>
-        { bookCategory &&(
+        {/* { bookCategory &&( */}
 
         <View>
             <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
@@ -106,7 +108,7 @@ const DailyDevotionalBooks = () => {
             </ScrollView>
         </View>
 
-        )}
+        {/* )} */}
         
     </View>
   );

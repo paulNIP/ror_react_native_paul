@@ -19,11 +19,19 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {Overlay } from '@rneui/themed';
 import {Dimensions,Image,Animated,Easing} from 'react-native';
 
+
+
 const THEME_COLOR = '##D8A623';
 const windowHeight = Dimensions.get('window').height*0.6;
 const windowWidth = Dimensions.get('window').width*0.8;
 
+
+
+
 const HomeScreen= ({navigation}) => {
+
+
+
 
 const [visibleCongs, setVisibleCongs] = useState(false);
 
@@ -58,6 +66,7 @@ const animatedStyle = {
 };
 
 useEffect(() => {
+
   async function setExpiry() {
     const expiryData = await AsyncStorage.getItem("expiry_date");
     console.log('expiry Date ',expiryData);

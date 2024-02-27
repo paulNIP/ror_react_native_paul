@@ -1,7 +1,8 @@
 import React ,{useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Text, View,Button,Image, ImageBackground,
-  TouchableOpacity ,Platform,KeyboardAvoidingView,StyleSheet} from "react-native";
+              DeviceEventEmitter,
+              TouchableOpacity ,Platform,KeyboardAvoidingView,StyleSheet,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from 'react-native-paper';
 import {Dimensions} from 'react-native';
@@ -113,6 +114,7 @@ const EmailCodeAuth=({ route, navigation })=> {
               //insert data into user DB local storage sqlite
 
               saveUserData();
+              DeviceEventEmitter.emit('reload.app');
               navigation.navigate('HomeScreen');
               
             } else {

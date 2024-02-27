@@ -32,6 +32,7 @@ const PremiumNotification = ({navigation}) => {
         // get current month rhapsody
         var d = new Date();
         var bk =monthNames[d.getMonth()];
+        console.log("BOOK MINE",bk);
 
 
         db.transaction((tx) => {

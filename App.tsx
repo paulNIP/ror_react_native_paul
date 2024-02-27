@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import { View, Text, StyleSheet,Image, TouchableOpacity,StatusBar, Platform,I18nManager } from 'react-native';
+import { View, Text, StyleSheet,Image, TouchableOpacity,StatusBar, Platform,I18nManager, DeviceEventEmitter } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -136,10 +136,10 @@ function HomeStackNavigator() {
       const fetchData = async () => {
           let data = await AsyncStorage.getItem('name');
           if(data==null){
-            setName('Guest')
+            setName('Guest');
 
           }else{
-            setName(data)
+            setName(data);
           }
           
       }
@@ -417,6 +417,7 @@ function MoreStackNavigator() {
         await AsyncStorage.removeItem("subscription");
         await AsyncStorage.removeItem("hasLoggedIn");
 
+        DeviceEventEmitter.emit('reload.app');
          //redirect user
         navigation.navigate('Welcome');
         return true;
@@ -559,7 +560,7 @@ export default function App() {
    
   useEffect(() => {
 
-
+    DeviceEventEmitter.emit('reload.app');
     const checkAppVersion = async () => {
       try {
 const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.com/in/lookup?bundleId=com.rhapsody.dailydevotionals')
