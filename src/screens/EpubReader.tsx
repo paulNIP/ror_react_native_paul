@@ -119,21 +119,10 @@ export const EpubReader: React.FC<MyScreenProps> = ({route}) => {
               onPress={ 
                 (loc) => {
                   let location=loc.href;
-                  let title3 =loc.title;
+                  var title3 =loc.title;
                   console.log("Location",location);
                   console.log("Location Object ",title3);
-                  let goTo ={
-                    href: '/OEBPS/Text/february-2024-epub.xhtml',
-                    title: title3,
-                    type: 'application/xhtml+xml',
-                    target: 27,
-                    locations: {
-                      position: 24,
-                      progression: 0,
-                      totalProgression: 0.03392330383480826
-                    },
-                  };
-                  setLocation(goTo);
+                  setLocation(loc);
 
                   
                 }
@@ -174,7 +163,9 @@ export const EpubReader: React.FC<MyScreenProps> = ({route}) => {
             <ReadiumView
               ref={ref}
               file={file}
-              location={location}
+              location={
+                location
+              }
               settings={settings}
               onLocationChange={(locator: Locator) => setLocation(locator)}
               onTableOfContents={(toc: Link[] | null) => {
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
   },
   readiumContainer: {
     width: Platform.OS === 'web' ? '80%' : '100%',
-    height: '100%',
+    height: '97%',
   },
   controls: {
     flexDirection: 'row',

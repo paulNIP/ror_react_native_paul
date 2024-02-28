@@ -40,6 +40,7 @@ import FeedBack from './src/screens/FeedBack';
 import { Linking, Alert } from 'react-native'; // Import Alert from 'react-native'
 
 import VersionCheck from 'react-native-version-check';
+import SplashScreen from 'react-native-splash-screen';
 
 
 import * as RNLocalize from "react-native-localize";
@@ -60,6 +61,7 @@ import { OldSubscription } from './src/screens/OldSubscription';
 import EpubReader from './src/screens/EpubReader';
 import { DatabaseConnection } from './src/database/database-connection';
 import { getProfile } from './src/service/authService';
+import Splash from './src/screens/Splash';
 
 
 
@@ -202,7 +204,10 @@ function HomeStackNavigator() {
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="VideoDetail" component={VideoDetail} />
-      <Stack.Screen name="EpubReader" component={EpubReader} />
+      <Stack.Screen name="EpubReader" component={EpubReader} 
+        options={{
+          title: 'Document Reader',
+        }}/>
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
       }} />
@@ -561,12 +566,19 @@ export default function App() {
 
   const [showRealApp, setShowRealApp] = useState<any>();
   const [appUrl, setStoreUrl] = useState<any>();
+  const [splashing,setSplashing] = useState(true);
 
   const db = DatabaseConnection.getdevotionalsDB();
   
   
    
   useEffect(() => {
+    // Hide the splash screen when the component is mounted
+    SplashScreen.hide();
+
+    setTimeout(() => {
+      setSplashing(false);
+    },5000);
 
     DeviceEventEmitter.emit('reload.app');
     const checkAppVersion = async () => {
@@ -676,9 +688,10 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
         
       }
 
-      checkAppVersion();
+      
       fetchAudioDevotionals();
       fetchData();
+      // checkAppVersion();
 
   }, []);
 
@@ -687,49 +700,60 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
 	return (
 		
 <>
-
+{splashing ?(
+  <NavigationContainer>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={Splash}  options={{headerShown: false}}/>
+    </Stack.Navigator>
+  </NavigationContainer>
+):( 
   <NavigationContainer>
   <StatusBar
 backgroundColor='#D8A623'
 />
 {showRealApp ? (
- <Tab.Navigator 
-   screenOptions={({ route }) => ({
-     tabBarIcon: ({ focused, color, size }) => {
-       let iconName= "home";
- 
-       if (route.name === 'Home') {
-         iconName = 'home';
-       } else if (route.name === 'Audio') {
-         iconName = 'music-note';
-       } else if (route.name === 'Library') {
-         iconName = 'bookshelf';
-       }else if (route.name === 'Store') {
-         iconName = 'cart';
-         } else if (route.name === 'More') {
-         iconName = 'dots-horizontal';
-         }
- 
-       return <MaterialCommunityIcons  name={iconName} size={size} color={color} />;
-     },
-     tabBarActiveTintColor: '#D8A623',
-     tabBarInactiveTintColor: '#333333',
-     })}>
+  <Tab.Navigator 
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName= "home";
   
-   <Tab.Screen name="Welcome" component={HomeStackNavigator} options={{headerShown: false}} />
-   <Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
-   <Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
-   <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />
-   <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
- </Tab.Navigator>
- ) : (
-  <Stack.Navigator screenOptions={screenOptionStyle}>
-      <Stack.Screen name="OnBoardingScreen" component={OnboardingScreen}  options={{headerShown: false}}/>
-      <Stack.Screen name="HomeScreen" component={TabNavigator}  options={{headerShown: false}}/>
-  </Stack.Navigator>
-)}
-</NavigationContainer>
+        if (route.name === 'Home') {
+          iconName = 'home';
+        } else if (route.name === 'Audio') {
+          iconName = 'music-note';
+        } else if (route.name === 'Library') {
+          iconName = 'bookshelf';
+        }else if (route.name === 'Store') {
+          iconName = 'cart';
+          } else if (route.name === 'More') {
+          iconName = 'dots-horizontal';
+          }
+  
+        return <MaterialCommunityIcons  name={iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: '#D8A623',
+      tabBarInactiveTintColor: '#333333',
+      })}>
+    
+    <Tab.Screen name="Welcome" component={HomeStackNavigator} options={{headerShown: false}} />
+    <Tab.Screen name="Audio" component={AudioStackNavigator} options={{headerShown: false}} />
+    <Tab.Screen name="Library" component={LibraryStackNavigator} options={{headerShown: false}} />
+    <Tab.Screen name="Store" component={StoreStackNavigator} options={{headerShown: false}}  />
+    <Tab.Screen name="More" component={MoreStackNavigator} options={{headerShown: false}} />
+  </Tab.Navigator>
+  ) : (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+        <Stack.Screen name="OnBoardingScreen" component={OnboardingScreen}  options={{headerShown: false}}/>
+        <Stack.Screen name="HomeScreen" component={TabNavigator}  options={{headerShown: false}}/>
+    </Stack.Navigator>
+  )}
+  </NavigationContainer>
 
+)}
+
+
+     
+     
 </>
 	);
 }
