@@ -25,21 +25,11 @@ import {
   Appearance,
 } from 'react-native-readium';
 
-export const INITIAL_LOCATION: Locator = {
-  href: '/OEBPS/Text/FebruaryROR03.xhtml',
-  title: 'SATURDAY 3 - PRODUCE VICTORY IN EVERY SITUATION',
-  type: 'application/xhtml+xml',
-  target: 27,
-  locations: {
-    position: 24,
-    progression: 0,
-    totalProgression: 0.03392330383480826
-  },
-};
+
 
 
 type RootStackParamList = {
-  EpubReader: { file2: string };
+  EpubReader: { file2: string,init:string };
 };
 
 type MyScreenRouteProp = RouteProp<RootStackParamList, 'EpubReader'>;
@@ -55,7 +45,23 @@ export const EpubReader: React.FC<MyScreenProps> = ({route}) => {
   const DEFAULT_SETTINGS = new Settings();
   DEFAULT_SETTINGS.appearance = Appearance.DEFAULT;
 
-  const {file2}=route.params;
+  const file2=route.params.file2;
+  const init=route.params.init;
+
+  console.log("initBwoyFile2",file2);
+  console.log("initBwoy",init.toUpperCase());
+
+  const INITIAL_LOCATION: Locator = {
+    href: '/OEBPS/Text/february-2024-epub.xhtml',
+    title: init.toUpperCase(),
+    type: 'application/xhtml+xml',
+    target: 27,
+    locations: {
+      position: 24,
+      progression: 0,
+      totalProgression: 0.03392330383480826
+    },
+  };
 
   const EPUB_URL = route.params;
   const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+file2.split("/").pop();
@@ -115,10 +121,10 @@ export const EpubReader: React.FC<MyScreenProps> = ({route}) => {
                   let location=loc.href;
                   let title3 =loc.title;
                   console.log("Location",location);
-                  console.log("Location Object ",loc);
+                  console.log("Location Object ",title3);
                   let goTo ={
-                    href: '/OEBPS/Text/FebruaryROR03.xhtml',
-                    title: 'MONDAY 5 - TELL IT EVERYWHERE',
+                    href: '/OEBPS/Text/february-2024-epub.xhtml',
+                    title: title3,
                     type: 'application/xhtml+xml',
                     target: 27,
                     locations: {

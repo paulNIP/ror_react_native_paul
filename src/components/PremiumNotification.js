@@ -7,54 +7,61 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import { DatabaseConnection } from '../database/database-connection';
+import { getDailyDevotionalBooks } from '../service/storeService';
+import { getProfile } from '../service/authService';
+import { getBookDetails } from '../service/libraryService';
+import { useNavigation } from '@react-navigation/native';
 
 const db = DatabaseConnection.getdb();
 
 
-const PremiumNotification = ({navigation}) => {
+const PremiumNotification = () => {
 
-   let [rhapsodyData, setRhapsodyData] = useState();
    const [subscribed, setSubscribed] = React.useState(null);
+   const [books, setBooks] = useState();
+   const navigation =useNavigation();
+
 
    useEffect(() => {
     async function setData() {
-      const subscribe = await AsyncStorage.getItem("subscription");
-      setSubscribed(subscribe);
+      const mail=await AsyncStorage.getItem('email');
+      if(mail===null){
+
+      }else{
+        const subscribe = await getProfile(mail);
+
+        const bks = await getDailyDevotionalBooks();
+        //get book details by the current Devotional ID
+        const bookDetail =await getBookDetails(bks.books[0].id);
+        setBooks(bookDetail);
+        setSubscribed(subscribe.subscription.status);
+        
+
+
+      }
+      
 
     }
     setData();
 
   }, []);
+   const openEpub=(url,init)=>{
+    console.log("urlfile",url);
+    navigation.navigate('EpubReader',{file2:url,init:init});
+
+   }
 
     const openRhapsodyReader = () => {
 
-        var monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
-        // get current month rhapsody
-        var d = new Date();
-        var bk =monthNames[d.getMonth()];
-        console.log("BOOK MINE",bk);
+        let url =books[0].book_file_url;
+        let options = { weekday: 'long', day: 'numeric'};
+        let prnDt =  new Date().toLocaleTimeString('en-us', options);
+        let initialLocation =prnDt.split(',')[0]; 
+        console.log("Initial Location", initialLocation);
+        openEpub(url,initialLocation);
+        
 
-
-        db.transaction((tx) => {
-          tx.executeSql(
-            'SELECT * FROM book_download where book_download_title LIKE ?',
-            ['%' + bk + '%'],
-            (tx, results) => {
-              var len = results.rows.length;
-              console.log('len000', results.rows.item(0));
-              if (len > 0) {
-                setRhapsodyData(results.rows.item(0).book_download_title);
-                //open Rhapsody using Epub Reader
-                navigation.navigate('EpubReader',{file:results.rows.item(0).book_download_title,location:''})
-
-              } else {
-                Alert.alert("The "+bk+" Rhapsody is not available in your Library. \nPlease download it from the Store");
-              }
-            }
-          );
-        });
-
-      };
+    };
 
 return (
   <>

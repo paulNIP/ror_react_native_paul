@@ -59,6 +59,7 @@ import Settings from './src/screens/Settings';
 import { OldSubscription } from './src/screens/OldSubscription';
 import EpubReader from './src/screens/EpubReader';
 import { DatabaseConnection } from './src/database/database-connection';
+import { getProfile } from './src/service/authService';
 
 
 
@@ -135,13 +136,15 @@ function HomeStackNavigator() {
   useEffect(() => {
 
       const fetchData = async () => {
-          let data = await AsyncStorage.getItem('name');
-          if(data==null){
+          let mail=await AsyncStorage.getItem('email');
+          if(mail===null){
             setName('Guest');
-
           }else{
-            setName(data);
+            let data = await getProfile(mail);
+            setName(data.name);
+
           }
+          
           
       }
       fetchData();
@@ -199,6 +202,7 @@ function HomeStackNavigator() {
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="VideoDetail" component={VideoDetail} />
+      <Stack.Screen name="EpubReader" component={EpubReader} />
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
       }} />
