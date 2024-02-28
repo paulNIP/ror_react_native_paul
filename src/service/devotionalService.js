@@ -1,6 +1,9 @@
 
 import axios from 'axios';
 import Strings from '../constants/Strings';
+import { DatabaseConnection } from '../database/database-connection';
+
+const db = DatabaseConnection.getdevotionalsDB();
 
 
 
@@ -63,7 +66,6 @@ const getAudioArticles =async(month) => {
         .then((res) => {
           resolve(res.data);
 
-
       })
         .catch((err) => {
           reject(err)
@@ -73,6 +75,37 @@ const getAudioArticles =async(month) => {
   
 
 }
+
+const getPlaylist = () => {
+  const currentDate =new Date().toISOString().split('T')[0];
+  const selectQuery = "SELECT * FROM audio_devotionals where formated_date <= ?";
+  
+  
+  return new Promise((resolve, reject) => {
+    
+    db.transaction(tx => {   
+      tx.executeSql(
+        selectQuery, 
+        [currentDate],
+        (tx, results) => {
+          let files=results.rows;
+          let temp =[];
+          
+          for(let j = 0; j < files.length; j++) {
+            let item=files.item(j);
+            temp.push(item);
+          
+          }
+          resolve(files)
+         }
+        ,
+        (_, error) => reject(error)
+      );
+    });
+
+  });
+
+};
 
 const getRelatedArticles =async(title) => {
   return new Promise((resolve, reject) => {
@@ -95,4 +128,4 @@ const getRelatedArticles =async(title) => {
 
 
 export { getDailyDevotional ,getArticleDetails,getPastArticles,
-     getRelatedArticles,getAudioArticles}
+     getRelatedArticles,getAudioArticles,getPlaylist}

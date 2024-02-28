@@ -423,6 +423,8 @@ PODS:
     - React-Core
   - react-native-ionicons (4.6.5):
     - React
+  - react-native-ios-files-app-save (0.1.7):
+    - React-Core
   - react-native-netinfo (11.2.1):
     - React-Core
   - react-native-network-info (5.2.1):
@@ -736,6 +738,7 @@ DEPENDENCIES:
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-ionicons (from `../node_modules/react-native-ionicons`)
+  - react-native-ios-files-app-save (from `../node_modules/react-native-ios-files-app-save`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-network-info (from `../node_modules/react-native-network-info`)
   - react-native-readium (from `../node_modules/react-native-readium`)
@@ -879,6 +882,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-ionicons:
     :path: "../node_modules/react-native-ionicons"
+  react-native-ios-files-app-save:
+    :path: "../node_modules/react-native-ios-files-app-save"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-network-info:
@@ -1026,6 +1031,7 @@ SPEC CHECKSUMS:
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-image-picker: 5e076db26cd81660cfb6db5bcf517cfa12054d45
   react-native-ionicons: 7ce04a8e61c6de2fc3b6798e8b9621b865cb18b1
+  react-native-ios-files-app-save: 097e27a39c87126605586bae34d35775d89fee65
   react-native-netinfo: 8a7fd3f7130ef4ad2fb4276d5c9f8d3f28d2df3d
   react-native-network-info: d1290ffc0bd0709e11436f5b8d7f605dcc5c4530
   react-native-readium: 7f71dab8b9c3eff510a2b7527e7a249691637215
@@ -1091,6 +1097,6 @@ SPEC CHECKSUMS:
   Yoga: 4c3aa327e4a6a23eeacd71f61c81df1bcdf677d5
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e2104be704e7550b161b85272fafc4394a0f5469
+PODFILE CHECKSUM: 6d9dc67e93a20487f24e048e418bca3a11c5f74f
 
 COCOAPODS: 1.14.2

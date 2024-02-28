@@ -53,6 +53,7 @@
     "react-native-image-picker": "^7.1.0",
     "react-native-indicator": "^1.2.2",
     "react-native-ionicons": "^4.6.5",
+    "react-native-ios-files-app-save": "^0.1.7",
     "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-localization": "^2.3.2",
     "react-native-localize": "^3.0.6",

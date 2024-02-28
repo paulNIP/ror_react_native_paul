@@ -58,6 +58,7 @@ import EditProfile from './src/screens/EditProfile';
 import Settings from './src/screens/Settings';
 import { OldSubscription } from './src/screens/OldSubscription';
 import EpubReader from './src/screens/EpubReader';
+import { DatabaseConnection } from './src/database/database-connection';
 
 
 
@@ -216,12 +217,13 @@ function AudioStackNavigator() {
                     headerTintColor: "white",
                     headerBackTitle: "Back"}}>
       <Stack.Screen name="Rhapsody Audio" component={AudioScreen} 
-      options={{
-                title: "Rhapsody Audio",
-                headerTitleStyle: { 
-                    textAlign:"center", 
-                    flex:1 
-                },}}
+      // options={{
+      //           headerTitleStyle: { 
+      //               textAlign:"center", 
+      //               flex:1 
+      //           },
+              
+      //         }}
        />
     </Stack.Navigator>
   );
@@ -555,6 +557,8 @@ export default function App() {
 
   const [showRealApp, setShowRealApp] = useState<any>();
   const [appUrl, setStoreUrl] = useState<any>();
+
+  const db = DatabaseConnection.getdevotionalsDB();
   
   
    
@@ -618,11 +622,56 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
           
       }
       //const fetch audio devotionals
-      const fetchAudioDevotionals = async () => {
-        const audio = await getAudioArticles();  
+      const fetchAudioDevotionals = async () => {  
+        let currentmonth =  String(new Date().getMonth() + 1).padStart(2, "0");
+        const audio = await getAudioArticles(currentmonth);
+        for (var i = 0; i < audio.length; i++) {
+
+          let date= audio[i].date;
+          let formated_date= audio[i].formated_date;
+          let url= audio[i].url;
+          let audio_id= audio[i].audio_id;
+          let title= audio[i].title;
+          let photo_link= audio[i].photo_link;
+
+
+          //slect from db if exists
+      db.transaction((tx:any) => {
+        tx.executeSql('SELECT * FROM audio_devotionals where date = ?',
+         [date],(tx:any, results:any) => {
+            if(results.rows.length>0){
+
+
+            }else{
+                  
+                    db.transaction((tx:any) => {
+                      tx.executeSql(
+                        'INSERT INTO audio_devotionals (date,formated_date,url,audio_id,title,photo_link) VALUES (?, ?,?,?,?,?)',
+                        [date,
+                          formated_date,
+                          url,
+                          audio_id,
+                          title,
+                          photo_link],
+                        (tx:any, results:any) => {
+                          console.log('INSERT successful');
+                        },
+                        (error:any) => {
+                          console.error('Error executing INSERT SQL: ', error);
+                        }
+                      );
+                    });
+              
+            }
+        });
+        });
+
+
+        }
         
         
       }
+
       checkAppVersion();
       fetchAudioDevotionals();
       fetchData();

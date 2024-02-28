@@ -8094,6 +8094,11 @@ react-native-ionicons@^4.6.5:
   resolved "https://registry.npmjs.org/react-native-ionicons/-/react-native-ionicons-4.6.5.tgz"
   integrity sha512-s2Ia7M5t609LE9LWygMj3ALVPUlKhK7R9XcMb67fP4EYJv0oLcwg5pc+8ftv9XXaUuTW/WgL3zJlBYxAvtvMJg==
 
+react-native-ios-files-app-save@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.npmjs.org/react-native-ios-files-app-save/-/react-native-ios-files-app-save-0.1.7.tgz"
+  integrity sha512-bwzr9v0lR+drPcsxv4VLeiy2F8lQFhews4iGTRNjQeKOrIQcNYjP77MHOc6lUdHPe2bMxXAww+9l3PLV4/GePw==
+
 react-native-keyboard-aware-scroll-view@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.1.2.tgz"

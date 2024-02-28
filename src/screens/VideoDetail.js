@@ -844,12 +844,12 @@ const VideoDetail= ({ route, navigation }) => {
         <View>
 
 
-        {/* <Video
+        <Video
           source={{ uri: tvProgram[0].url }}
           style={styles.video}
           controls={true}
           resizeMode="contain"
-        /> */}
+        />
 
 
         <View style={{justifyContent:'space-between'}}>

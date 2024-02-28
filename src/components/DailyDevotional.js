@@ -1,5 +1,5 @@
 import React , { useEffect, useState,useRef,useCallback } from 'react';
-import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration } from 'react-native';
+import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration,Alert } from 'react-native';
 import Strings from '../constants/Strings';
 import { getDailyDevotional } from '../service/devotionalService';
 import AccountChips from './AccountChips';
@@ -33,6 +33,13 @@ const DailyDevotional = () => {
   const [points, setPoints] = useState();
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [subscribed, setSubscribed] = React.useState(null);
+  
+  const initialMinutes = 5; // Initial minutes
+  const initialSeconds = 0; // Initial seconds
+  const [minutes, setMinutes] = useState(initialMinutes);
+  const [seconds, setSeconds] = useState(initialSeconds);
+  const [isActive, setIsActive] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   // Vibration after reading
   const ONE_SECOND_IN_MS = 1000;
@@ -69,7 +76,6 @@ const DailyDevotional = () => {
   }, []);
 
   useEffect(() => {
-
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
           if(email==null){
@@ -80,8 +86,6 @@ const DailyDevotional = () => {
             console.log("Profile data 0025",status);
 
           }
-          
-
 
       }
       fetchData();
@@ -108,6 +112,50 @@ const DailyDevotional = () => {
         fetchData();
   
       }, []);
+
+    useEffect(() => {
+      let interval;
+  
+      if (isActive && (minutes > 0 || seconds > 0)) {
+        interval = setInterval(() => {
+          if (seconds === 0) {
+            if (minutes === 0) {
+              Vibration.vibrate(10 * ONE_SECOND_IN_MS);
+              toggleReadingOverlay();
+              setIsActive(false);
+              setIsCompleted(true);
+              //display completed message
+              clearInterval(interval);
+            } else {
+              setMinutes((prevMinutes) => prevMinutes - 1);
+              setSeconds(59);
+            }
+          } else {
+            setSeconds((prevSeconds) => prevSeconds - 1);
+          }
+        }, 1000);
+      }
+  
+      return () => {
+        clearInterval(interval);
+      };
+    }, [isActive, minutes, seconds]);
+
+
+    const startTimer = () => {
+      setIsActive(true);
+    };
+  
+    const stopTimer = () => {
+      setIsActive(false);
+    };
+  
+    const resetTimer = () => {
+      setIsActive(false);
+      setMinutes(initialMinutes);
+      setSeconds(initialSeconds);
+    };
+    
 
 
 
@@ -163,11 +211,42 @@ const DailyDevotional = () => {
   const timerCallbackFunc = (timerFlag) => {
 
       setTimerEnd(timerFlag);
-      Vibration.vibrate(10 * ONE_SECOND_IN_MS);
-      toggleReadingOverlay();
+     
 
 
   };
+
+  const readMore = async () => {
+
+    const email= await AsyncStorage.getItem('email');
+    if(email==null){
+      Alert.alert(
+        'Warning',
+        'Please login to access premium content',
+        [
+          {
+            text: 'Ok'
+          },
+        ],
+        { cancelable: false }
+      );
+
+    }else{
+      const data = await getProfile(email);
+      if(data.subscription.status==='active'){
+        setShouldShow(!shouldShow);
+        startTimer();
+        setTimerEnd(false);
+        refTimer.current.resetTimer();
+
+      }else{
+        navigation.navigate('Subscription');
+      }
+
+    }
+
+
+  }
 
 
   const renderDevotional = ({ item }) => {
@@ -194,46 +273,52 @@ const DailyDevotional = () => {
         
         <AccountChips style={{marginTop:10}}/>
         {/* <ReadAndEarn/> */}
+        {status===undefined ?(
+                    <View>
+                      <Text style={{color:'#606060',alignSelf:'center'}} >{today}</Text>
+                    </View>
 
-        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        ):(
+
+          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+               
                 <View style={{flexDirection:'row'}}> 
                     <MaterialCommunityIcons style={{marginTop:-2}} name="timer-outline" size={25} color="red" />
-                    <View style={{ display: timerEnd ? 'none' : 'flex' }}>
-                    <CountDownTimer
-                        ref={refTimer}
-                        timestamp={10}
-                        timerCallback={timerCallbackFunc}
-                        containerStyle={{
-                            justifyContent: 'center',
-                            alignItems: 'left',
-                        }}
-                        textStyle={{
-                            fontSize: 20,
-                            color: 'black',
-                            letterSpacing: 0.25,
-                        }}
-                    />
-                </View>
-                <TouchableOpacity
-                    style={{
-                    display: timerEnd ? 'flex' : 'none',
-                    }}
-                    >
-                    <Text style={{ fontSize: 14, color: '#008000' }}>
-                    Completed
-                    </Text>
-                </TouchableOpacity>
+                    {
+                      isActive ?(<Text>
+                        {minutes.toString().padStart(2, '0')}:
+                        {seconds.toString().padStart(2, '0')}
+                      </Text>):(
+                        <Text>
+                        00:00
+                      </Text>
+                      )
+                    }
+
+                  {(isCompleted && !isActive) ?(
+                    <TouchableOpacity>
+                      <Text style={{ fontSize: 14, color: '#008000' }}>
+                        Completed
+                        </Text>
+                    </TouchableOpacity>
+
+                  ):(null)}
+                
                 
                 </View>
-                <View>
-                  <Text style={{color:'#606060'}} >{today}</Text>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <MaterialCommunityIcons name="arrow-up-bold-circle-outline" style={{marginTop:-2}} size={25} color="red" />
-                     <Text>  {points} pt(s)</Text>
-                </View>
+                  <View>
+                    <Text style={{color:'#606060'}} >{today}</Text>
+                  </View>
+                  <View style={{flexDirection:'row'}}>
+                      <MaterialCommunityIcons name="arrow-up-bold-circle-outline" style={{marginTop:-2}} size={25} color="red" />
+                      <Text>  {points} pt(s)</Text>
+                  </View>
 
             </View>
+
+
+        )}
+        
 
         
         {shouldShow ? ( <View  style={{padding:10}}>
@@ -242,26 +327,9 @@ const DailyDevotional = () => {
           <Divider style={{width:100,color:'#DAA520', alignSelf:'center'}} color='red' width={2}/>
           <Text style={styles.excerpt}>{item.excerpt}</Text>
           <View style={styles.fixToText}>
-             <Button
-                title="Read more"
-                color='red'
-                onPress={() => {
-                  if(status==='active'){
-                    setShouldShow(!shouldShow);
-                    setTimerEnd(false);
-                    refTimer.current.resetTimer();
-
-                  }else if(status!=='active' && status !=null){
-                    navigation.navigate('Subscription');
-
-                  }else{
-                    navigation.navigate('Login');
-
-                  }
-                  
-                }}
-              />
-              
+             <TouchableOpacity style={{backgroundColor:"red",height:40,borderRadius:5}} onPress={readMore}>
+               <Text style={{color:"#FFFFFF", fontWeight:'bold',alignSelf:'center',padding:10}} >Read more</Text>
+             </TouchableOpacity> 
           </View>
           </View>
         ) : null

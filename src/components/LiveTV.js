@@ -33,14 +33,15 @@ const LiveTV=()=> {
 
       
       return (
-        <View style={styles.container}>
+      <View style={styles.container}>
 
-      {/* <Video
+      <Video
         source={{ uri: video_url }}
+        paused={true}
         style={styles.video}
         controls={true}
         resizeMode="contain"
-      /> */}
+      />
 
 
         
