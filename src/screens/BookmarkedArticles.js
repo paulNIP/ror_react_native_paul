@@ -31,13 +31,7 @@ const BookmarkedArticles = () => {
             temp.push(res.rows.item(i));
           setWords(temp);
           setIsLoading(false);
-          // console.log('itemData:', res.rows);
-          // if (res.rows.length == 0) {
 
-          // }else{
-            
-
-          // }
         }
       );
     });
@@ -45,16 +39,6 @@ const BookmarkedArticles = () => {
 
 
   }, []);
-
-  console.log("Words",words);
-  words.map((k, i) => {
-    console.log("Data 33",k.article_json);
-
-  })
-
-
-
-
 
   return (
     <SafeAreaView>
@@ -73,22 +57,22 @@ const BookmarkedArticles = () => {
 
         {
           !isLoading && words.map((l, i) => {
-            let art=l.article_json;
-          console.log("OBject article",art);
+            
+            let art=JSON.parse(l.article_json);
 
             return (
 
-            <TouchableOpacity onPress={()=>{navigation.navigate('ArticleDetails',{date:l.date})}}>
+            <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:art.pdate})}}>
             <ListItem key={i} bottomDivider>
                <Image
                  style={styles.image}
-                 source={{uri: l.image}} 
+                 source={{uri: art.img}} 
                  resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
                />
                <ListItem.Content>
-                 <ListItem.Title>{l.title}</ListItem.Title>
-                 <ListItem.Subtitle style={{color:'#999999'}}>{l.art}</ListItem.Subtitle>
-                 <Text style={{color:'#606060'}}>{l.art}</Text>
+                 <ListItem.Title>{art.title}</ListItem.Title>
+                 <ListItem.Subtitle style={{color:'#999999'}} numberOfLines={3}>{art.excerpt}</ListItem.Subtitle>
+                 <Text style={{color:'#606060'}}>{art.pdate}</Text>
                </ListItem.Content>
             </ListItem>
             </TouchableOpacity>
@@ -128,8 +112,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: Dimensions.get('window').width*0.23,
+    height: Dimensions.get('window').height*0.12,
     borderRadius: 15
   },
   name: {

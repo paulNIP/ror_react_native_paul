@@ -8,9 +8,6 @@ import { getDailyDevotional } from '../service/devotionalService';
 import { DatabaseConnection } from '../database/database-connection';
 
 
-
-
-
 const RecentArticles=()=> {
 
     const navigation = useNavigation();
@@ -18,8 +15,7 @@ const RecentArticles=()=> {
     const [devotional, setDevotional] = useState();
     const [bookmarkable, setBookmarkable] = useState(false);
     const db = DatabaseConnection.getbookmarked_articles_databaseDB();
-    
-
+  
 
     useEffect(() => {
   
@@ -75,7 +71,6 @@ const RecentArticles=()=> {
             opening_scripture:"-"
       }
 
-      console.log("Bookmarke",data);
       const currentDate=new Date().toISOString().slice(0, 10);
       let info =JSON.stringify(data);
 
@@ -177,7 +172,7 @@ const RecentArticles=()=> {
                 <TouchableOpacity style={styles.roundButton}
                 onPress={()=>navigation.navigate('Search Article')}
                 >
-                    <MaterialCommunityIcons style={{alignSelf:'center'}} name="file-find-outline" size={25} color="#D8A623" />
+                    <MaterialCommunityIcons style={{alignSelf:'center'}} name="magnify" size={25} color="#D8A623" />
                     <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>SEARCH </Text>
                     <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>ARTICLES</Text>
                 </TouchableOpacity>
