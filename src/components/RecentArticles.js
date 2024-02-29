@@ -173,8 +173,8 @@ const RecentArticles=()=> {
                 onPress={()=>navigation.navigate('Search Article')}
                 >
                     <MaterialCommunityIcons style={{alignSelf:'center'}} name="magnify" size={25} color="#D8A623" />
-                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>SEARCH </Text>
-                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>ARTICLES</Text>
+                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>ROR </Text>
+                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>SEARCH</Text>
                 </TouchableOpacity>
             </View>
             

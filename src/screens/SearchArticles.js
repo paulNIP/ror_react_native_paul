@@ -9,6 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { DatabaseConnection } from '../database/database-connection';
 import { ActivityIndicator } from 'react-native';
 import { getRelatedArticles } from '../service/devotionalService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {  getWallet } from '../service/authService';
 
 
 const SearchArticles = () => {
@@ -21,6 +23,9 @@ const SearchArticles = () => {
 
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [packageLevel, setPackageLevel] = useState();
+  const [padLock, setPadLock] = useState(false);
+  const [searchLock, setSearchLock] = useState(false);
 
   const searchFunction = async(text) => {
     setSearchText(text);
@@ -37,21 +42,39 @@ const SearchArticles = () => {
 
  
   useEffect(() => {
+    const fetchData =async()=>{
+      const mail=await AsyncStorage.getItem('email');
+      if(mail===null){
 
-    db.transaction(function (txn) {
-      txn.executeSql(
-        "SELECT * FROM bookmarked_articles_table",
-        [],
-        function (tx, res) {
-          var temp = [];
-          for (let i = 0; i < res.rows.length; ++i)
-            temp.push(res.rows.item(i));
-          setWords(temp);
-          setIsLoading(false);
+      }else{
+        //check Read and Earn user
+        const profile = await getWallet(mail);
+        let pckg_level=profile.class;
+        setPackageLevel(profile.class);
+        if (pckg_level !=="" ) {
+          if (pckg_level==="level1" || pckg_level==="level2") {
+              setPadLock(true);
+              setSearchLock(false);
+          }
 
+          if (subscription_status.equals("inactive") || pckg_level==="level1" || pckg_level==="level2") {
+            setPadLock(true);
+            setSearchLock(false);
+          }
+
+        }else{//just lock it off
+          setSearchLock(true);
+          setPadLock(true);
         }
-      );
-    });
+
+
+      }
+
+    }
+    
+
+    setIsLoading(false);
+    fetchData();
     
 
 
@@ -75,6 +98,8 @@ const SearchArticles = () => {
         <MaterialCommunityIcons  style={styles.searchIcon} name='magnify' color='#D8A623' size={25}/>
         <TextInput
             style={styles.input}
+            editable={searchLock}
+            selectTextOnFocus={searchLock}
             placeholder="Search"
             onChangeText={text => searchFunction(text)}
             underlineColorAndroid="transparent"
@@ -109,16 +134,20 @@ const SearchArticles = () => {
      </ScrollView> 
 
 
-  <View intensity={60}  style={{ height: 450, 
-   position:'absolute',width:Dimensions.get('window').width, top:630}}>
-    <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
-    <Button
-          title="Unlock with a Higher Package"
-          color='#F9A825'
-          onPress={() => {navigation.navigate('Subscription')}}
-        />
+  {padLock&&(
+      <View intensity={60}  style={{ height: 450, 
+        backgroundColor: 'white',
+        opacity:0.7,
+      position:'absolute',width:Dimensions.get('window').width, top:630}}>
+        <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
+        <Button
+              title="Unlock with a Higher Package"
+              color='#F9A825'
+              onPress={() => {navigation.navigate('Subscription')}}
+            />
 
-  </View>
+      </View>
+  )}
 
 
     </SafeAreaView>

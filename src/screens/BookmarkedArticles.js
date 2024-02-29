@@ -8,6 +8,8 @@ import {Dimensions} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DatabaseConnection } from '../database/database-connection';
 import { ActivityIndicator } from 'react-native';
+import { getWallet } from '../service/authService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const BookmarkedArticles = () => {
@@ -17,10 +19,43 @@ const BookmarkedArticles = () => {
   let [flatListItems, setFlatListItems] = useState([]);
   const [words, setWords] = useState([]);
   const db = DatabaseConnection.getbookmarked_articles_databaseDB();
+  const [packageLevel, setPackageLevel] = useState();
+  const [padLock, setPadLock] = useState(false);
+  const [subscription_status,setSubscriptionStatus] =useState();
+
 
  
   useEffect(() => {
+    const fetchData =async()=>{
+      const mail=await AsyncStorage.getItem('email');
+      if(mail===null){
 
+      }else{
+        //check Read and Earn user
+        const profile = await getWallet(mail);
+        let pckg_level=profile.class;
+        setPackageLevel(profile.class);
+        setSubscriptionStatus(profile.status);
+        if (pckg_level !=="" ) {
+          if (pckg_level==="level1" || pckg_level==="level2") {
+              setPadLock(true);
+
+          }
+
+          if (subscription_status===1 || pckg_level==="level1" || pckg_level==="level2") {
+            setPadLock(true);
+
+          }
+
+        }else{//just lock it off
+          setPadLock(true);
+        }
+
+
+      }
+
+    }
+    fetchData();
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT * FROM bookmarked_articles_table",
@@ -62,7 +97,22 @@ const BookmarkedArticles = () => {
 
             return (
 
-            <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:art.pdate})}}>
+            <TouchableOpacity onPress={()=>{
+              if (packageLevel !=="" ) {
+                if (packageLevel==="level1" || packageLevel==="level2") {
+                    setPadLock(true);
+      
+                }else if (subscription_status===1 || packageLevel==="level1" || packageLevel==="level2") {
+                  setPadLock(true);
+      
+                }else{
+                  navigation.navigate('Rhapsody of Realities',{date:art.pdate});
+
+                }
+      
+              }
+              
+              }}>
             <ListItem key={i} bottomDivider>
                <Image
                  style={styles.image}
@@ -83,16 +133,21 @@ const BookmarkedArticles = () => {
      </ScrollView> 
 
 
-  <View intensity={60}  style={{ height: 450, 
-   position:'absolute',width:Dimensions.get('window').width, top:630}}>
-    <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
-    <Button
-          title="Unlock with a Higher Package"
-          color='#F9A825'
-          onPress={() => {navigation.navigate('Subscription')}}
-        />
+  {padLock&&(
+    <View intensity={60}  style={{ height: 450, 
+      backgroundColor: 'white',
+        opacity:0.7,
+    position:'absolute',width:Dimensions.get('window').width, top:630}}>
+      <MaterialCommunityIcons style={{alignSelf:'center',marginTop:10,marginBottom:10}} name="lock" size={25} color="#F9A825" />
+      <Button
+            title="Unlock with a Higher Package"
+            color='#F9A825'
+            onPress={() => {navigation.navigate('Subscription')}}
+          />
 
-  </View>
+    </View>
+  
+  )}
 
 
     </SafeAreaView>
