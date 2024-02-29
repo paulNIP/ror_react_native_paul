@@ -62,6 +62,8 @@ import EpubReader from './src/screens/EpubReader';
 import { DatabaseConnection } from './src/database/database-connection';
 import { getProfile } from './src/service/authService';
 import Splash from './src/screens/Splash';
+import RhapsodyNews from './src/screens/RhapsodyNews';
+import LatestBooks from './src/screens/LatestBooks';
 
 
 
@@ -82,6 +84,8 @@ export type StackParamList = {
   BookCategories:undefined;
   AllCategories:undefined;
   Settings:undefined;
+  LatestBooks:undefined;
+  RhapsodyNews:undefined;
   EditProfile:{email:string};
   PrivacyPolicy:undefined;
   FeedBack:{id:string};
@@ -204,9 +208,18 @@ function HomeStackNavigator() {
       <Stack.Screen name="Rhapsody of Realities" component={ArticleDetails} />
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="VideoDetail" component={VideoDetail} />
+      <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
+      <Stack.Screen name="LatestBooks" component={LatestBooks}
+       options={{
+        title: 'Latest Books',
+      }} />
       <Stack.Screen name="EpubReader" component={EpubReader} 
         options={{
           title: 'Document Reader',
+        }}/>
+      <Stack.Screen name="RhapsodyNews" component={RhapsodyNews} 
+        options={{
+          title: 'Rhapsody News',
         }}/>
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
@@ -487,12 +500,18 @@ options={{
                <MaterialCommunityIcons  name='dots-vertical' size={25} color='#FFFFFF' />
             </TouchableOpacity>
     </View>
-   ),
+   )
 }}
       
       />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
-      <Stack.Screen name="Testimony" component={Testimony} />
+      <Stack.Screen name="LatestBooks" component={LatestBooks} 
+      options={{
+        title: 'Latest Books ',
+        
+      }}/>
+      <Stack.Screen name="Testimony" component={Testimony} 
+      />
 
       <Stack.Screen name="EditProfile" component={EditProfile}
       options={{

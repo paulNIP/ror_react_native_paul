@@ -18,6 +18,7 @@ import ActionButton from 'react-native-action-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Overlay } from '@rneui/themed';
 import {Dimensions,Image,Animated,Easing} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -28,10 +29,10 @@ const windowWidth = Dimensions.get('window').width*0.8;
 
 
 
-const HomeScreen= ({navigation}) => {
+const HomeScreen= () => {
 
 
-
+const navigation =useNavigation();
 
 const [visibleCongs, setVisibleCongs] = useState(false);
 
@@ -101,7 +102,9 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Real Impact, Real Stories</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline" color="warning" />
+            <Button title="VIEW ALL" type="outline" color="warning" onPress={()=>{
+              navigation.navigate('Rhapsody TV');
+            }} />
           </View>
           </View>
         </View>
@@ -118,7 +121,11 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Books by Pastor Chris Oyakhilome</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline" color="warning"/>
+            <Button title="VIEW ALL" type="outline" color="warning" 
+                onPress={()=>{
+                  navigation.navigate('LatestBooks');
+                }}
+            />
           </View>
         </View>
         </View>
@@ -133,7 +140,9 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Real Impact, Real Stories</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline"  color="warning" />
+            <Button title="VIEW ALL" type="outline"  color="warning" onPress={()=>{
+              navigation.navigate('Rhapsody TV');
+            }}  />
           </View>
           </View>
         </View>

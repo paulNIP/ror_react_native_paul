@@ -1,13 +1,12 @@
 import React , { useEffect, useState } from 'react';
-import { View, StyleSheet, Button,Text ,FlatList} from 'react-native';
+import { View, StyleSheet, Button,Text ,FlatList,Image} from 'react-native';
 import Video from 'react-native-video';
 import { liveTvService } from '../service/liveTvService';
 import {Dimensions} from 'react-native';
 
 
-
-
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const LiveTV=()=> {
 
@@ -42,6 +41,17 @@ const LiveTV=()=> {
         controls={true}
         resizeMode="contain"
       />
+
+      {/* <Image
+            source={require('../assets/play_thumb.png')}
+            style={{
+              alignSelf:'center',
+              height: 50,
+              width: 50,
+              marginTop:-windowHeight*0.16
+            }}
+            // resizeMode="contain"
+      /> */}
 
 
         

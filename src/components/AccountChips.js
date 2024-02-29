@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNavigation } from '@react-navigation/native';
 import { getProfile } from '../service/authService';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AccountChips = () => {
   const navigation = useNavigation();
@@ -99,7 +99,8 @@ return (
             }}
             >
             <View style={{flexDirection:"row"}}>
-                <FontAwesome name="globe" size={20} color="#900" />
+                {/* <FontAwesome name="globe" size={20} color="#900" /> */}
+                <MaterialCommunityIcons  size={20} name='earth' color='gray'/>
                 <Text> Language - {language}</Text>
             </View>
           </TouchableOpacity>

@@ -20,7 +20,8 @@ import * as RNIap from 'react-native-iap';
 
 const BookDetails = ({ route, navigation }) => {
 
-  const { book_id } = route.params;
+  const book_id = route.params.book_id;
+  const title  = route.params.title;
 
   const [book, setBook] = useState();
   const [visible, setVisible] = useState(false);
@@ -38,8 +39,11 @@ const BookDetails = ({ route, navigation }) => {
   
         }
         fetchData();
+        navigation.setOptions({
+          title: title,
+        });
   
-      }, []);
+      }, [navigation]);
 
 
       const purchaseProduct = async (productId) => {
@@ -253,8 +257,6 @@ db.transaction(function (txn) {
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
                         <Text style={{alignSelf:"center"}}>Download</Text>
                         </TouchableOpacity>
-                        <Progress.Pie progress={progress} size={50} />
-                        <Text>{Math.round(progress * 100)}%</Text>
                     </View>
                     <View>
                      <TouchableOpacity  onPress={()=>{}}>

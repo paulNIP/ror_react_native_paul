@@ -5,6 +5,10 @@ import { getWordOfMonth } from '../service/wordOfMonthService';
 import { ListItem ,Avatar} from '@rneui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import {Dimensions} from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 
 const WordOfMonth=()=>{
@@ -36,7 +40,7 @@ const WordOfMonth=()=>{
           
 
             {
-              words.map((l, i) => {
+              words.slice(0, 4).map((l, i) => {
 
                 return i === 0 ?
 <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
@@ -72,13 +76,22 @@ const WordOfMonth=()=>{
                    />
                    <ListItem.Content>
                      <ListItem.Title>{l.title}</ListItem.Title>
-                     <ListItem.Subtitle style={{color:'#999999'}}>{l.excerpt}</ListItem.Subtitle>
+                     <ListItem.Subtitle style={{color:'#999999'}}   numberOfLines={4}>{l.excerpt}</ListItem.Subtitle>
                      <Text style={{color:'#606060'}}>{l.postdate}</Text>
                    </ListItem.Content>
                 </ListItem>
                 </TouchableOpacity>
               })
          }   
+
+          <TouchableOpacity style={{backgroundColor:'#D8A623',
+               alignSelf:'center',marginTop:15,borderRadius:5}} onPress={()=>{
+                navigation.navigate('RhapsodyNews');
+               }}>
+            <Text style={{color:'#FFFFFF',fontWeight:'bold',padding:10,alignSelf:'center'}}>
+              More from Rhapsody News
+            </Text>
+          </TouchableOpacity>
 
           
 
@@ -100,8 +113,8 @@ const styles = StyleSheet.create({
       marginBottom: 6,
     },
     image: {
-      width: 100,
-      height: 100,
+      width: windowWidth*0.2,
+      height: windowHeight*0.12,
       borderRadius: 15
     },
     name: {

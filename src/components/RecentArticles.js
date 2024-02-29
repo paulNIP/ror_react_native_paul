@@ -16,6 +16,7 @@ const RecentArticles=()=> {
     const navigation = useNavigation();
 
     const [devotional, setDevotional] = useState();
+    const [bookmarkable, setBookmarkable] = useState(false);
     const db = DatabaseConnection.getbookmarked_articles_databaseDB();
     
 
@@ -25,6 +26,24 @@ const RecentArticles=()=> {
         const fetchData = async () => {
             const data = await getDailyDevotional();
             setDevotional(data);
+
+            const currentDate=new Date().toISOString().slice(0, 10);
+            db.transaction(function (txn) {
+                txn.executeSql(
+                  "SELECT article_date_key FROM bookmarked_articles_table WHERE article_date_key=?",
+                  [currentDate],
+                  function (tx, res) {
+                    console.log('item:0000000', res.rows.length);
+                    if(res.rows.length>0){
+                      setBookmarkable(false);
+
+                    }else{
+                      setBookmarkable(true);
+                    }
+                    
+                  }
+                );
+              });
   
         }
         fetchData();
@@ -58,6 +77,7 @@ const RecentArticles=()=> {
 
       console.log("Bookmarke",data);
       const currentDate=new Date().toISOString().slice(0, 10);
+      let info =JSON.stringify(data);
 
         db.transaction(function (txn) {
             txn.executeSql(
@@ -65,13 +85,13 @@ const RecentArticles=()=> {
               [currentDate],
               function (tx, res) {
                 console.log('item:', res.rows.length);
-                if (res.rows.length > 0) {
+                if (res.rows.length <= 0) {
                   //insert into DB
                   txn.executeSql(
                     'INSERT INTO bookmarked_articles_table (article_date_key,article_json) VALUES(? ,?)',
                     [
                       currentDate,
-                      data,
+                      info,
                     ]
                   );
     
@@ -89,7 +109,7 @@ const RecentArticles=()=> {
                 }else{
                   Alert.alert(
                     'Error',
-                    'Already added to Bookmarks',
+                    'Failed to Bookmark article',
                     [
                       {
                         text: 'Ok'
@@ -137,15 +157,20 @@ const RecentArticles=()=> {
                 <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>ARTICLES</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.content}>
-                <TouchableOpacity style={styles.roundButton}
-                onPress={bookmarkArticle}
-                >
-                    <MaterialCommunityIcons style={{alignSelf:'center'}} name="bookmark" size={25} color="#D8A623" />
-                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>SAVE</Text>
-                    <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>THIS ARTICLE</Text>
-                </TouchableOpacity>
-            </View>
+            {
+              bookmarkable &&(
+                <View style={styles.content}>
+                    <TouchableOpacity style={styles.roundButton}
+                    onPress={bookmarkArticle}
+                    >
+                        <MaterialCommunityIcons style={{alignSelf:'center'}} name="bookmark" size={25} color="#D8A623" />
+                        <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>SAVE</Text>
+                        <Text style={{alignSelf:'center',fontSize:12,color:'#D8A623'}}>THIS ARTICLE</Text>
+                    </TouchableOpacity>
+                </View>
+              )
+            }
+            
 
             {/* receipt */}
             <View style={styles.content}> 

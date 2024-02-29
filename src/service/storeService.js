@@ -183,6 +183,7 @@ const getFeaturedBooks = async () => {
           axios.get(Strings.BOOKS_URL+'/featured')
             .then((res) => {
               resolve(res.data.response);
+              console.log("Books latyests ",res.data.reponse);
 
           })
             .catch((err) => {
