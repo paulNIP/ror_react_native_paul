@@ -84,6 +84,7 @@ PODS:
   - hermes-engine (0.72.7):
     - hermes-engine/Pre-built (= 0.72.7)
   - hermes-engine/Pre-built (0.72.7)
+  - JOSESwift (2.4.0)
   - libevent (2.1.12)
   - libwebp (1.3.2):
     - libwebp/demux (= 1.3.2)
@@ -99,6 +100,12 @@ PODS:
     - libwebp/sharpyuv
   - Minizip (1.0.0)
   - OpenSSL-Universal (1.1.1100)
+  - pagopa-io-react-native-crypto (0.2.3):
+    - React-Core
+  - pagopa-io-react-native-jwt (1.1.0):
+    - JOSESwift (~> 2.3)
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - R2Navigator (2.6.0):
     - DifferenceKit (~> 1.0)
     - R2Shared
@@ -717,6 +724,8 @@ DEPENDENCIES:
   - libevent (~> 2.1.12)
   - Minizip
   - OpenSSL-Universal (= 1.1.1100)
+  - "pagopa-io-react-native-crypto (from `../node_modules/@pagopa/io-react-native-crypto/pagopa-io-react-native-crypto.podspec`)"
+  - "pagopa-io-react-native-jwt (from `../node_modules/@pagopa/io-react-native-jwt`)"
   - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec`)
   - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec`)
   - R2Streamer (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec`)
@@ -808,6 +817,7 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - Fuzi
+    - JOSESwift
     - libevent
     - libwebp
     - Minizip
@@ -843,6 +853,10 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-08-07-RNv0.72.4-813b2def12bc9df02654b3e3653ae4a68d0572e0
+  pagopa-io-react-native-crypto:
+    :path: "../node_modules/@pagopa/io-react-native-crypto/pagopa-io-react-native-crypto.podspec"
+  pagopa-io-react-native-jwt:
+    :path: "../node_modules/@pagopa/io-react-native-jwt"
   R2Navigator:
     :podspec: https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec
   R2Shared:
@@ -1011,10 +1025,13 @@ SPEC CHECKSUMS:
   GCDWebServer: 5e989dbe6795b9975f378cc0eeeee49ef2c51b6f
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 9180d43df05c1ed658a87cc733dc3044cf90c00a
+  JOSESwift: 7ff178bb9173ff42c6e990929a9f2fa702a34f69
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Minizip: 188cb3e39a1195c283ae03bf673d182596fefd0b
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
+  pagopa-io-react-native-crypto: 93f984df8711eb72f3fb030eca51be6268fc96d6
+  pagopa-io-react-native-jwt: 76b4008ace006bc4eec878712101e7b53b390a97
   R2Navigator: 4b53a3d10dd7282c9d9cd6d2188e68f0041840fc
   R2Shared: fa34e56aa6e67e34608bf6ef72acf2631cbc4b5e
   R2Streamer: d2501f0395c868cb65329ec46e3ab604b8b98687
@@ -1103,6 +1120,6 @@ SPEC CHECKSUMS:
   Yoga: 4c3aa327e4a6a23eeacd71f61c81df1bcdf677d5
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6d9dc67e93a20487f24e048e418bca3a11c5f74f
+PODFILE CHECKSUM: 6fa2a497ee351d437ca600e42e466a17cdfb4d94
 
 COCOAPODS: 1.14.2

@@ -7,6 +7,7 @@ import HTMLView from 'react-native-htmlview';
 import DailyQuiz from './DailyQuiz';
 import {Overlay } from '@rneui/themed';
 import { WebView } from 'react-native-webview';
+import axios from 'axios';
 
 import { Divider } from '@rneui/themed';
 import {Dimensions} from 'react-native';
@@ -15,6 +16,19 @@ import CountDownTimer from 'react-native-countdown-timer-hooks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getProfile, getWallet } from '../service/authService';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from 'uuid-random';
+import {
+  decode,
+  verify,
+  isSignatureValid,
+  SignJWT,
+  thumbprint,
+  sha256ToBase64,
+  EncryptJwe,
+  getRemoteJWKSet,
+} from '@pagopa/io-react-native-jwt';
+
+import { generate, sign, getPublicKey,CryptoError } from '@pagopa/io-react-native-crypto';
 
 
 const windowHeight = Dimensions.get('window').height*0.6;
@@ -28,18 +42,29 @@ const DailyDevotional = () => {
   const [visible, setVisible] = useState(false);
   const [shouldShow, setShouldShow] = useState(true);
   const [visibleCongs, setVisibleCongs] = useState(false);
+  const [visibleRead, setVisibleRead] = useState(false);
 
   const [status, setStatus] = useState();
   const [points, setPoints] = useState();
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [subscribed, setSubscribed] = React.useState(null);
   
-  const initialMinutes = 5; // Initial minutes
-  const initialSeconds = 0; // Initial seconds
+  const initialMinutes = 0; // Initial minutes
+  const initialSeconds = 10; // Initial seconds
   const [minutes, setMinutes] = useState(initialMinutes);
   const [seconds, setSeconds] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [userEmail, setUserEmail] = useState();
+  const [rneMessage, setRneMessage] = useState();
+  const [readCompletion,setReadCompletion] =useState();
+
+
+  // Factory to create context bound to a key
+  const createCryptoContext = (keyTag) => ({
+    getPublicKey : () => getPublicKey(keyTag),
+    getSignature : (value) => sign(value, keyTag),
+  });
 
   // Vibration after reading
   const ONE_SECOND_IN_MS = 1000;
@@ -57,7 +82,7 @@ const DailyDevotional = () => {
 
 
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function setData() {
       const logData = await AsyncStorage.getItem("hasLoggedIn");
       const subscribe = await AsyncStorage.getItem("subscription");
@@ -78,12 +103,13 @@ const DailyDevotional = () => {
   useEffect(() => {
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
+          
           if(email==null){
 
           }else{
+            setUserEmail(email);
             const data = await getProfile(email);
             setStatus(data.subscription.status);
-            console.log("Profile data 0025",status);
 
           }
 
@@ -92,24 +118,25 @@ const DailyDevotional = () => {
 
     }, []);
 
-    
+    //Fetch Points every 2 minute
+    const fetchPoints = async() => {
+      const mail = await AsyncStorage.getItem('email');
+      if (mail===null){
+
+      }else{
+        const profile = await getWallet(mail); 
+        setPoints(profile.totalpoints);
+
+      }
+
+    };
 
     useEffect(() => {
-  
-        const fetchData = async () => {
-            const email= await AsyncStorage.getItem('email');
-            if(email==null){
-              setPoints('-');
-
-            }else{
-              const data = await getWallet(email);
-              setPoints(data.reading_points);
-
-            }
-            
-  
-        }
-        fetchData();
+      const myInterval = setInterval(fetchPoints, 5000);
+      return () => {
+        // should clear the interval when the component unmounts
+        clearInterval(myInterval);
+      };
   
       }, []);
 
@@ -120,11 +147,6 @@ const DailyDevotional = () => {
         interval = setInterval(() => {
           if (seconds === 0) {
             if (minutes === 0) {
-              Vibration.vibrate(10 * ONE_SECOND_IN_MS);
-              toggleReadingOverlay();
-              setIsActive(false);
-              setIsCompleted(true);
-              //display completed message
               clearInterval(interval);
             } else {
               setMinutes((prevMinutes) => prevMinutes - 1);
@@ -134,12 +156,21 @@ const DailyDevotional = () => {
             setSeconds((prevSeconds) => prevSeconds - 1);
           }
         }, 1000);
+      }else if(readCompletion){
+        //Do read if complet
+        doReadAndEarnArticlePoints();
+        // toggleReadingOverlay();
+        setIsActive(false);
+        setIsCompleted(true);
+        //display completed message
       }
   
       return () => {
         clearInterval(interval);
       };
-    }, [isActive, minutes, seconds]);
+
+      // [isActive, minutes, seconds]
+    }, []);
 
 
     const startTimer = () => {
@@ -168,6 +199,10 @@ const DailyDevotional = () => {
     setVisibleCongs(!visibleCongs);
   };
 
+  const toggleReadOverlay = () => {
+    setVisibleRead(!visibleRead);
+  };
+
   const navigation = useNavigation();
 
   React.useEffect(() => {
@@ -189,11 +224,10 @@ const DailyDevotional = () => {
   useEffect(() => {
 
       const fetchData = async () => {
-          const data = await getDailyDevotional()
+          const read =await AsyncStorage.getItem("rne_date");
+          setReadCompletion(true);
+          const data = await getDailyDevotional();
           setDevotional(data)
-          
-
-
       }
       fetchData();
 
@@ -235,9 +269,15 @@ const DailyDevotional = () => {
       const data = await getProfile(email);
       if(data.subscription.status==='active'){
         setShouldShow(!shouldShow);
-        startTimer();
-        setTimerEnd(false);
-        refTimer.current.resetTimer();
+        if(setReadCompletion){
+
+        }else{
+          startTimer();
+          setTimerEnd(false);
+          refTimer.current.resetTimer();
+
+        }
+
 
       }else{
         navigation.navigate('Subscription');
@@ -248,6 +288,78 @@ const DailyDevotional = () => {
 
   }
 
+  //set reading completed
+  const setReadingCompleted=async()=>{
+    const rne_date= await AsyncStorage.getItem('rne_date');
+    if(rne_date==null){
+      await AsyncStorage.setItem('rne_date',new Date().toISOString().slice(0, 10));
+
+    }
+
+  }
+
+  //Do read and earn points
+  const doReadAndEarnArticlePoints=async()=> {
+    const randomKeyTag = Math.random().toString(36).substring(2, 5);
+    try {
+      const pk = await generate(randomKeyTag);
+      // console.log("pksnsnndnd",pk)
+    } catch (e) {
+      const {message, userInfo} =  e;
+      // console.log("Generation Erriorttt",message);
+    }
+
+    const crypto = createCryptoContext(randomKeyTag);
+
+    // Create jwt
+    const signedJwt = await new SignJWT(crypto)
+      .setPayload({
+        sub: 'demoApp',
+        iss: 'PagoPa',
+      })
+      .setProtectedHeader({ typ: 'JWT' })
+      .sign();
+
+    console.log("Generated tokennbfnjfj",signedJwt);
+
+
+    const data={
+        "article": 1,
+        "last_read": new Date().toISOString().slice(0, 10),
+        "password":"rabadaba",
+        "email":userEmail
+    }
+
+    axios.post('https://rowtoken.rhapsodyofrealities.org/api/read/add',data, {
+      //example with bearer token
+      headers: {
+        'Authentication': 'Bearer '+signedJwt
+      }
+    })
+    .then(function (res) {
+      // console.log("Read and Earn response",res.data.response);
+      if(res.data.status===1){
+        Vibration.vibrate(10 * ONE_SECOND_IN_MS);
+        setRneMessage(res.data.response);
+        setVisibleCongs(true);
+        setReadingCompleted();
+        
+
+
+      }else{
+        setRneMessage(res.data.response);
+        setVisibleRead(true);
+        setReadingCompleted();
+
+      }
+
+
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+}
 
   const renderDevotional = ({ item }) => {
 
@@ -285,26 +397,22 @@ const DailyDevotional = () => {
                 <View style={{flexDirection:'row'}}> 
                     <MaterialCommunityIcons style={{marginTop:-2}} name="timer-outline" size={25} color="red" />
                     {
-                      isActive ?(<Text>
-                        {minutes.toString().padStart(2, '0')}:
-                        {seconds.toString().padStart(2, '0')}
-                      </Text>):(
-                        <Text>
-                        00:00
-                      </Text>
+                      readCompletion &&(
+                        <TouchableOpacity>
+                          <Text style={{ fontSize: 14, color: '#008000' }}>
+                            Completed
+                            </Text>
+                        </TouchableOpacity>
+                      
                       )
                     }
 
-                  {(isCompleted && !isActive) ?(
-                    <TouchableOpacity>
-                      <Text style={{ fontSize: 14, color: '#008000' }}>
-                        Completed
+                    {!readCompletion&&( 
+                        <Text>
+                          {minutes.toString().padStart(2, '0')}:
+                          {seconds.toString().padStart(2, '0')}
                         </Text>
-                    </TouchableOpacity>
-
-                  ):(null)}
-                
-                
+                      )}
                 </View>
                   <View>
                     <Text style={{color:'#606060'}} >{today}</Text>
@@ -378,7 +486,7 @@ const DailyDevotional = () => {
                 <WebView source={{ uri: Strings.READING }} style={{ flex: 1 }} />
               </Overlay> 
 
-              {/* <Overlay ModalComponent={Modal} fullScreen={false}
+              <Overlay ModalComponent={Modal} fullScreen={false}
               isVisible={visibleCongs} 
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
                 
@@ -396,20 +504,40 @@ const DailyDevotional = () => {
                 </View>
                 
                 <Text style={{flexWrap:'wrap',alignSelf:'center'}}>
-                     Congratulations you have recieved 1 point(s) for reading the day's article
-                </Text>
-                <Text style={{flexWrap:'wrap',alignSelf:'center'}}>
-                     Answer the Question and get 1 extra bonus point.
+                     {rneMessage}
                 </Text>
                 <Button
                   title="Ok"
                   onPress={() => setVisibleCongs(!visibleCongs)}
                 />
-              </Overlay> */}
+              </Overlay>
 
           </View>) }
+          
+          {/* Overlay for read message */}
+          <Overlay ModalComponent={Modal} fullScreen={false}
+              isVisible={visibleRead} 
+              onBackdropPress={toggleReadOverlay} overlayStyle={{width:windowWidth,height:windowHeight*0.5}}>
+                <View style={{backgroundColor:'#D8A623',height:70}}>
+                   
+                </View>
+                <Image  style={styles.logo2} source={require('../assets/logo.png')} />
+                <Text style={{alignSelf:'center',marginTop:20}}>
+                    STATUS
+                </Text>
+                <Text style={{alignSelf:'center',flexWrap:'wrap',marginTop:10}}>
+                  {rneMessage}</Text>
+                <Button
+                  title="OKAY"
+                  color="#D8A623"
+                  onPress={() => {
+                    setVisibleRead(!visibleRead);
+                  }}
+                />
+          </Overlay>
 
-          {subscribed==='inactive' ? (<Overlay ModalComponent={Modal} fullScreen={false}
+          {subscribed==='inactive' ? (
+            <Overlay ModalComponent={Modal} fullScreen={false}
               isVisible={visibleCongs} 
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
                 
@@ -534,6 +662,12 @@ logo:{
   height:50,
   alignSelf:'center',
   marginTop:-100
+},
+logo2:{
+  width:50,
+  height:50,
+  marginTop:-60,
+  alignSelf:'center'
 }
 
 });

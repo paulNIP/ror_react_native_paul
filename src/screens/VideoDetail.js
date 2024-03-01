@@ -12,8 +12,6 @@ import { CardField, useStripe } from '@stripe/stripe-react-native';
 import SnackBar from 'react-native-snackbar-component';
 
 
-
-
 // import all the components we are going to use
 import {
   SafeAreaView,
@@ -27,6 +25,7 @@ import Video from 'react-native-video';
 import SelectDropdown from 'react-native-select-dropdown';
 import {  getTVProgramme } from '../service/liveTvService';
 import { useNetInfo } from "@react-native-community/netinfo";
+import { getStripeKeys } from '../utils/Utils';
 
 const windowHeight = Dimensions.get('window').height*0.7;
 const windowWidth = Dimensions.get('window').width;
@@ -734,6 +733,12 @@ const VideoDetail= ({ route, navigation }) => {
       }
   ];
 
+  const partner =async(amount)=>{
+    const resp =await getStripeKeys(amount);
+    console.log("Stripe datata",resp);
+
+  }
+
     useEffect(() => {
             const fetchData = async () => {
             const data = await getTVProgramme(videoid);
@@ -943,7 +948,7 @@ const VideoDetail= ({ route, navigation }) => {
 
             <Button
               title="Give Now"
-              onPress={() => {}}
+              onPress={() => {partner(10);}}
               style={{marginTop:5, marginBottom:5}}
             />
 
