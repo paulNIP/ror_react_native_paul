@@ -177,7 +177,7 @@ return (
           <ActionButton.Item
             buttonColor="#D8A623"
             title="Notes"
-            onPress={() => alert('Notes clicked')}>
+            onPress={() => navigation.navigate("AllNotes")}>
             <MaterialCommunityIcons style={{alignSelf:'center'}} name="lead-pencil" size={30} color="white" />
           </ActionButton.Item>
         </ActionButton>

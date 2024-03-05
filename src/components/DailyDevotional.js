@@ -298,6 +298,8 @@ const DailyDevotional = () => {
 
   }
 
+
+
   //Do read and earn points
   const doReadAndEarnArticlePoints=async()=> {
     const randomKeyTag = Math.random().toString(36).substring(2, 5);
@@ -323,7 +325,7 @@ const DailyDevotional = () => {
     console.log("Generated tokennbfnjfj",signedJwt);
 
 
-    const data={
+    const post_data={
         "article": 1,
         "last_read": new Date().toISOString().slice(0, 10),
         "password":"rabadaba",
@@ -341,10 +343,11 @@ const DailyDevotional = () => {
       if(res.data.status===1){
         Vibration.vibrate(10 * ONE_SECOND_IN_MS);
         setRneMessage(res.data.response);
+        
         setVisibleCongs(true);
+        //call method to insert in read and earn Dates
         setReadingCompleted();
         
-
 
       }else{
         setRneMessage(res.data.response);

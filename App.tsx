@@ -64,6 +64,9 @@ import { getProfile } from './src/service/authService';
 import Splash from './src/screens/Splash';
 import RhapsodyNews from './src/screens/RhapsodyNews';
 import LatestBooks from './src/screens/LatestBooks';
+import axios from 'axios';
+import AllNotes from './src/screens/AllNotes';
+// import { NotificationListener, requestUserPermission } from './src/service/pushNotificationManager';
 
 
 
@@ -224,6 +227,31 @@ function HomeStackNavigator() {
       <Stack.Screen name="AppFeedBack" component={AppFeedBack}  options={{
         title: 'FeedBack' 
       }} />
+
+      <Stack.Screen name="AllNotes" component={AllNotes}  options={{
+        title: '',
+        headerLeft: () => (
+          <View style={{flexDirection:"row"}}>
+            <Text style={{color:'white',fontWeight:"bold",marginLeft:30,marginRight:30,fontSize:18,marginTop:5}}>Welcome</Text>
+           <Image
+                style={{width:40,height:40,marginLeft:10}}
+                source={require('./src/assets/prof.png')}
+              />
+
+          </View>
+         ),
+        headerRight: () => (
+          <View style={{marginRight:10}}>
+                  <TouchableOpacity onPress={()=>{
+                    navigation.navigate('AppFeedBack');
+                  }}>
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                  </TouchableOpacity>
+
+
+
+          </View>
+         )}} />
 
 
     </Stack.Navigator>
@@ -481,27 +509,26 @@ function MoreStackNavigator() {
          ),
       }}/>
       <Stack.Screen name="Profile" component={ProfileScreen} 
-
-options={{
-  title: 'My Profile ',
-  headerRight: () => (
-    <View style={{marginRight:10,flexDirection:'row'}}>
-            <TouchableOpacity onPress={()=>{
-              navigation.navigate('Settings');
-            }} >
-              <MaterialCommunityIcons  name='cog-outline' size={25} color='#FFFFFF' />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{}} >
-               <MaterialCommunityIcons  name='refresh' size={25} color='#FFFFFF' />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{
-              navigation.navigate('EditProfile',{email:email});
-            }} >
-               <MaterialCommunityIcons  name='dots-vertical' size={25} color='#FFFFFF' />
-            </TouchableOpacity>
-    </View>
-   )
-}}
+          options={{
+            title: 'My Profile ',
+            headerRight: () => (
+              <View style={{marginRight:10,flexDirection:'row'}}>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('Settings');
+                      }} >
+                        <MaterialCommunityIcons  name='cog-outline' size={25} color='#FFFFFF' />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{}} >
+                        <MaterialCommunityIcons  name='refresh' size={25} color='#FFFFFF' />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{
+                        navigation.navigate('EditProfile',{email:email});
+                      }} >
+                        <MaterialCommunityIcons  name='dots-vertical' size={25} color='#FFFFFF' />
+                      </TouchableOpacity>
+              </View>
+            )
+          }}
       
       />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
@@ -594,6 +621,8 @@ export default function App() {
   useEffect(() => {
     // Hide the splash screen when the component is mounted
     SplashScreen.hide();
+    // requestUserPermission();
+    // NotificationListener();
 
     setTimeout(() => {
       setSplashing(false);
@@ -711,6 +740,109 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
       fetchAudioDevotionals();
       fetchData();
       // checkAppVersion();
+
+      const syncDataInBackground = async () => {
+        try {
+          // Perform data syncing here
+        const email = await AsyncStorage.getItem("email");
+        if(email===null){
+
+        }else{
+          // syncBookmarkedArticlesData();
+          // syncCalenderData();
+          // uploadCalenderData();
+
+
+            axios.get('https://backend3.rhapsodyofrealities.org/read/get/'+email)
+                    .then((res) => {
+                console.log("Read Dates",res.data);
+            })
+              .catch((err) => {
+                console.log("Error",err)
+            });
+
+
+          const link = 'https://backend3.rhapsodyofrealities.org/get/notes';
+          const syncData ={
+            "email":email
+          }
+          
+          axios.post(link,syncData)
+            .then((res) => {
+              console.log("Sync Results ",res.data.result)
+          })
+            .catch((err) => {
+              console.log(err);
+          });
+
+        }
+     
+
+    //                 String sync_status = jsonArray.getJSONObject(0).getString("sync_status");
+    //                 if(sync_status.equals("0")){
+    //                     Toast.makeText(getContext(), "No notes to be Synced", Toast.LENGTH_SHORT).show();
+    //                 }else{
+    //                     for (int i = 0; i < jsonArray.length(); i++) {
+
+    //                         JSONObject object = jsonArray.getJSONObject(i);
+    //                         String id;
+    //                         try {
+    //                             id = object.getString("id");
+    //                         } catch (JSONException e) {
+    //                             id = String.valueOf(object.getInt("id"));
+    //                             e.printStackTrace();
+    //                         }
+    //                         String noteid = object.getString("noteid");
+    //                         String notetitle = object.getString("notetitle");
+    //                         String notebody = object.getString("notebody");
+    //                         String notestatus = object.getString("notestatus");
+    //                         String notestime = object.getString("notestime");
+    //                         String notetype = object.getString("notetype");
+
+    //                         //query each id or title
+    //                         final Cursor cursor = notesdb.get_bk_based_on_uniqid(noteid);
+    //                         if (cursor.moveToFirst()) {
+    //                             Log.d("datacheck", id + " exist");
+    //                         } else {
+    //                             Log.d("datacheck", id + " no exist, so insert");
+    //                             //insert into db
+    //                             notesdb.insertnote(notetitle, noteid, notebody, notestatus, notetype, notestime, "");
+    //                             ref();
+    //                         }
+    //                     }
+    //                     //after the loop
+    //                     Toast.makeText(getContext(), "Notes Synced Successfully", Toast.LENGTH_SHORT).show();
+    //                 }
+
+    //             } catch (JSONException e) {
+    //                 e.printStackTrace();
+    //                 if(getActivity() != null){
+    //                     Toast.makeText(getContext(), "Notes Sync Failed, check Your internet Connection", Toast.LENGTH_LONG).show();
+    //                 }
+    //             }
+    //         }
+
+    //         @Override
+    //         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+    //             pb_refresh_notes.setVisibility(View.GONE);
+    //             if(getActivity() != null){
+    //                 Toast.makeText(getContext(), "Notes Sync Failed, check Your internet Connection", Toast.LENGTH_LONG).show();
+    //             }
+    //         }
+    //     });
+    // }
+        } catch (error) {
+          console.error('Background sync error:', error);
+        }
+      };
+  
+      const backgroundSyncInterval = setInterval(() => {
+        syncDataInBackground();
+      }, 1 * 60 * 1000); // Execute every 15 minutes
+  
+      return () => {
+        clearInterval(backgroundSyncInterval);
+      };
 
   }, []);
 

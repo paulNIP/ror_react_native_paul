@@ -1,19 +1,25 @@
 import React ,{useEffect,useState} from "react";
 import {View, Text,Button, SafeAreaView,ScrollView,Alert,FlatList,
-   TextInput,StyleSheet,TouchableOpacity,Image} from 'react-native';
+   TextInput,StyleSheet,TouchableOpacity,Image,Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {Dimensions} from 'react-native';
+import {Dimensions,Animated} from 'react-native';
 import { getWallet } from "../service/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+//Import ActionButton
+import ActionButton from 'react-native-action-button';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Overlay } from '@rneui/themed';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowHeight = Dimensions.get('window').height*0.8;
 
-const WalletScreen = () => {
+const AllNotes = () => {
 
   const navigation = useNavigation();
   const [text, onChangeText] = React.useState('Useless Text');
   const [number, onChangeNumber] = React.useState('');
+  const [visibleCongs,setVisibleCongs] =useState(false);
+
 
 
 
@@ -24,6 +30,10 @@ const WalletScreen = () => {
   const [totalpoints, setTotalPoints] = useState();
   const [pointsBalance, setPointsBalance] = useState();
   const [shareid, setShareid] = useState();
+
+  const toggleReadingOverlay =()=>{
+    setVisibleCongs(!visibleCongs);
+  }
 
 
 
@@ -143,12 +153,6 @@ const WalletScreen = () => {
           <Text style={{alignSelf:"center",color:"#D8A623",fontWeight:"bold"}}>
           RHAPSODY SUBSCRIPTION
           </Text>
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Hello {user}, your subscription is valid until {wallet.expiry_date} </Text>
-          <Text style={{fontWeight:'bold',flexWrap:'wrap',marginBottom:5}}>Your points have been reset in preparation for the new year 2024! </Text>
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Total Points - is the total point you get from subscription, reading, enlisting others and quiz points
-          80% of yout total points is instantly converted to copies of Rhapsody of realities didtributed to others
-          on your behalf. The balanace is what is called POINTS BALANCE </Text>
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Points Balance - are Redeemable points </Text>
           </View>
         
         </View>
@@ -278,7 +282,48 @@ const WalletScreen = () => {
 
     )}
 
-    
+
+            <Overlay ModalComponent={Modal} fullScreen={false}
+                        isVisible={visibleCongs} 
+                        onBackdropPress={toggleReadingOverlay}
+                        overlayStyle={{width:windowWidth,height:windowHeight}}>
+            <View style={{flexDirection:'row',
+                          backgroundColor:"#D8A623",height:40}}>
+                            <TouchableOpacity onPress={()=>{
+                                setVisibleCongs(!visibleCongs);
+                            }}>
+                                    <MaterialCommunityIcons  name='close' size={25} color='#000000' />  
+                            </TouchableOpacity>
+                            <TextInput>
+
+                            </TextInput>
+                            <View style={{flexDirection:'row',marginLeft:'auto'}}>
+                                <TouchableOpacity onPress={()=>{}}>
+                                    <MaterialCommunityIcons  name='content-save' size={25} color='#000000' />  
+                                </TouchableOpacity>
+                                <TouchableOpacity  onPress={()=>{}}>
+                                    <MaterialCommunityIcons  name='share-variant' size={25} color='#FFFFFF' />  
+                                </TouchableOpacity>
+                                <TouchableOpacity  onPress={()=>{}}>
+                                    <MaterialCommunityIcons  name='delete' size={25} color='#FFFFFF' />
+                                </TouchableOpacity>
+
+                            </View>
+
+            </View>
+
+                
+            </Overlay>
+
+              <ActionButton buttonColor="#D8A623">
+
+          <ActionButton.Item
+            buttonColor="#D8A623"
+            title="Notes"
+            onPress={() => {setVisibleCongs(true)}}>
+            <MaterialCommunityIcons style={{alignSelf:'center'}} name="lead-pencil" size={30} color="white" />
+          </ActionButton.Item>
+        </ActionButton>
 
       </ScrollView >
    </SafeAreaView >
@@ -322,13 +367,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 5,
   },
-  input: {
-    height: 40,
-    borderWidth: 1,
-  },
+
   dimension:{
     width:Dimensions.get('window').width*0.45
   }
 });
 
-export default WalletScreen;
+export default AllNotes;

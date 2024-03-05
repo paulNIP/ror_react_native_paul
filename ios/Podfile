@@ -9,6 +9,8 @@ require Pod::Executable.execute_command('node', ['-p',
 #changing minimum supported version for ios
 platform :ios, 13
 
+
+
 prepare_react_native_project!
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
@@ -42,6 +44,11 @@ target 'rhapsodyreader' do
   pod 'rn-fetch-blob',
       :path => '../node_modules/rn-fetch-blob'
   pod 'Minizip', modular_headers: true
+  
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   
 
   # Flags change depending on the env values.
