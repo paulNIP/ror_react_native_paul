@@ -22,7 +22,6 @@ const getProfile = async (email) => {
 
 const getWallet = async (email) => {
 
-    
   return new Promise((resolve, reject) => {
 
           axios.post('https://rowtoken.rhapsodyofrealities.org/api/user/check/',{
@@ -31,13 +30,16 @@ const getWallet = async (email) => {
 
           })
             .then((res) => {
-              console.log("Wallet Data"+res.data);
+
               resolve(res.data);
+              console.log("Profile ",res.data);
           })
             .catch((err) => {
               reject(err)
           });
   });
 };
+
+
 
 export { getProfile,getWallet}

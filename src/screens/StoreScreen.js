@@ -1,5 +1,5 @@
 import React  , { useEffect, useState } from 'react';
-import {View, Text,SafeAreaView,ScrollView,StyleSheet, StatusBar,TouchableOpacity,Image,FlatList} from 'react-native';
+import {View, Text,SafeAreaView,ScrollView,StyleSheet, StatusBar,TouchableOpacity,Image,FlatList,ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Divider} from '@rneui/themed';
 import { Button } from '@rneui/themed';
@@ -28,6 +28,8 @@ import SoulWining from '../components/SoulWining';
 import ChristianLiving from '../components/ChristianLiving';
 import ChildrenBooks from '../components/ChildrenBooks';
 import Avanzini from '../components/Avanzini';
+import Strings from '../constants/Strings';
+import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -38,8 +40,25 @@ const StoreScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [translatedBooks, setTranslatedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [allbooks, setAllBooks] = useState();
 
   useEffect(() => {
+
+    const getAllBooks = async () => {
+      try {
+        
+        const response = await axios.get(Strings.BOOKS_URL+'/fetch').then((res) => {
+          setIsLoading(false);
+          setAllBooks(response.data.EBOOK_APP);
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+      
+      }catch(e){
+        console.log(e);
+        }
+    }
 
     const fetchData = async () => {
         const data = await getBooks();
@@ -49,11 +68,11 @@ const StoreScreen = ({ navigation }) => {
 
     }
     fetchData();
-    setIsLoading(false);
+    getAllBooks();
 
   }, []);
 
-  console.log("Translated Books :",translatedBooks);
+
 
 
   const renderCategories = ({ item }) => {
@@ -413,37 +432,60 @@ const StoreScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+
+      {isLoading? (
+      <View>
+      <View style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+      
+      }}
+        >
+        <Text style={{alignSelf:'center',justifyContent: 'center',
+        alignItems: 'center'}}> Loading Store components ....</Text>
+        <ActivityIndicator
+        style={{justifyContent: 'center',
+        alignItems: 'center'}}
+            color="#FFFFFF"
+            size="large"
+          />
+      </View>
+      </View>
+      ):(
+      <View>
         <FeaturedBooks/>
+            <BookCategories/>
+
+            <KidsBooks/>
+
+            <EarlyReaders/>
+
+            <DailyDevotionalBooks/>
+
+            <Teevo/>
+
+            <Prayer/>
+
+            <FaithProsperity/>
+
+            <HolySpirit/>
+
+            <DivineHealing/>
+
+            <SoulWining/>
+
+            <ChristianLiving/>
+
+            <ChildrenBooks/>
+
+            <Avanzini/>
 
 
-        <BookCategories/>
+            <TranslatedBooks/>
 
-        <KidsBooks/>
-
-        <EarlyReaders/>
-
-        <DailyDevotionalBooks/>
-
-        <Teevo/>
-
-        <Prayer/>
-
-        <FaithProsperity/>
-
-        <HolySpirit/>
-
-        <DivineHealing/>
-
-        <SoulWining/>
-
-        <ChristianLiving/>
-
-        <ChildrenBooks/>
-
-        <Avanzini/>
-
-
-        <TranslatedBooks/>
+      </View>)}
+        
         
 
         
@@ -454,8 +496,7 @@ const StoreScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
+
   },
   scrollView: {
 

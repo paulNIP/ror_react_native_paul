@@ -45,14 +45,14 @@ const renderItem = ({ item }) => {
     );
   };
 
-const KidsBooks = () => {
+const KidsBooks = ({navigation}) => {
     
     const [books, setBooks] = useState();
     const [bookCategory, setBookCategory] = useState();
     const [categoryID, setCategoryID] = useState();
     const [bookDescription, setBookDescription] = useState();
 
-    const navigation =useNavigation()
+    // const navigation =useNavigation()
 
 
     useEffect(() => {
@@ -88,7 +88,7 @@ const KidsBooks = () => {
             <Divider orientation="vertical" width={5} />
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
-                <Text style={{marginLeft:10,fontWeight:'bold',flexWrap:'wrap'}}>{bookCategory}</Text>
+                <Text style={{marginLeft:10,fontWeight:'bold',flexWrap:'wrap'}}>{bookCategory} Test</Text>
                 <Text style={{marginLeft:10,flexWrap:"wrap"}}>{bookDescription}</Text>
                 </View>
                 <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>

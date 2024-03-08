@@ -1,11 +1,12 @@
 import React , { useEffect, useState } from 'react';
-import { View, StyleSheet, Button,Text ,FlatList} from 'react-native';
+import { View, StyleSheet, Button,Text ,FlatList,Image} from 'react-native';
 import Video from 'react-native-video';
 import { liveTvService } from '../service/liveTvService';
 import {Dimensions} from 'react-native';
 
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const LiveTV=()=> {
 
@@ -31,34 +32,27 @@ const LiveTV=()=> {
 
       
       return (
-        <View style={styles.container}>
-        {/* <Video
-          ref={video}
-          style={styles.video}
-          source={{
-            uri: video_url,
-          }}
-          useNativeControls
-          resizeMode={ResizeMode.COVER}
-          isLooping
-          onPlaybackStatusUpdate={status => setStatus(() => status)}
-        /> */}
+      <View style={styles.container}>
 
-        {/* <VideoPlayer
-          video={{uri: 'https://example.com/video.mp4'}}
-          videoWidth={1600}
-          videoHeight={900}
-          autoplay={true}
-          defaultMuted={false}
-          loop={false}
-        /> */}
+      <Video
+        source={{ uri: video_url }}
+        paused={true}
+        style={styles.video}
+        controls={true}
+        resizeMode="contain"
+      />
 
-        <Video  
-            source={{url: video_url}}                  // the video file
-            paused={true}                  // make it start    
-            style={styles.video}  // any style you want
-            repeat={false}             // make it a loop
-        />
+      {/* <Image
+            source={require('../assets/play_thumb.png')}
+            style={{
+              alignSelf:'center',
+              height: 50,
+              width: 50,
+              marginTop:-windowHeight*0.16
+            }}
+            // resizeMode="contain"
+      /> */}
+
 
         
         <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
@@ -67,13 +61,13 @@ const LiveTV=()=> {
             <Text style={{marginLeft:10,color:'#999999'}}>SHOWING NOW</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end',marginRight:10}}>
-            <Button
+            {/* <Button
                 title={status.isPlaying ? 'Pause' : 'Play'}
                 color='#F9A825'
                 onPress={() =>
                   status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
                 }
-              />
+              /> */}
           </View>
         </View>
       </View>
@@ -102,7 +96,7 @@ const styles = StyleSheet.create({
   video: {
     alignSelf: 'center',
     width: Dimensions.get('window').width,
-    height: 200,
+    height: Dimensions.get('window').height*0.23,
     marginTop:10,
     marginBottom:10
   },

@@ -17,13 +17,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionButton from 'react-native-action-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Overlay } from '@rneui/themed';
-import {Dimensions,Image} from 'react-native';
+import {Dimensions,Image,Animated,Easing} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const THEME_COLOR = '##D8A623';
 const windowHeight = Dimensions.get('window').height*0.6;
 const windowWidth = Dimensions.get('window').width*0.8;
 
-const HomeScreen= ({navigation}) => {
+
+
+
+const HomeScreen= () => {
+
+
+const navigation =useNavigation();
 
 const [visibleCongs, setVisibleCongs] = useState(false);
 
@@ -31,8 +40,34 @@ const toggleReadingOverlay = () => {
   setVisibleCongs(!visibleCongs);
 };
 
+const [rotateAnimation, setRotateAnimation] = useState(new Animated.Value(0));
+
+
+Animated.timing(rotateAnimation, {
+    toValue: 1,
+    duration: 800,
+  }).start(() => {
+    rotateAnimation.setValue(0);
+  });
+
+const interpolateRotating = rotateAnimation.interpolate({
+  inputRange: [0, 1],
+  outputRange: ["0deg", "720deg"],
+});
+
+
+const animatedStyle = {
+  transform: [
+    {
+      rotate: interpolateRotating,
+    },
+  ],
+  width:150,
+  height:150
+};
 
 useEffect(() => {
+
   async function setExpiry() {
     const expiryData = await AsyncStorage.getItem("expiry_date");
     console.log('expiry Date ',expiryData);
@@ -67,7 +102,9 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Real Impact, Real Stories</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline" color="warning" />
+            <Button title="VIEW ALL" type="outline" color="warning" onPress={()=>{
+              navigation.navigate('Rhapsody TV');
+            }} />
           </View>
           </View>
         </View>
@@ -84,7 +121,11 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Books by Pastor Chris Oyakhilome</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline" color="warning"/>
+            <Button title="VIEW ALL" type="outline" color="warning" 
+                onPress={()=>{
+                  navigation.navigate('LatestBooks');
+                }}
+            />
           </View>
         </View>
         </View>
@@ -99,7 +140,9 @@ return (
             <Text style={{marginLeft:10,color:'#999999'}}>Real Impact, Real Stories</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end'}}>
-            <Button title="VIEW ALL" type="outline"  color="warning" />
+            <Button title="VIEW ALL" type="outline"  color="warning" onPress={()=>{
+              navigation.navigate('Rhapsody TV');
+            }}  />
           </View>
           </View>
         </View>
@@ -134,7 +177,7 @@ return (
           <ActionButton.Item
             buttonColor="#D8A623"
             title="Notes"
-            onPress={() => alert('Notes clicked')}>
+            onPress={() => navigation.navigate("AllNotes")}>
             <MaterialCommunityIcons style={{alignSelf:'center'}} name="lead-pencil" size={30} color="white" />
           </ActionButton.Item>
         </ActionButton>
@@ -144,7 +187,7 @@ return (
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
                 
                 <View style={{alignSelf:'center'}}>
-                   <Image style={styles.sunrays} source={require('../assets/sunrays.png')} />
+                   <Animated.Image style={animatedStyle} source={require('../assets/sunrays.png')} />
                    <Image  style={styles.logo} source={require('../assets/logo.png')} />
                    
                 </View>
@@ -218,7 +261,9 @@ const styles = StyleSheet.create({
   },
   sunrays:{
     width:150,
-    height:150
+    height:150,
+    
+    
   },
   logo:{
     width:50,

@@ -1,12 +1,15 @@
 import React, { useEffect, useState ,useRef} from 'react';
 import { Icon,BottomSheet } from '@rneui/themed';
-import {Dimensions,FlatList} from 'react-native';
+import {Dimensions,FlatList,TouchableOpacity,Image} from 'react-native';
 import {Overlay } from '@rneui/themed';
-import { Button } from '@rneui/themed';
+import { Button,ListItem } from '@rneui/themed';
 import { TextInput } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PhoneInput from 'react-native-phone-number-input';
-
+import {Dropdown} from 'sharingan-rn-modal-dropdown';
+import { StripeProvider } from '@stripe/stripe-react-native';
+import { CardField, useStripe } from '@stripe/stripe-react-native';
+import SnackBar from 'react-native-snackbar-component';
 
 
 // import all the components we are going to use
@@ -15,16 +18,16 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity,
-  LogBox,ScrollView,Share,Modal
+  ActivityIndicator,
+  ScrollView,Share,Modal
 } from 'react-native';
 import Video from 'react-native-video';
-import RelatedScreen from './RelatedScreen';
-import CommentScreen from './CommentScreen';
 import SelectDropdown from 'react-native-select-dropdown';
-import { getRelatedTVProgramme, getTVProgramme } from '../service/liveTvService';
+import {  getTVProgramme } from '../service/liveTvService';
+import { useNetInfo } from "@react-native-community/netinfo";
+import { getStripeKeys } from '../utils/Utils';
 
-const windowHeight = Dimensions.get('window').height*0.6;
+const windowHeight = Dimensions.get('window').height*0.7;
 const windowWidth = Dimensions.get('window').width;
 
 
@@ -32,14 +35,28 @@ const windowWidth = Dimensions.get('window').width;
 const VideoDetail= ({ route, navigation }) => {
 
     const { videoid } = route.params;
+    const [isLoading, setIsLoading] = useState(true);
     const [visible, setVisible] = useState(false);
     const [visible00, setVisible00] = useState(false);
     const [isVisible0, setIsVisible0] = useState(false);
     const [isVisible00, setIsVisible00] = useState(false);
+    const { type, isConnected } = useNetInfo();
+    const [formattedValue, setFormattedValue] = useState("");
+    const [countryCode, setCountryCode] = useState('');
+    const [value, setValue] = useState("");
+    const [city, setCity] = useState("");
 
     const [index, setIndex] = useState(1);
+    const [phone, setPhone] = useState('');
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
+    const [publishableKey, setPublishableKey] = useState('');
+    const { confirmPayment } = useStripe();
+
+    const fetchPublishableKey = async () => {
+      const key = await getStripeKey(); // fetch key from your server here
+      setPublishableKey(key);
+    };
 
     const toggleOverlay = () => {
         setVisible(!visible);
@@ -49,34 +66,702 @@ const VideoDetail= ({ route, navigation }) => {
         setVisible00(!visible00);
       };
 
-    const [tvProgram, setTvProgram] = useState([]);
+    const [tvProgram, setTvProgram] = useState();
+    const [related, setRelated] = useState();
+    const [category, setCategory] = useState();
+    const [zoneSS, setZoneSS] = useState('');
+    const [volunteerSS, setVolunteerSS] = useState('');
+    const [internetCheck, setInternetCheck] = useState(false);
 
+    const onChangeZone = (value) => {
+      setZoneSS(value);
+    };
+
+    const onChangeVolunteer = (value) => {
+        setVolunteerSS(value);
+      };
+
+    const save_volunteer = (names, email, countrycode, phoneno, 
+    country, city, option, zoneSS) => {
+
+        const data ={
+            "names":names,
+            "email":email,
+            "country":country,
+            "city":city,
+            "country_code":countrycode,
+            "phoneno":phoneno,
+            "option":option,
+            "zone":zoneSS
+        }
+
+        axios.post(url,data)
+            .then((res) => {
+              resolve(res.data);
+              console.log("Volunteer data",res.data);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+
+    };
+
+    const volunteerOption = [
+        {
+            value: "abavz",
+            label: "Aba  Zone"
+        },
+
+    ];
+
+    const zones = [
+      {
+          value: "abavz",
+          label: "Aba  Zone"
+      },
+      {
+          value: "abeakutamc",
+          label: "Ministry Center Abeokuta"
+      },
+      {
+          value: "abujamc",
+          label: "Ministry Center Abuja"
+      },
+      {
+          value: "abujavz",
+          label: "Abuja  Zone"
+      },
+      {
+          value: "accraz",
+          label: "Accra Zone"
+      },
+      {
+          value: "australia",
+          label: "Australia \/South  Pacific"
+      },
+      {
+          value: "beninvz2",
+          label: "Benin Zone 2"
+      },
+      {
+          value: "beninz1",
+          label: "Benin Zone 1"
+      },
+      {
+          value: "blwchurchzone",
+          label: "BLW CHURCH ZONE"
+      },
+      {
+          value: "blwnec",
+          label: "BLW GHANA SUB-ZONE C"
+      },
+      {
+          value: "blwned",
+          label: "BLW  GHANA SUB ZONE D"
+      },
+      {
+          value: "blwnee",
+          label: "BLW GHANA SUB-ZONE E"
+      },
+      {
+          value: "blwnef",
+          label: "BLW GHANA SUB-ZONE F"
+      },
+      {
+          value: "blwoup22",
+          label: "BLW WALES GROUP"
+      },
+      {
+          value: "blwugandaz",
+          label: "BLW Uganda Zone"
+      },
+      {
+          value: "capne1",
+          label: "Cape Town Zone 1"
+      },
+      {
+          value: "capne2",
+          label: "Cape Town Zone 2"
+      },
+      {
+          value: "ceadsp",
+          label: "CE Amsterdam-DSP"
+      },
+      {
+          value: "cechad",
+          label: "CE Chad"
+      },
+      {
+          value: "ceidia45",
+          label: "CE India Zone"
+      },
+      {
+          value: "cgm",
+          label: "CHURCH GROWTH INTL"
+      },
+      {
+          value: "dscsz",
+          label: "DSC Sub- Zone"
+      },
+      {
+          value: "durone",
+          label: "Durban Zone"
+      },
+      {
+          value: "easterneuropevr",
+          label: "Eastern Europe Region"
+      },
+      {
+          value: "edonorthcentralvz",
+          label: "Edo North & Central Zone"
+      },
+      {
+          value: "ewce3b",
+          label: "EWCA ZONE 3 B"
+      },
+      {
+          value: "ewcvz1",
+          label: "EWC Zone 1 "
+      },
+      {
+          value: "ewcvz2",
+          label: "EWC Zone 2 "
+      },
+      {
+          value: "ewcvz3",
+          label: "EWC Zone 3"
+      },
+      {
+          value: "ewcvz4",
+          label: "EWC Zone 4 "
+      },
+      {
+          value: "ewcvz5",
+          label: "EWC Zone 5 "
+      },
+      {
+          value: "ewcvz6",
+          label: "EWC Zone 6"
+      },
+      {
+          value: "ibz1",
+          label: "Ibadan Zone 1"
+      },
+      {
+          value: "intate24",
+          label: "International Missons for South East Asia\u00a0Directorate"
+      },
+      {
+          value: "Islt",
+          label: "ISLT"
+      },
+      {
+          value: "ism",
+          label: "ISM"
+      },
+      {
+          value: "ismuganda",
+          label: "ISM UGANDA"
+      },
+      {
+          value: "itlice",
+          label: "ITL OFFICE"
+      },
+      {
+          value: "kenyaz",
+          label: "Kenya Zone"
+      },
+      {
+          value: "lcm",
+          label: "LW CELL MINISTRY"
+      },
+      {
+          value: "lovoup11",
+          label: "Loveworld Ethiopia Group"
+      },
+      {
+          value: "lovoup19",
+          label: "Loveworld  Namibia Group"
+      },
+      {
+          value: "lovoup55",
+          label: "Loveworld Ireland Group"
+      },
+      {
+          value: "lovoup57",
+          label: "Loveworld Canada Group"
+      },
+      {
+          value: "lsza",
+          label: "Lagos Sub Zone A"
+      },
+      {
+          value: "lszb",
+          label: "Lagos Sub Zone B"
+      },
+      {
+          value: "lszc",
+          label: "Lagos Sub Zone C"
+      },
+      {
+          value: "lvz",
+          label: "CELVZ"
+      },
+      {
+          value: "lwcg1",
+          label: "BLW Cameroon Sub-Group 1"
+      },
+      {
+          value: "lwcg2",
+          label: "BLW CAMEROON SUB-GROUP 2"
+      },
+      {
+          value: "lwcg3",
+          label: "BLW Cameroon Sub-Group 3"
+      },
+      {
+          value: "lwghanaza",
+          label: "Loveworld  Ghana Zone A"
+      },
+      {
+          value: "lwghanazb",
+          label: "Loveworld Ghana Zone B"
+      },
+      {
+          value: "lwgradnet",
+          label: "LW GRADUATE NETWORK"
+      },
+      {
+          value: "lwiers52",
+          label: "LW International Chapters"
+      },
+      {
+          value: "lwkenyaz",
+          label: "Loveworld  Kenya Zone"
+      },
+      {
+          value: "lwkids",
+          label: "CHILDREN\\'S CHURCH"
+      },
+      {
+          value: "lwnrus",
+          label: "LW North Cyprus"
+      },
+      {
+          value: "lwrdio42",
+          label: "LW RADIO"
+      },
+      {
+          value: "lwsaza",
+          label: "Loveworld SA Zone A"
+      },
+      {
+          value: "lwsazb",
+          label: "Loveworld SA Zone B"
+      },
+      {
+          value: "lwsazc",
+          label: "Loveworld SA Zone C"
+      },
+      {
+          value: "lwsazd",
+          label: "Loveworld SA Zone D"
+      },
+      {
+          value: "lwsaze",
+          label: "Loveworld SA Zone E"
+      },
+      {
+          value: "lwttry90",
+          label: "LW TELEVISION MINISTRY"
+      },
+      {
+          value: "lwukza",
+          label: "Loveworld UK Zone A"
+      },
+      {
+          value: "lwukzb",
+          label: "Loveworld UK Zone B"
+      },
+      {
+          value: "lwusag4",
+          label: "LW USA Group 4"
+      },
+      {
+          value: "lwusagrp1",
+          label: "LW USA GROUP 1"
+      },
+      {
+          value: "lwusagrp2",
+          label: "LW USA GROUP 2"
+      },
+      {
+          value: "lwusagrp3",
+          label: "LW USA GROUP 3"
+      },
+      {
+          value: "lwza",
+          label: "Loveworld Zone A"
+      },
+      {
+          value: "lwzb",
+          label: "Loveworld  Zone B"
+      },
+      {
+          value: "lwzc",
+          label: "Loveworld  Zone C"
+      },
+      {
+          value: "lwzd",
+          label: "Loveworld Zone D"
+      },
+      {
+          value: "lwze",
+          label: "Loveworld Zone E"
+      },
+      {
+          value: "lwzf",
+          label: "Loveworld Zone F"
+      },
+      {
+          value: "lwzg",
+          label: "Loveworld Zone G"
+      },
+      {
+          value: "lwzh",
+          label: "Loveworld Zone H"
+      },
+      {
+          value: "lwzi",
+          label: "Loveworld  Zone I"
+      },
+      {
+          value: "lwzj",
+          label: "Loveworld  Zone J"
+      },
+      {
+          value: "lwzk",
+          label: "Loveworld  Zone K"
+      },
+      {
+          value: "lwzl",
+          label: "Loveworld  zone L"
+      },
+      {
+          value: "lz1",
+          label: "Lagos Zone 1"
+      },
+      {
+          value: "lz2",
+          label: "Lagos Zone 2"
+      },
+      {
+          value: "lz3",
+          label: "Lagos Zone 3"
+      },
+      {
+          value: "lz4",
+          label: "Lagos Zone 4"
+      },
+      {
+          value: "lz5",
+          label: "Lagos Zone 5"
+      },
+      {
+          value: "lz6",
+          label: "Lagos Zone 6"
+      },
+      {
+          value: "mcc",
+          label: "Ministry Center Calabar"
+      },
+      {
+          value: "middleeast",
+          label: "Middle East  & South East Asia Region"
+      },
+      {
+          value: "midwestz",
+          label: "Mid West Zone "
+      },
+      {
+          value: "newdia43",
+          label: "New Media"
+      },
+      {
+          value: "newia144",
+          label: "New Media1"
+      },
+      {
+          value: "nncvz1",
+          label: "NC Zone 1"
+      },
+      {
+          value: "nncvz2",
+          label: "NC Zone 2"
+      },
+      {
+          value: "nnevz1",
+          label: "NE Zone 1"
+      },
+      {
+          value: "nnwvz2",
+          label: "NW Zone 2"
+      },
+      {
+          value: "nsevz1",
+          label: "SE Zone 1"
+      },
+      {
+          value: "nsevz2",
+          label: "SS ZONE 3"
+      },
+      {
+          value: "nssvz1",
+          label: "SS Zone 1"
+      },
+      {
+          value: "nssvz2",
+          label: "SS Zone 2"
+      },
+      {
+          value: "nswvirualz3",
+          label: "SW Zone 3"
+      },
+      {
+          value: "nswvz1",
+          label: "SW Zone 1"
+      },
+      {
+          value: "nswvz2",
+          label: "SW Zone 2"
+      },
+      {
+          value: "nwz1",
+          label: "NW Zone 1"
+      },
+      {
+          value: "offial69",
+          label: "OFFICIAL"
+      },
+      {
+          value: "onitshaz",
+          label: "Onitsha Zone"
+      },
+      {
+          value: "ottz",
+          label: "Ottawa Zone"
+      },
+      {
+          value: "pcdl",
+          label: "PCDL"
+      },
+      {
+          value: "phz1",
+          label: "Port Harcourt Zone 1"
+      },
+      {
+          value: "phz2",
+          label: "Port Harcourt Zone 2"
+      },
+      {
+          value: "phz3",
+          label: "Port Harcourt Zone 3"
+      },
+      {
+          value: "qubators",
+          label: "QUBATORS"
+      },
+      {
+          value: "quebecvz",
+          label: "Quebec Zone"
+      },
+      {
+          value: "reon",
+          label: "REON"
+      },
+      {
+          value: "rin",
+          label: "RIN"
+      },
+      {
+          value: "rorion",
+          label: "ROR Global Production"
+      },
+      {
+          value: "sales",
+          label: "sales"
+      },
+      {
+          value: "savz2",
+          label: "SA Zone 2"
+      },
+      {
+          value: "savz3",
+          label: "SA Zone 3"
+      },
+      {
+          value: "savz4",
+          label: "SA Zone 4"
+      },
+      {
+          value: "saz1",
+          label: "SA Zone 1"
+      },
+      {
+          value: "saz5",
+          label: "SA Zone 5"
+      },
+      {
+          value: "sez3",
+          label: "SE Zone 3"
+      },
+      {
+          value: "som",
+          label: "LoveWorld SOM"
+      },
+      {
+          value: "southamericavr",
+          label: "South America Region"
+      },
+      {
+          value: "swzne4",
+          label: "SW Zone 4"
+      },
+      {
+          value: "swzne5",
+          label: "SW Zone 5"
+      },
+      {
+          value: "teens",
+          label: "TEENS MINISTRY"
+      },
+      {
+          value: "texasz1",
+          label: "USA Region 3"
+      },
+      {
+          value: "texasz2",
+          label: "Dallas Zone"
+      },
+      {
+          value: "tni",
+          label: "TNI"
+      },
+      {
+          value: "torz",
+          label: "Toronto Zone"
+      },
+      {
+          value: "ukszonec",
+          label: "BLW UK SUB-ZONE C"
+      },
+      {
+          value: "ukvz1",
+          label: "UK Zone 1 (UK Region 2)"
+      },
+      {
+          value: "ukvz3",
+          label: "UK Zone 3 (UK Region 2)"
+      },
+      {
+          value: "ukvz4",
+          label: "UK Zone 4 (Region 1)"
+      },
+      {
+          value: "ukz1",
+          label: "UK Zone 1 (UK Region 1)"
+      },
+      {
+          value: "ukz2",
+          label: "UK Zone 2 (UK Region 1)"
+      },
+      {
+          value: "ukz3",
+          label: "UK Zone 3 (UK Region 1)"
+      },
+      {
+          value: "ukz4",
+          label: "UK Zone 4 (UK Region 2)"
+      },
+      {
+          value: "ukz4dspr1",
+          label: "UKzone4 DSP region 1"
+      },
+      {
+          value: "usaregion3",
+          label: "USA REGION 3"
+      },
+      {
+          value: "usavz1",
+          label: "USA Zone 1 ( Region 1)"
+      },
+      {
+          value: "usavz2",
+          label: "USA Zone 2 ( Region 1)"
+      },
+      {
+          value: "usaz1r2",
+          label: "USA Zone 1 (Region 2)"
+      },
+      {
+          value: "warrimc",
+          label: "Ministry Center Warri"
+      },
+      {
+          value: "wevz1",
+          label: "Western Europe Zone 1"
+      },
+      {
+          value: "wevz2",
+          label: "Western Europe Zone 2"
+      },
+      {
+          value: "wevz3",
+          label: "Western Europe Zone 3"
+      },
+      {
+          value: "wevz4",
+          label: "Western Europe Zone 4"
+      },
+      {
+          value: "xtreme",
+          label: "Xtreme"
+      },
+      {
+          value: "yolnda",
+          label: "YOLANDA1"
+      }
+  ];
+
+  const partner =async(amount)=>{
+    const resp =await getStripeKeys(amount);
+    console.log("Stripe datata",resp);
+
+  }
 
     useEffect(() => {
-  
-        const fetchData = async () => {
+            const fetchData = async () => {
             const data = await getTVProgramme(videoid);
             setTvProgram(data);
+            setRelated(data[0].related_videos);
+            setCategory(data[0].cat);
+            console.log("Related Video details",data[0].related_videos);
 
         }
         fetchData();
+        setIsLoading(false);
+        navigation.setOptions({
+          title: category,
+        });
+
   
-    }, []);
+    }, [navigation]);
 
 
 
 
 
-    const RenderElement = () => {
-        //You can add N number of Views here in if-else condition
-        if (index === 1) {
-        //Return the FirstScreen as a child to set in Parent View
-        return <RelatedScreen relatedVideos = {tvProgram} />;
-        } else if (index === 2) {
-        //Return the SecondScreen as a child to set in Parent View
-        return <CommentScreen />;
-        }
-    };
+
 
     const [text, setText] = React.useState("");
 
@@ -109,42 +794,79 @@ const VideoDetail= ({ route, navigation }) => {
         Alert.alert(phoneNumber);
       };
 
-      
+      const renderVideoItem = ({ item }) => {
+        const videoid=item.videoid;
 
-
-      const renderSelectedVideo = ({ item }) => {
-
-        const vid = item.url;
-    
-        
         return (
-          <View>
-            <View>
+          <View >
+             <TouchableOpacity onPress={()=>{navigation.push('VideoDetail',{videoid:item.videoid})}}>
+                    <ListItem bottomDivider>
+                       <Image
+                         style={styles.image}
+                         source={{uri: item.thumbnail}} 
+                         resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
+                       />
+                       <ListItem.Content>
+                         <ListItem.Title>{item.title}</ListItem.Title>
+                         <ListItem.Subtitle style={{color:'#999999'}}>{item.description}</ListItem.Subtitle>
+                       </ListItem.Content>
+                    </ListItem>
+                    </TouchableOpacity>
+         </View>
+        );
+      };
 
 
-        <View style={styles.container}>
+
+  return (
+
+    // <StripeProvider
+    //   publishableKey={publishableKey}
+    //   merchantIdentifier="merchant.com.rhapsody.dailydevotionals" // required for Apple Pay
+    //   urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+    // >
+
+    <SafeAreaView >
+      {isLoading && (
+        <View style={{  
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+          <ActivityIndicator
+            style={{ height: 80 }}
+            color="#FFFFFF"
+            size="large"
+          />
+          </View>
+        )}
+      
+      {tvProgram && (
+        <View>
+
 
         <Video
-            controls={true}
-            source=''
-            resizeMode={"stretch"}
-            style={styles.video}
-            onError={(e) => console.log("error", e)}
-          />
+          source={{ uri: tvProgram[0].url }}
+          style={styles.video}
+          controls={true}
+          resizeMode="contain"
+        />
 
 
-        <View style={{flex:1,justifyContent:'space-between'}}>
-            
-                <Text style={{marginLeft:10,fontWeight:'bold'}}>{item.title}</Text>
-                <Text style={{marginLeft:10,color:'#999999'}}>{item.description}</Text>
-            
-            </View>
+        <View style={{justifyContent:'space-between'}}>
+                <Text style={{marginLeft:10,fontWeight:'bold'}}>{tvProgram[0].title}</Text>
+                <Text style={{marginLeft:10,color:'#999999'}}>{tvProgram[0].description}</Text>
         </View>
+        
 
         <View style={{  borderRadius: 5, overflow: "hidden",
-        flexDirection:'row',flexWrap:'space-around',justifyContent:'space-evenly' }}>
+        flexDirection:'row',flexWrap:'space-around',justifyContent:'space-evenly',marginTop:15,marginBottom:15 }}>
           <TouchableOpacity onPress={toggleOverlay}>
-            <Icon style={{ alignSelf:'center'}} name="badge-account" type="material-community" color="grey" />
+            <Icon style={{ alignSelf:'center'}} name="hand-back-right" type="material-community" color="grey" />
             <Text>volunteer</Text>
           </TouchableOpacity>
 
@@ -164,31 +886,26 @@ const VideoDetail= ({ route, navigation }) => {
           </TouchableOpacity>
 
         </View>
-        <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           {/*To set the FirstScreen*/}
           <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => setIndex(1)}>
-            <Text style={{color: '#ffffff'}}>RELATED</Text>
+            style={{height:40,backgroundColor:"grey",width:Dimensions.get('window').width,
+            marginTop:10,alignContent:'center',justifyContent:'center'}}
+            onPress={() => {}}>
+            <Text style={{alignSelf:'center'}}>RELATED</Text>
           </TouchableOpacity>
-          {/*To set the SecondScreen*/}
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => setIndex(2)}>
-            <Text style={{color: '#ffffff'}}>COMMENTS</Text>
-          </TouchableOpacity>
+
         </View>
-        {/*View to hold the child screens 
-        which can be changed on the click of a button*/}
+
         <View style={{backgroundColor: '#ffffff'}}>
-          <RenderElement />
+          {/* flat list of related */}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <FlatList data={related} renderItem={renderVideoItem} />
+          </ScrollView>
+                
+              
         </View>
-      </View>
 
-
-
-       </View>
 
        <BottomSheet modalProps={{}} isVisible={isVisible0}>
 
@@ -198,47 +915,29 @@ const VideoDetail= ({ route, navigation }) => {
 
           <View style={{marginTop:5,marginLeft:20,marginRight:20}}>
 
-            <Text style={{width:100, marginTop:5, marginBottom:5}}>Give ...</Text>
+            <Text style={{ marginTop:15, marginBottom:15}}>Give ...</Text>
 
-            <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+            <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Choose Give Option"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+                  </View>
 
-            <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+              <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Zone"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+              </View>
 
             <TextInput
                 label="Enter amount to give in USD"
@@ -249,7 +948,7 @@ const VideoDetail= ({ route, navigation }) => {
 
             <Button
               title="Give Now"
-              onPress={() => {}}
+              onPress={() => {partner(10);}}
               style={{marginTop:5, marginBottom:5}}
             />
 
@@ -259,9 +958,9 @@ const VideoDetail= ({ route, navigation }) => {
                 <Text style={{color:"#eee",alignSelf:'center'}}>Use other payment means</Text>
             </TouchableOpacity>
 
-            <ScrollView>
+            <ScrollView> 
 
-            <View style={{marginLeft:20,marginRight:20,marginBottom:10,borderRadius:5,marginTop:10,backgroundColor:'#E5E4E2'}}>
+            {/* <View style={{marginLeft:20,marginRight:20,marginBottom:10,borderRadius:5,marginTop:10,backgroundColor:'#E5E4E2'}}>
                 <View style={{flexDirection:'row',marginLeft:10,marginTop:5,marginBottom:2}}>
                     <Text style={{width:100}}>Country</Text>
                     <Text style={{color:'grey'}}>NIGERIA</Text>
@@ -332,9 +1031,9 @@ const VideoDetail= ({ route, navigation }) => {
                     <Text style={{width:100}}>Account No.</Text>
                     <Text style={{color:'grey'}}>3347850</Text>
                 </View>
-            </View>
+            </View> */}
 
-            <View style={{marginLeft:20,marginRight:20,marginBottom:10,borderRadius:5,marginTop:5,backgroundColor:'#E5E4E2'}}>
+            {/* <View style={{marginLeft:20,marginRight:20,marginBottom:10,borderRadius:5,marginTop:5,backgroundColor:'#E5E4E2'}}>
                 <View style={{flexDirection:'row',marginLeft:10,marginTop:5,marginBottom:2}}>
                     <Text style={{width:100}}>Country</Text>
                     <Text style={{color:'grey'}}>U.S.A</Text>
@@ -386,13 +1085,9 @@ const VideoDetail= ({ route, navigation }) => {
                     <Text style={{width:100}}>Swift Code.</Text>
                     <Text style={{color:'grey'}}>SBZAZAJJ</Text>
                 </View>
-            </View>
+            </View> */}
             </ScrollView>
 
-            
-
-            
-            
         
         </View>
         </TouchableOpacity>
@@ -402,7 +1097,7 @@ const VideoDetail= ({ route, navigation }) => {
 
        <Overlay ModalComponent={Modal} fullScreen={false} 
               isVisible={visible} 
-              onBackdropPress={toggleOverlay} overlayStyle={{width:windowWidth,height:windowHeight}}>
+              onBackdropPress={toggleOverlay} overlayStyle={{width:windowWidth*0.9,height:windowHeight}}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{backgroundColor:'#778899'}}>
                   
@@ -413,61 +1108,47 @@ const VideoDetail= ({ route, navigation }) => {
                 <Text style={{marginTop:10,marginBottom:10}}>
                         CHOOSE VOLUNTEER OPTIONS BELOW:
                     </Text>
-                    <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+                    <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Choose Option"
+                            enableSearch
+                            data={volunteerOption}
+                            value={volunteerSS}
+                            onChange={onChangeVolunteer}
+                            
+                        />
+                  </View>
 
                     <Text style={{marginTop:10,marginBottom:10}}>
                         PHONE NUMBER:
                     </Text>
 
-                    {/* <TextInput
-                    label="Phone number ??"
-                    value={text}
-                    onChangeText={text => setText(text)}
-                    style={{marginTop:10,marginBottom:10}}
-                  /> */}
+                    <PhoneInput
+                        ref={phoneInput}
+                        defaultValue={value}
+                        layout="first"
+                        onChangeText={(text) => {
+                        setPhone(text);
+                        setCountryCode(phoneInput.current?.getCountryCode() || '');
+                        }}
+                        onChangeFormattedText={(text) => {
+                        setFormattedValue(text);
+                        }}
+                        withDarkTheme
+                        withShadow
+                        autoFocus
+                        containerStyle={{
+                        width:Dimensions.get('window').width,marginBottom:10
+                        }}
+                        
+                    />
 
-                <PhoneInput
-                  ref={phoneInput}
-                  defaultValue={phoneNumber}
-                  defaultCode="IN"
-                  layout="first"
-                  withShadow
-                  autoFocus
-                  containerStyle={styles.phoneContainer}
-                  textContainerStyle={styles.textInput}
-                  onChangeFormattedText={text => {
-                    setphoneNumber(text);
-                  }}
-                />
-                {/* <Pressable style={styles.button} onPress={() => buttonPress()}>
-                  <Text style={styles.continueText}>Get Phone Number</Text>
-                </Pressable> */}
 
 
                   <TextInput
                         label="City"
                         value={text}
-                        onChangeText={text => setText(text)}
+                        onChangeText={text => setCity(text)}
                         style={{marginTop:10,marginBottom:10}}
                       />
 
@@ -476,33 +1157,37 @@ const VideoDetail= ({ route, navigation }) => {
                     <Text style={{marginTop:10,marginBottom:10}}>
                         SELECT ZONE:
                     </Text>
-                    <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+                    <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Select Zone (Optional)"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+                  </View>
 
                 <Button
-                  onPress={()=>{}}
+                  onPress={()=>{
+
+                    // check network availabilty
+                    if(isConnected===true){
+                        //save volunteer
+                        save_volunteer(fullnames, email, countryCodePicker.getSelectedCountryCode(), phoneno, 
+                                            countryCodePicker.getSelectedCountryName(), city, option, zoneSS);
+
+
+                    }else{
+                        //Internet Error Message 
+                        setInternetCheck(true);
+                    }
+
+
+
+                  }}
                   title="SUBMIT"
-                  color="#F9A825"
-                  accessibilityLabel="Learn more about this purple button"
+                  color="#D8A623"
                   style={{marginTop:10,marginBottom:10}}
                 />
 
@@ -513,7 +1198,7 @@ const VideoDetail= ({ route, navigation }) => {
 
         <Overlay ModalComponent={Modal} fullScreen={false} 
               isVisible={visible00} 
-              onBackdropPress={toggleOverlay2} overlayStyle={{width:windowWidth,height:windowHeight}}>
+              onBackdropPress={toggleOverlay2} overlayStyle={{width:windowWidth*0.9,height:windowHeight}}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{backgroundColor:'#007CC0'}}>
                   
@@ -524,30 +1209,19 @@ const VideoDetail= ({ route, navigation }) => {
                 <Text style={{marginTop:10,marginBottom:10}}>
                         CHOOSE PLEDGE OPTION BELOW:
                     </Text>
-                    <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+                    <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Pledge Option"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+                  </View>
 
               <TextInput
-                    label="Type pledege amount"
+                    label="Type pledge amount"
                     value={text}
                     onChangeText={text => setText(text)}
                     style={{marginTop:10,marginBottom:10}}
@@ -556,38 +1230,21 @@ const VideoDetail= ({ route, navigation }) => {
                 <Text style={{marginTop:10,marginBottom:10}}>
                         Choose currency below:
                     </Text>
-                    <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+                    <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Currency"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+                  </View>
 
                     <Text style={{marginTop:10,marginBottom:10}}>
                         PHONE NUMBER:
                     </Text>
 
-                    {/* <TextInput
-                    label="Phone number ??"
-                    value={text}
-                    onChangeText={text => setText(text)}
-                    style={{marginTop:10,marginBottom:10}}
-                  /> */}
 
                 <PhoneInput
                   ref={phoneInput}
@@ -602,9 +1259,6 @@ const VideoDetail= ({ route, navigation }) => {
                     setphoneNumber(text);
                   }}
                 />
-                {/* <Pressable style={styles.button} onPress={() => buttonPress()}>
-                  <Text style={styles.continueText}>Get Phone Number</Text>
-                </Pressable> */}
 
 
                   <TextInput
@@ -619,52 +1273,40 @@ const VideoDetail= ({ route, navigation }) => {
                     <Text style={{marginTop:10,marginBottom:10}}>
                         SELECT ZONE:
                     </Text>
-                    <SelectDropdown
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item
-                    }}
-                    renderDropdownIcon={isOpened => {
-                      return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-                      
-                    }}
-                    buttonStyle={styles.dropdown3BtnStyle}
-                />
+                    <View style={styles.dropdowncontainer}>
+                        <Dropdown
+                            label="Zone (Optional)"
+                            enableSearch
+                            data={zones}
+                            value={zoneSS}
+                            onChange={onChangeZone}
+                            
+                        />
+                    </View>
 
                 <Button
                   onPress={()=>{}}
-                  title="SUBMIT PLEDEGE"
-                  color="#F9A825"
-                  accessibilityLabel="Learn more about this purple button"
+                  title="SUBMIT PLEDGE"
+                  color="#D8A623"
                   style={{marginTop:10,marginBottom:10}}
                 />
 
                 </ScrollView>
 
 
-        </Overlay>
+            </Overlay>
 
           </View>
-        );
-      };
 
+        )}
 
-  return (
-
-    <SafeAreaView style={{flex: 1}}>
-      <FlatList data={tvProgram} renderItem={renderSelectedVideo}  />
+        {/* Network snack bar */}
+        <SnackBar visible={internetCheck} textMessage="Failed  Check Your Internet Conncetion" 
+            actionHandler={()=>{setInternetCheck(false);}} actionText="OKAY"/>
+      
       
     </SafeAreaView>
+    // </StripeProvider>
   );
 };
 
@@ -680,7 +1322,6 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
     buttonStyle: {
-      flex: 1,
       alignItems: 'center',
       backgroundColor: '#808080',
       padding: 10,
@@ -699,8 +1340,7 @@ const styles = StyleSheet.create({
     video: {
         alignSelf: 'center',
         width: windowWidth,
-        height: 200,
-        marginBottom:10
+        height: Dimensions.get('window').height*0.3,
       },
     buttons: {
     flexDirection: 'row',
@@ -722,6 +1362,27 @@ const styles = StyleSheet.create({
     textInput: {
       paddingVertical: 0,
     },
+    image: {
+      width:Dimensions.get('window').width*0.2,
+      height: Dimensions.get('window').height*0.1,
+      borderRadius: 15
+    },
+
+    centered: { 
+      flex: 1, 
+      justifyContent: "center", 
+      alignItems: "center", 
+    }, 
+    title: { 
+      marginVertical: 2, 
+    }, 
+    subtitle: { 
+      fontSize: 14, 
+    }, 
+    dropdowncontainer:{
+      width:'100%',
+      marginBottom:10
+   },
 
 
   });

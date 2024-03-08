@@ -18,13 +18,16 @@ const LibraryScreen = ({navigation}) => {
   const [loadingState, setLoadingState] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [listAlign, setListAlign] = useState(false);
+  const [booksNo, setBooksNo] = useState([]);
+  const [email, setEmail] = useState();
 
     useEffect(() => {
       const fetchData = async () => {
           const data = await getLibrary();
           setBooks(data);
-          const email= await AsyncStorage.getItem('email');
-          if(email==null){
+          const mail= await AsyncStorage.getItem('email');
+          setEmail(mail);
+          if(mail==null){
             setLoggedIn(false);
 
           }else{
@@ -32,9 +35,12 @@ const LibraryScreen = ({navigation}) => {
 
           }
           
+          
 
       }
+      const header = booksNo+"";
       fetchData();
+
 
     }, []);
 
@@ -74,7 +80,7 @@ const LibraryScreen = ({navigation}) => {
               
               <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50}}>              
                 <TouchableOpacity onPress={()=>{navigation.navigate('EpubReader',{
-                  file: item.url
+                  file2: item.url
                 })}}>
                   <Text style={{alignSelf:"center",fontSize:8,color:'white',marginTop:5}}>Read Book</Text>
                 </TouchableOpacity>
@@ -197,9 +203,9 @@ const LibraryScreen = ({navigation}) => {
     <View style={styles.container}>
         <View style={{ flexDirection: 'row',backgroundColor:"#D8A623",height:50}}>
           <View style={{  alignSelf:"flex-start",justifyContent:'center',alignSelf:'center'}}>
-          {loggedIn? (
+          {email!=="" ? (
             <Text style={{color:'#FFFFFF',marginLeft:10}}>
-              1 Books in your Library
+               {books.length} Books in your Library
             </Text>):(
               <Text style={{color:'#FFFFFF',marginLeft:10}}>
               0 Books in your Library
@@ -208,7 +214,7 @@ const LibraryScreen = ({navigation}) => {
             )}
 
           </View>
-          {/* {loggedIn? ( */}
+          {email !==""? (
           <View style={{ flexDirection: 'row',alignSelf:"flex-end",marginLeft:'auto',justifyContent:'center',alignSelf:'center' }}>
             <Divider orientation="vertical" width={2} />
             <TouchableOpacity onPress={()=>{
@@ -222,10 +228,13 @@ const LibraryScreen = ({navigation}) => {
               <Icon  name="view-list" size={30} color="white" />
             </TouchableOpacity>
           </View>
-          {/* ):null
-          } */}
+          
+            
+            ):null
+          } 
+
          </View>
-         {/* {loggedIn? ( */}
+         {email !==""? (
           <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{padding:10}}>
             {!listAlign &&(
             <FlatList data={books} renderItem={renderBooks} numColumns={3} ItemSeparatorComponent={() => <View style={{height: 5}} />}/>)}
@@ -337,13 +346,13 @@ const LibraryScreen = ({navigation}) => {
 
 
           </ScrollView>
-        {/* //  ):
-        //  (<ScrollView showsHorizontalScrollIndicator={false}  */}
-        {/* //  contentContainerStyle={{ flexGrow: 1, justifyContent: 'center',alignItems:'center' }}>
-        //      <Text>You Currently have no books in your Library</Text>
+         ):
+         (<ScrollView showsHorizontalScrollIndicator={false}  
+            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center',alignItems:'center' }}>
+              <Text>You Currently have no books in your Library</Text>
       
           
-        //   </ScrollView>)} */}
+           </ScrollView>)}
         
     </View>
   );

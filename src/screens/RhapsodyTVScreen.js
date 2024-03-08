@@ -55,19 +55,6 @@ const RhapsodyTVScreen = ({navigation}) => {
   };
 
 
-    // JSONArray rhapsody_travels = jsonObjectCatsContainer.getJSONArray("rhapsody_travels");
-    // JSONArray rhapsody_cities = jsonObjectCatsContainer.getJSONArray("rhapsody_cities");
-    // JSONArray rhapsody_languages = jsonObjectCatsContainer.getJSONArray("rhapsody_languages");
-    // JSONArray rhapsodyStories = jsonObjectCatsContainer.getJSONArray("rhapsody_stories");
-    // JSONArray yourLoveWorld = jsonObjectCatsContainer.getJSONArray("your_loveworld");
-    // JSONArray ropc = jsonObjectCatsContainer.getJSONArray("ropc");
-
-    // JSONArray gdop = jsonObjectCatsContainer.getJSONArray("gdop");
-    // JSONArray rin = jsonObjectCatsContainer.getJSONArray("rin");
-    // JSONArray techvision = jsonObjectCatsContainer.getJSONArray("techvision");
-    // JSONArray hackathon = jsonObjectCatsContainer.getJSONArray("hackathon");
-
-
 
   return (
     <SafeAreaView>

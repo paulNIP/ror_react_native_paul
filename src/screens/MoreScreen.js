@@ -152,7 +152,13 @@ const MoreScreen = () => {
                     <ListItem.Content>
                     <ListItem.Title>Home</ListItem.Title>
                     </ListItem.Content>
-                    <ListItem.Chevron/>
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
 
           </ListItem>
 
@@ -166,7 +172,13 @@ const MoreScreen = () => {
                     <ListItem.Content>
                     <ListItem.Title>Profile</ListItem.Title>
                     </ListItem.Content>
-                    <ListItem.Chevron/>
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                     
+                    />
       
           </ListItem>
       </View>
@@ -186,7 +198,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Rhapsody TV</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                     
+                    />
   
       </ListItem>
       </View>
@@ -202,7 +220,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Testimony</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
 
@@ -216,7 +240,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Prayer Request</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
       </View>
@@ -236,7 +266,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Favourite Books</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
 
@@ -250,7 +286,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Study Tracker</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
 
@@ -266,7 +308,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Bookmarked Articles</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
       </View>
@@ -283,7 +331,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Language</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
       <ListItem onPress={onShare} >
@@ -294,7 +348,13 @@ const MoreScreen = () => {
                 <ListItem.Content>
                 <ListItem.Title>Share App</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <MaterialCommunityIcons
+                      name="chevron-right"
+                      // type="font-awesome"
+                      // color='#D8A623'
+                      size={25}
+                      
+                    />
   
       </ListItem>
       </View>

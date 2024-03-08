@@ -1,5 +1,5 @@
 import React , { useEffect, useState } from 'react';
-import { View, Image, StyleSheet,FlatList ,Button,SafeAreaView,ScrollView} from 'react-native';
+import { View, Image, StyleSheet,FlatList ,SafeAreaView,ScrollView} from 'react-native';
 import { Text, Card,  Divider } from '@rneui/themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import HTMLView from 'react-native-htmlview';
@@ -7,13 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 import {Dimensions} from 'react-native';
 import { getArticleDetails } from '../service/devotionalService';
 
-const windowUnlockHeight = Dimensions.get('window').height*75;
-
-
 const ArticleDetails = ({ route, navigation }) => {
 
     const { date } = route.params;
-
     const [words, setWords] = useState([]);
    
     useEffect(() => {
@@ -26,33 +22,31 @@ const ArticleDetails = ({ route, navigation }) => {
   
     }, []);
 
-    console.log("Worddddf",words);
-  return (
-    <SafeAreaView>
-    <ScrollView>
+    
+    const renderItem = ({ item }) => {
+      console.log("Worddddf",item);
+  
 
-        {
-          words.map((l, i) => {
-
-            return (
-                    <TouchableOpacity>
-                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10,marginBottom:10 }}>
+     return(
+      <View>
+        <TouchableOpacity>
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginBottom:10 }}>
                     <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                     <Image
-                    source={{uri:l.image}}
+                    source={{uri:item.image}}
                     style={{
-                        height: 200,
+                        height: Dimensions.get('window').height*0.25,
                         width: 'auto'
                     }}
                     // resizeMode="contain"
                     />
                     <View style={{ marginBottom:10,backgroundColor:'#FFFFFF',padding:10 }}>
-                    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,color:'#999999'}}>{l.postdate}</Text>
-                    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10}}>{l.title}</Text>
+                    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,color:'#999999'}}>{item.postdate}</Text>
+                    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10}}>{item.title}</Text>
                     <Divider style={{width:100, alignSelf:'center'}} color='red' width={2}/>
                     
                     <HTMLView style={{marginTop:10}}
-                        value={l.body}
+                        value={item.body}
                         stylesheet={webViewStyle}
                         
                         />
@@ -61,10 +55,17 @@ const ArticleDetails = ({ route, navigation }) => {
                     </View>
                     </View>
                     </TouchableOpacity>
-            )
+      </View>
 
-          })
-     }  
+     )
+  }
+  
+  return (
+    <SafeAreaView>
+    <ScrollView>
+
+       <FlatList data={words} renderItem={renderItem} 
+         ItemSeparatorComponent={() => <View style={{height: 2}} />}/>
 
      </ScrollView> 
     </SafeAreaView>

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import Strings from '../constants/Strings';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // storing data
 const storeUser = async (value) => {
@@ -22,10 +23,11 @@ const getUser = async () => {
   };
 
 const getLibrary = async () => {
+    const mail= await AsyncStorage.getItem('email');
     return new Promise((resolve, reject) => {
 
             axios.post(Strings.BOOKS_URL+'/library', {
-                email: "paulalex.otim@outlook.com"
+                email: mail
 
               })
               .then((res) => {

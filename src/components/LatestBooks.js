@@ -5,6 +5,9 @@ import { getLatestBooks } from '../service/latestBooksService';
 import { Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 
 
 const LatestBooks = () => {
@@ -31,22 +34,23 @@ const LatestBooks = () => {
 
     
     return (
-      <View style={{marginEnd:10,width:100}}>
-        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
+      <View style={{marginEnd:10,width:windowWidth*0.23}}>
+        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id,title:item.book_title})}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
             <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                 <Image
                   source={{uri:imgr}}
                   style={{
-                    height: 150,
-                    width: 100
+                    height: windowWidth*0.35,
+                    width: windowWidth*0.23
                   }}
                   // resizeMode="contain"
                 />
               <View style={{height:50}}>
-                <Text style={{ marginBottom: 5,marginTop:5,fontSize:10, flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
+                <Text style={{flexWrap: 'wrap',width:windowWidth*0.23}}
+                 >{item.book_title}</Text>
               </View>
-              <Text style={{ marginBottom: 5,fontSize:7,alignSelf:'center' }}>
+              <Text style={{ marginBottom: 5,fontSize:10,alignSelf:'center' }}>
                   By {item.author_name}
               </Text>
             </View>

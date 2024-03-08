@@ -92,7 +92,7 @@ useEffect(() => {
      <View style={{flexDirection:'row'}}>
         <View style={{marginEnd:10,width:windowWidth*0.3,marginBottom:10,marginRight:"auto"}}>
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
-                <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+                <View style={{  borderRadius: 5, overflow: "hidden" }}>
                     <Image
                     source={{uri:imgr}}
                     style={{
@@ -217,7 +217,7 @@ useEffect(() => {
 
       <View style={{marginEnd:10,width:windowWidth*0.3,marginBottom:10,marginRight:"auto"}}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
-            <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+            <View style={{  borderRadius: 5, overflow: "hidden" }}>
                 <Image
                   source={{uri:imgr}}
                   style={{

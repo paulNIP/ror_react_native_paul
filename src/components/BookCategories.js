@@ -67,7 +67,7 @@ const BookCategories = () => {
                 borderBottomLeftRadius:5,
                 borderTopLeftRadius:5,
                 borderBottomRightRadius:5}}>
-                <TouchableOpacity onPress={()=>{goToTranslatedBooks(language);}}>
+                <TouchableOpacity onPress={()=>{goToTranslatedBooks(category_name);}}>
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
                     <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                         <Image
