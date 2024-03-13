@@ -152,11 +152,11 @@ const HomeScreen = () => {
             style={{
               flexDirection: 'row',
               marginHorizontal: 10,
-              marginTop: 15,
+              marginTop: 40,
               marginBottom: 15,
               alignContent: 'space-between',
             }}>
-            <Divider orientation="vertical" width={5} />
+            <Divider orientation="vertical" width={2} />
             <View
               style={{
                 flex: 1,
@@ -191,11 +191,11 @@ const HomeScreen = () => {
             style={{
               flexDirection: 'row',
               marginHorizontal: 10,
-              marginTop: 15,
+              marginTop: 40,
               marginBottom: 15,
               alignContent: 'space-between',
             }}>
-            <Divider orientation="vertical" width={5} />
+            <Divider orientation="vertical" width={2} />
             <View
               style={{
                 flex: 1,
@@ -360,7 +360,8 @@ const styles = StyleSheet.create({
   sectionTitle : {
     marginLeft: 10,
     fontWeight: '600',
-    fontSize : 15
+    fontSize : 16,
+    color :'#52565e'
   },
   sectionSubTitle : {
     marginLeft: 10,

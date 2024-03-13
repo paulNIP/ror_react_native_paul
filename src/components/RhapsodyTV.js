@@ -38,7 +38,7 @@ const RhapsodyTV = () => {
       <TouchableOpacity onPress={()=>{
         navigation.navigate('VideoDetail',{videoid:id});
       }}>
-      <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+      <View style={{ backgroundColor: "#f3f4f7", borderRadius: 5, overflow: "hidden" }}>
           <Image
             source={{uri:img}}
             style={{
@@ -82,7 +82,7 @@ return (
 const styles = StyleSheet.create({
 container: {
   flex: 1,
-  marginTop: 10,
+  marginTop: -10,
 }
 });
 
