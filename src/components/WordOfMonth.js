@@ -29,15 +29,10 @@ const WordOfMonth=()=>{
 
   console.log("Selected Articles",words);
 
- 
-
-  
-
 
     return (
         <>
         <View style={styles.container}>
-          
 
             {
               words.slice(0, 4).map((l, i) => {
@@ -55,11 +50,10 @@ const WordOfMonth=()=>{
       // resizeMode="contain"
     />
   <View style={{ marginBottom:10,backgroundColor:'#FFFFFF',padding:10 }}>
-    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,color:'#999999'}}>{l.postdate}</Text>
-    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10}}>{l.title}</Text>
-    <Divider style={{width:100, alignSelf:'center'}} color='red' width={2}/>
-    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,marginBottom:20}}>{l.excerpt}</Text>
-
+    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,color:'#cf8d2e'}}>{l.postdate}</Text>
+    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10, fontSize:16, fontWeight :'600'}}>{l.title}</Text>
+    <Divider style={{width:100, alignSelf:'center'}} color='red' width={1}/>
+    <Text style={{flexWrap: 'wrap',alignSelf:'center',marginTop:10,marginBottom:20 , color:'#59626a', lineHeight:22,  fontWeight :'300', fontSize:14 }}>{l.excerpt}</Text>
   </View>
 </View>
 </View>
@@ -75,9 +69,9 @@ const WordOfMonth=()=>{
                      resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
                    />
                    <ListItem.Content>
-                     <ListItem.Title>{l.title}</ListItem.Title>
-                     <ListItem.Subtitle style={{color:'#999999'}}   numberOfLines={4}>{l.excerpt}</ListItem.Subtitle>
-                     <Text style={{color:'#606060'}}>{l.postdate}</Text>
+                     <ListItem.Title style={{fontSize:14, fontWeight :'600'}}>{l.title}</ListItem.Title>
+                     <ListItem.Subtitle style={styles.excert}   numberOfLines={4}>{l.excerpt}</ListItem.Subtitle>
+                     <Text style={{color:'#cf8d2e', fontSize:12 , textTransform : 'uppercase'  }}>{l.postdate}</Text>
                    </ListItem.Content>
                 </ListItem>
                 </TouchableOpacity>
@@ -121,6 +115,12 @@ const styles = StyleSheet.create({
       fontSize: 16,
       marginTop: 5,
     },
+    excert :{
+        color:'#59626a',
+        lineHeight:22,
+        fontWeight :'300',
+        fontSize:14
+    }
     });
 
 export default WordOfMonth;

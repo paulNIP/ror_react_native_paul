@@ -1,6 +1,5 @@
 PODS:
   - boost (1.76.0)
-  - CocoaAsyncSocket (7.6.5)
   - CryptoSwift (1.5.1)
   - DifferenceKit (1.3.0):
     - DifferenceKit/Core (= 1.3.0)
@@ -17,39 +16,39 @@ PODS:
     - React-Core (= 0.72.7)
     - React-jsi (= 0.72.7)
     - ReactCommon/turbomodule/core (= 0.72.7)
-  - Firebase (10.21.0):
-    - Firebase/Core (= 10.21.0)
-  - Firebase/Core (10.21.0):
+  - Firebase (10.22.0):
+    - Firebase/Core (= 10.22.0)
+  - Firebase/Core (10.22.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 10.21.0)
-  - Firebase/CoreOnly (10.21.0):
-    - FirebaseCore (= 10.21.0)
-  - Firebase/Messaging (10.21.0):
+    - FirebaseAnalytics (~> 10.22.0)
+  - Firebase/CoreOnly (10.22.0):
+    - FirebaseCore (= 10.22.0)
+  - Firebase/Messaging (10.22.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.21.0)
-  - FirebaseAnalytics (10.21.0):
-    - FirebaseAnalytics/AdIdSupport (= 10.21.0)
+    - FirebaseMessaging (~> 10.22.0)
+  - FirebaseAnalytics (10.22.0):
+    - FirebaseAnalytics/AdIdSupport (= 10.22.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (10.21.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseAnalytics/AdIdSupport (10.22.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleAppMeasurement (= 10.21.0)
+    - GoogleAppMeasurement (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseCore (10.21.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseCore (10.22.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
-  - FirebaseCoreExtension (10.21.0):
+  - FirebaseCoreExtension (10.22.0):
     - FirebaseCore (~> 10.0)
   - FirebaseCoreInternal (10.22.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
@@ -58,7 +57,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.21.0):
+  - FirebaseMessaging (10.22.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.3)
@@ -66,94 +65,36 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - Flipper (0.182.0):
-    - Flipper-Folly (~> 2.6)
-  - Flipper-Boost-iOSX (1.76.0.1.11)
-  - Flipper-DoubleConversion (3.2.0.1)
-  - Flipper-Fmt (7.1.7)
-  - Flipper-Folly (2.6.10):
-    - Flipper-Boost-iOSX
-    - Flipper-DoubleConversion
-    - Flipper-Fmt (= 7.1.7)
-    - Flipper-Glog
-    - libevent (~> 2.1.12)
-    - OpenSSL-Universal (= 1.1.1100)
-  - Flipper-Glog (0.5.0.5)
-  - Flipper-PeerTalk (0.0.4)
-  - FlipperKit (0.182.0):
-    - FlipperKit/Core (= 0.182.0)
-  - FlipperKit/Core (0.182.0):
-    - Flipper (~> 0.182.0)
-    - FlipperKit/CppBridge
-    - FlipperKit/FBCxxFollyDynamicConvert
-    - FlipperKit/FBDefines
-    - FlipperKit/FKPortForwarding
-    - SocketRocket (~> 0.6.0)
-  - FlipperKit/CppBridge (0.182.0):
-    - Flipper (~> 0.182.0)
-  - FlipperKit/FBCxxFollyDynamicConvert (0.182.0):
-    - Flipper-Folly (~> 2.6)
-  - FlipperKit/FBDefines (0.182.0)
-  - FlipperKit/FKPortForwarding (0.182.0):
-    - CocoaAsyncSocket (~> 7.6)
-    - Flipper-PeerTalk (~> 0.0.4)
-  - FlipperKit/FlipperKitHighlightOverlay (0.182.0)
-  - FlipperKit/FlipperKitLayoutHelpers (0.182.0):
-    - FlipperKit/Core
-    - FlipperKit/FlipperKitHighlightOverlay
-    - FlipperKit/FlipperKitLayoutTextSearchable
-  - FlipperKit/FlipperKitLayoutIOSDescriptors (0.182.0):
-    - FlipperKit/Core
-    - FlipperKit/FlipperKitHighlightOverlay
-    - FlipperKit/FlipperKitLayoutHelpers
-    - YogaKit (~> 1.18)
-  - FlipperKit/FlipperKitLayoutPlugin (0.182.0):
-    - FlipperKit/Core
-    - FlipperKit/FlipperKitHighlightOverlay
-    - FlipperKit/FlipperKitLayoutHelpers
-    - FlipperKit/FlipperKitLayoutIOSDescriptors
-    - FlipperKit/FlipperKitLayoutTextSearchable
-    - YogaKit (~> 1.18)
-  - FlipperKit/FlipperKitLayoutTextSearchable (0.182.0)
-  - FlipperKit/FlipperKitNetworkPlugin (0.182.0):
-    - FlipperKit/Core
-  - FlipperKit/FlipperKitReactPlugin (0.182.0):
-    - FlipperKit/Core
-  - FlipperKit/FlipperKitUserDefaultsPlugin (0.182.0):
-    - FlipperKit/Core
-  - FlipperKit/SKIOSNetworkPlugin (0.182.0):
-    - FlipperKit/Core
-    - FlipperKit/FlipperKitNetworkPlugin
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - fmt (6.2.1)
   - Fuzi (3.1.3)
   - GCDWebServer (3.7.5):
     - GCDWebServer/Core (= 3.7.5)
   - GCDWebServer/Core (3.7.5)
   - glog (0.3.5)
-  - GoogleAppMeasurement (10.21.0):
-    - GoogleAppMeasurement/AdIdSupport (= 10.21.0)
+  - GoogleAppMeasurement (10.22.0):
+    - GoogleAppMeasurement/AdIdSupport (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (10.21.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.21.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (10.22.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.22.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (10.21.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/WithoutAdIdSupport (10.22.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleDataTransport (9.4.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUtilities (7.13.0):
     - GoogleUtilities/AppDelegateSwizzler (= 7.13.0)
@@ -217,13 +158,12 @@ PODS:
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
   - Minizip (1.0.0)
-  - nanopb (2.30909.1):
-    - nanopb/decode (= 2.30909.1)
-    - nanopb/encode (= 2.30909.1)
-  - nanopb/decode (2.30909.1)
-  - nanopb/encode (2.30909.1)
-  - OpenSSL-Universal (1.1.1100)
-  - pagopa-io-react-native-crypto (0.2.3):
+  - nanopb (2.30910.0):
+    - nanopb/decode (= 2.30910.0)
+    - nanopb/encode (= 2.30910.0)
+  - nanopb/decode (2.30910.0)
+  - nanopb/encode (2.30910.0)
+  - pagopa-io-react-native-crypto (0.3.0):
     - React-Core
   - pagopa-io-react-native-jwt (1.1.0):
     - JOSESwift (~> 2.3)
@@ -549,14 +489,14 @@ PODS:
     - glog
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-image-picker (7.1.0):
+  - react-native-image-picker (7.1.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-ionicons (4.6.5):
     - React
   - react-native-ios-files-app-save (0.1.7):
     - React-Core
-  - react-native-netinfo (11.2.1):
+  - react-native-netinfo (11.3.1):
     - React-Core
   - react-native-network-info (5.2.1):
     - React
@@ -567,9 +507,10 @@ PODS:
     - React-Core
   - react-native-restart (0.0.27):
     - React-Core
-  - react-native-safe-area-context (4.7.4):
+  - react-native-safe-area-context (4.9.0):
     - React-Core
-  - react-native-slider (4.4.3):
+  - react-native-slider (4.5.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
@@ -578,8 +519,6 @@ PODS:
   - react-native-track-player (4.0.1):
     - React-Core
     - SwiftAudioEx (= 1.0.0)
-  - react-native-version-check (3.4.7):
-    - React-Core
   - react-native-video (5.2.1):
     - React-Core
     - react-native-video/Video (= 5.2.1)
@@ -705,11 +644,11 @@ PODS:
   - ReadiumInternal (2.6.0)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAudioRecorderPlayer (3.6.5):
+  - RNAudioRecorderPlayer (3.6.6):
     - React-Core
-  - RNBootSplash (5.1.3):
+  - RNBootSplash (5.4.1):
     - React-Core
-  - RNCAsyncStorage (1.19.6):
+  - RNCAsyncStorage (1.22.3):
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
@@ -717,18 +656,18 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
-  - RNDeviceInfo (10.12.0):
+  - RNDeviceInfo (10.13.1):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (19.0.0):
-    - Firebase/CoreOnly (= 10.21.0)
+  - RNFBApp (19.0.1):
+    - Firebase/CoreOnly (= 10.22.0)
     - React-Core
-  - RNFBMessaging (19.0.0):
-    - Firebase/Messaging (= 10.21.0)
-    - FirebaseCoreExtension (= 10.21.0)
+  - RNFBMessaging (19.0.1):
+    - Firebase/Messaging (= 10.22.0)
+    - FirebaseCoreExtension (= 10.22.0)
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
@@ -736,42 +675,17 @@ PODS:
   - RNGestureHandler (2.15.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - RNIap (12.11.0):
+  - RNIap (12.13.0):
     - React-Core
   - RNLocalize (3.0.6):
     - React-Core
   - RNRate (1.2.12):
     - React-Core
-  - RNReanimated (3.5.4):
-    - DoubleConversion
-    - FBLazyVector
-    - glog
-    - hermes-engine
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-callinvoker
+  - RNReanimated (3.8.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - React-Core/DevSupport
-    - React-Core/RCTWebSocket
-    - React-CoreModules
-    - React-cxxreact
-    - React-hermes
-    - React-jsi
-    - React-jsiexecutor
-    - React-jsinspector
-    - React-RCTActionSheet
-    - React-RCTAnimation
-    - React-RCTAppDelegate
-    - React-RCTBlob
-    - React-RCTImage
-    - React-RCTLinking
-    - React-RCTNetwork
-    - React-RCTSettings
-    - React-RCTText
     - ReactCommon/turbomodule/core
-    - Yoga
-  - RNScreens (3.27.0):
+  - RNScreens (3.29.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNSVG (14.1.0):
@@ -785,12 +699,12 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-  - Stripe (23.21.1):
-    - StripeApplePay (= 23.21.1)
-    - StripeCore (= 23.21.1)
-    - StripePayments (= 23.21.1)
-    - StripePaymentsUI (= 23.21.1)
-    - StripeUICore (= 23.21.1)
+  - Stripe (23.21.2):
+    - StripeApplePay (= 23.21.2)
+    - StripeCore (= 23.21.2)
+    - StripePayments (= 23.21.2)
+    - StripePaymentsUI (= 23.21.2)
+    - StripeUICore (= 23.21.2)
   - stripe-react-native (0.36.0):
     - React-Core
     - Stripe (~> 23.21.0)
@@ -799,33 +713,31 @@ PODS:
     - StripePayments (~> 23.21.0)
     - StripePaymentSheet (~> 23.21.0)
     - StripePaymentsUI (~> 23.21.0)
-  - StripeApplePay (23.21.1):
-    - StripeCore (= 23.21.1)
-  - StripeCore (23.21.1)
-  - StripeFinancialConnections (23.21.1):
-    - StripeCore (= 23.21.1)
-    - StripeUICore (= 23.21.1)
-  - StripePayments (23.21.1):
-    - StripeCore (= 23.21.1)
-    - StripePayments/Stripe3DS2 (= 23.21.1)
-  - StripePayments/Stripe3DS2 (23.21.1):
-    - StripeCore (= 23.21.1)
-  - StripePaymentSheet (23.21.1):
-    - StripeApplePay (= 23.21.1)
-    - StripeCore (= 23.21.1)
-    - StripePayments (= 23.21.1)
-    - StripePaymentsUI (= 23.21.1)
-  - StripePaymentsUI (23.21.1):
-    - StripeCore (= 23.21.1)
-    - StripePayments (= 23.21.1)
-    - StripeUICore (= 23.21.1)
-  - StripeUICore (23.21.1):
-    - StripeCore (= 23.21.1)
+  - StripeApplePay (23.21.2):
+    - StripeCore (= 23.21.2)
+  - StripeCore (23.21.2)
+  - StripeFinancialConnections (23.21.2):
+    - StripeCore (= 23.21.2)
+    - StripeUICore (= 23.21.2)
+  - StripePayments (23.21.2):
+    - StripeCore (= 23.21.2)
+    - StripePayments/Stripe3DS2 (= 23.21.2)
+  - StripePayments/Stripe3DS2 (23.21.2):
+    - StripeCore (= 23.21.2)
+  - StripePaymentSheet (23.21.2):
+    - StripeApplePay (= 23.21.2)
+    - StripeCore (= 23.21.2)
+    - StripePayments (= 23.21.2)
+    - StripePaymentsUI (= 23.21.2)
+  - StripePaymentsUI (23.21.2):
+    - StripeCore (= 23.21.2)
+    - StripePayments (= 23.21.2)
+    - StripeUICore (= 23.21.2)
+  - StripeUICore (23.21.2):
+    - StripeCore (= 23.21.2)
   - SwiftAudioEx (1.0.0)
   - SwiftSoup (2.5.3)
   - Yoga (1.14.0)
-  - YogaKit (1.18.1):
-    - Yoga (~> 1.14)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
@@ -835,34 +747,13 @@ DEPENDENCIES:
   - Firebase
   - FirebaseCore
   - FirebaseCoreInternal
-  - Flipper (= 0.182.0)
-  - Flipper-Boost-iOSX (= 1.76.0.1.11)
-  - Flipper-DoubleConversion (= 3.2.0.1)
-  - Flipper-Fmt (= 7.1.7)
-  - Flipper-Folly (= 2.6.10)
-  - Flipper-Glog (= 0.5.0.5)
-  - Flipper-PeerTalk (= 0.0.4)
-  - FlipperKit (= 0.182.0)
-  - FlipperKit/Core (= 0.182.0)
-  - FlipperKit/CppBridge (= 0.182.0)
-  - FlipperKit/FBCxxFollyDynamicConvert (= 0.182.0)
-  - FlipperKit/FBDefines (= 0.182.0)
-  - FlipperKit/FKPortForwarding (= 0.182.0)
-  - FlipperKit/FlipperKitHighlightOverlay (= 0.182.0)
-  - FlipperKit/FlipperKitLayoutPlugin (= 0.182.0)
-  - FlipperKit/FlipperKitLayoutTextSearchable (= 0.182.0)
-  - FlipperKit/FlipperKitNetworkPlugin (= 0.182.0)
-  - FlipperKit/FlipperKitReactPlugin (= 0.182.0)
-  - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.182.0)
-  - FlipperKit/SKIOSNetworkPlugin (= 0.182.0)
   - GCDWebServer (from `https://raw.githubusercontent.com/readium/GCDWebServer/3.7.5/GCDWebServer.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - GoogleUtilities
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
   - Minizip
-  - OpenSSL-Universal (= 1.1.1100)
-  - "pagopa-io-react-native-crypto (from `../node_modules/@pagopa/io-react-native-crypto/pagopa-io-react-native-crypto.podspec`)"
+  - "pagopa-io-react-native-crypto (from `../node_modules/@pagopa/io-react-native-crypto`)"
   - "pagopa-io-react-native-jwt (from `../node_modules/@pagopa/io-react-native-jwt`)"
   - R2Navigator (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec`)
   - R2Shared (from `https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumShared.podspec`)
@@ -874,7 +765,6 @@ DEPENDENCIES:
   - React-callinvoker (from `../node_modules/react-native/ReactCommon/callinvoker`)
   - React-Codegen (from `build/generated/ios`)
   - React-Core (from `../node_modules/react-native/`)
-  - React-Core/DevSupport (from `../node_modules/react-native/`)
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
@@ -897,7 +787,6 @@ DEPENDENCIES:
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-sqlite-storage (from `../node_modules/react-native-sqlite-storage`)
   - react-native-track-player (from `../node_modules/react-native-track-player`)
-  - react-native-version-check (from `../node_modules/react-native-version-check`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -945,7 +834,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - CocoaAsyncSocket
     - CryptoSwift
     - DifferenceKit
     - Firebase
@@ -955,14 +843,6 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
-    - Flipper
-    - Flipper-Boost-iOSX
-    - Flipper-DoubleConversion
-    - Flipper-Fmt
-    - Flipper-Folly
-    - Flipper-Glog
-    - Flipper-PeerTalk
-    - FlipperKit
     - fmt
     - Fuzi
     - GoogleAppMeasurement
@@ -973,7 +853,6 @@ SPEC REPOS:
     - libwebp
     - Minizip
     - nanopb
-    - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
@@ -988,7 +867,6 @@ SPEC REPOS:
     - StripeUICore
     - SwiftAudioEx
     - SwiftSoup
-    - YogaKit
 
 EXTERNAL SOURCES:
   boost:
@@ -1007,7 +885,7 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-08-07-RNv0.72.4-813b2def12bc9df02654b3e3653ae4a68d0572e0
   pagopa-io-react-native-crypto:
-    :path: "../node_modules/@pagopa/io-react-native-crypto/pagopa-io-react-native-crypto.podspec"
+    :path: "../node_modules/@pagopa/io-react-native-crypto"
   pagopa-io-react-native-jwt:
     :path: "../node_modules/@pagopa/io-react-native-jwt"
   R2Navigator:
@@ -1072,8 +950,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-sqlite-storage"
   react-native-track-player:
     :path: "../node_modules/react-native-track-player"
-  react-native-version-check:
-    :path: "../node_modules/react-native-version-check"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-webview:
@@ -1165,42 +1041,32 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
-  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
   DifferenceKit: ab185c4d7f9cef8af3fcf593e5b387fb81e999ca
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 5fbbff1d7734827299274638deb8ba3024f6c597
   FBReactNativeSpec: 638095fe8a01506634d77b260ef8a322019ac671
-  Firebase: 4453b799f72f625384dc23f412d3be92b0e3b2a0
-  FirebaseAnalytics: d275f288881d4417f780115dd52c05fa9752d530
-  FirebaseCore: 74f647ad9739ea75112ce6c3b3b91f5488ce1122
-  FirebaseCoreExtension: 1c044fd46e95036cccb29134757c499613f3f564
+  Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
+  FirebaseAnalytics: 8d0ff929c63b7f72260f332b86ccf569776b75d3
+  FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
+  FirebaseCoreExtension: 6394c00b887d0bebadbc7049c464aa0cbddc5d41
   FirebaseCoreInternal: bca337352024b18424a61e478460547d46c4c753
   FirebaseInstallations: 763814908793c0da14c18b3dcffdec71e29ed55e
-  FirebaseMessaging: b285329399cc6edd73b5b32864c68454177bcf3f
-  Flipper: 6edb735e6c3e332975d1b17956bcc584eccf5818
-  Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
-  Flipper-DoubleConversion: 2dc99b02f658daf147069aad9dbd29d8feb06d30
-  Flipper-Fmt: 60cbdd92fc254826e61d669a5d87ef7015396a9b
-  Flipper-Folly: 584845625005ff068a6ebf41f857f468decd26b3
-  Flipper-Glog: 70c50ce58ddaf67dc35180db05f191692570f446
-  Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
-  FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
+  FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   Fuzi: 4c10d6449c0b49a85cd75b13844c559c0fc71220
   GCDWebServer: 5e989dbe6795b9975f378cc0eeeee49ef2c51b6f
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  GoogleAppMeasurement: a65314d316443969ed3d3709b3a187448ed6418f
-  GoogleDataTransport: bed3a36c04c8552479fbb9b76326e0fc69bddcb2
+  GoogleAppMeasurement: ccefe3eac9b0aa27f96066809fb1a7fe4b462626
+  GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
   hermes-engine: 9180d43df05c1ed658a87cc733dc3044cf90c00a
   JOSESwift: 7ff178bb9173ff42c6e990929a9f2fa702a34f69
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Minizip: 188cb3e39a1195c283ae03bf673d182596fefd0b
-  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  pagopa-io-react-native-crypto: 93f984df8711eb72f3fb030eca51be6268fc96d6
+  nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  pagopa-io-react-native-crypto: 6aa9f33e4bf64ef420ad97c720c1ad0f876cd470
   pagopa-io-react-native-jwt: 76b4008ace006bc4eec878712101e7b53b390a97
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   R2Navigator: 4b53a3d10dd7282c9d9cd6d2188e68f0041840fc
@@ -1222,19 +1088,18 @@ SPEC CHECKSUMS:
   React-jsinspector: 8baadae51f01d867c3921213a25ab78ab4fbcd91
   React-logger: 8edc785c47c8686c7962199a307015e2ce9a0e4f
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-image-picker: 5e076db26cd81660cfb6db5bcf517cfa12054d45
+  react-native-image-picker: 76bf9cf742bebbaac4ee4c0385be374c034a556c
   react-native-ionicons: 7ce04a8e61c6de2fc3b6798e8b9621b865cb18b1
   react-native-ios-files-app-save: 097e27a39c87126605586bae34d35775d89fee65
-  react-native-netinfo: 8a7fd3f7130ef4ad2fb4276d5c9f8d3f28d2df3d
+  react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-network-info: d1290ffc0bd0709e11436f5b8d7f605dcc5c4530
   react-native-readium: 7f71dab8b9c3eff510a2b7527e7a249691637215
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
-  react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
-  react-native-slider: 1cdd6ba29675df21f30544253bf7351d3c2d68c4
+  react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
+  react-native-slider: cc89964e1432fa31aa9db7a0fa9b21e26b5d5152
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-sqlite-storage: f6d515e1c446d1e6d026aa5352908a25d4de3261
   react-native-track-player: 97d76dbbd35f27cc709e5f04540615e54264b3f9
-  react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-NativeModulesApple: b6868ee904013a7923128892ee4a032498a1024a
@@ -1258,42 +1123,41 @@ SPEC CHECKSUMS:
   ReactNativeLocalization: fb171138cdc80d5d0d4f20243d2fc82c2b3cc48f
   ReadiumInternal: a74f61e9c0fbe2407f4e5c53aa032aa92193f3d5
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAudioRecorderPlayer: ba0aca62cd47c6f878313fdadb0edb23ef9dbf90
-  RNBootSplash: 970faaa2ab1322758c6545c88d3b23f424b86a2f
-  RNCAsyncStorage: 191a99459b4a6d174cfe51579d34b5267201bbf3
+  RNAudioRecorderPlayer: f790fc1afb118552ae6285d60adde52ee6b5d9ef
+  RNBootSplash: eff8239c4f795ce42a0604873aef3733aac0dedd
+  RNCAsyncStorage: 10591b9e0a91eaffee14e69b3721009759235125
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
-  RNDeviceInfo: db5c64a060e66e5db3102d041ebe3ef307a85120
+  RNDeviceInfo: 4f9c7cfd6b9db1b05eb919620a001cf35b536423
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBApp: 495bf6662800c670fe8e9629d4de0cba72c78b0a
-  RNFBMessaging: 6686d597a88f0054b87faba6299992a90cfe935b
+  RNFBApp: 94f7fca150585cb1ad3802a6c6d356e9a8b95b34
+  RNFBMessaging: cad9f5dcd04671a01621135b55b892b8b2547da2
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 7909c50383a18f0cb10ce1db7262b9a6da504c03
-  RNIap: fc9af04ee706894a80c9d8f979bae930b0dee191
+  RNIap: ce1af5f33e92af3aa6c5c3d8fb601c624748ac03
   RNLocalize: 4222a3756cdbe2dc9a5bdf445765a4d2572107cb
   RNRate: ef3bcff84f39bb1d1e41c5593d3eea4aab2bd73a
-  RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
-  RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
+  RNReanimated: 5afba582037b0dae040a5f927dec7fdd18e430c3
+  RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Stripe: d55e7338dabc599eddeee3b09eacd5c13457e1a2
+  Stripe: 1ac988b21653854f79d0e55c0cb68c67022534a0
   stripe-react-native: ee7309aeca7aeb9cabeec8e1434c84f114fdf74b
-  StripeApplePay: 48973391091a96e30e6ef6b9b331dbaa31449dcb
-  StripeCore: 2ad2bf779ed5b34c1af0800d8304222d3a98440f
-  StripeFinancialConnections: d75c000ffe2f09b14f9aebf02a571d91658ae73b
-  StripePayments: 9961532054e6d4176f54d681cab876cefe60de14
-  StripePaymentSheet: 2ef84d80a938e8c6c59ba0639007b4108d0a6bfb
-  StripePaymentsUI: 1f8addf41697d0f298fd8a15e4edf3999fbc66bc
-  StripeUICore: 95c5235db01a2d90b5bb72c85a804eaed4e64f17
+  StripeApplePay: d47882e5de82480cc536dc63d1403a1efdb9de7b
+  StripeCore: 04ae691ead0c8e03acfe2c935867a55459cc98e6
+  StripeFinancialConnections: 1f53e55955f2cd27a426a9934cc8630274b9860d
+  StripePayments: 9853e83478decbb6f4fd721e4271336d73ac8d11
+  StripePaymentSheet: 5b1d25eab80059cedfbee49fe7f30c34b703be89
+  StripePaymentsUI: 2d1a2bd3c88735e003342f4c8d9d7aa25d7613c0
+  StripeUICore: d8d6fdcbc77bd8697052501452cbb0fcf1bc6840
   SwiftAudioEx: 6f511018b7a0fdfd14ed1bb4081f953588245cc0
   SwiftSoup: 33e8d374021a6c332788f78fa29a93227d8a7699
   Yoga: 4c3aa327e4a6a23eeacd71f61c81df1bcdf677d5
-  YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 7df43ad893908c303f1995a164b96c332392d44c
+PODFILE CHECKSUM: e830dbc16ca5cedfd30434ea4603a309533e2a0b
 
-COCOAPODS: 1.14.2
+COCOAPODS: 1.12.1

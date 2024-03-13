@@ -22,7 +22,7 @@ prepare_react_native_project!
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
 # ```
-flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
+#flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
@@ -39,8 +39,8 @@ target 'rhapsodyreader' do
   pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumStreamer.podspec'
   pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumNavigator.podspec'
   pod 'ReadiumInternal', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.6.0/Support/CocoaPods/ReadiumInternal.podspec'
-  pod 'pagopa-io-react-native-crypto',
-      :path => '../node_modules/@pagopa/io-react-native-crypto/pagopa-io-react-native-crypto.podspec'
+ # pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+  pod 'pagopa-io-react-native-crypto', :path => '../node_modules/@pagopa/io-react-native-crypto'
   pod 'rn-fetch-blob',
       :path => '../node_modules/rn-fetch-blob'
   pod 'Minizip', modular_headers: true
@@ -63,7 +63,7 @@ target 'rhapsodyreader' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => flipper_config,
+    #:flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )

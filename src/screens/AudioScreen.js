@@ -19,13 +19,16 @@ import RNFS from 'react-native-fs';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { startDownloadAppSave,FileSaveOptions, FileSaveSuccess } from 'react-native-ios-files-app-save';
-import RNFetchBlob from 'rn-fetch-blob';
+
+//import RNFetchBlob from 'rn-fetch-blob';
+
 import {Platform, PermissionsAndroid} from 'react-native';
 
+import {NativeModules} from 'react-native';
+const RNFetchBlob = NativeModules.RNFetchBlob;
 
-
-let dirs = RNFetchBlob.fs.dirs.DocumentDir;
-const db = DatabaseConnection.getdevotionalsDB();
+// let dirs = RNFetchBlob.fs.dirs.DocumentDir;
+// const db = DatabaseConnection.getdevotionalsDB();
 
 
 

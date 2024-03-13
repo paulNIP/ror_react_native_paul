@@ -37,22 +37,21 @@ const LatestBooks = () => {
       <View style={{marginEnd:10,width:windowWidth*0.23}}>
         <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id,title:item.book_title})}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
-            <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+            <View style={{ backgroundColor: "#f3f4f7", borderRadius: 5, overflow: "hidden" }}>
                 <Image
                   source={{uri:imgr}}
                   style={{
                     height: windowWidth*0.35,
                     width: windowWidth*0.23
                   }}
-                  // resizeMode="contain"
                 />
               <View style={{height:50}}>
-                <Text style={{flexWrap: 'wrap',width:windowWidth*0.23}}
+                <Text style={{flexWrap: 'wrap',width:windowWidth*0.23, fontSize : 10, paddingLeft : 5, paddingTop : 5,  fontFamily : 'Arial' }}
                  >{item.book_title}</Text>
               </View>
-              <Text style={{ marginBottom: 5,fontSize:10,alignSelf:'center' }}>
-                  By {item.author_name}
-              </Text>
+              {/*<Text style={{ marginBottom: 5,fontSize:10,alignSelf:'center' }}>*/}
+              {/*    By {item.author_name}*/}
+              {/*</Text>*/}
             </View>
             </View>
           </TouchableOpacity>
@@ -76,7 +75,8 @@ return (
 const styles = StyleSheet.create({
       container: {
         flex: 1,
-        marginTop: 10,
+        marginTop: -5,
+          backgroundColor : '#ffffff'
       },
       image: {
         flex: 1,
