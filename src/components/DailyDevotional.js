@@ -48,7 +48,7 @@ const DailyDevotional = () => {
   const [points, setPoints] = useState();
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [subscribed, setSubscribed] = React.useState(null);
-  
+
   const initialMinutes = 0; // Initial minutes
   const initialSeconds = 10; // Initial seconds
   const [minutes, setMinutes] = useState(initialMinutes);
@@ -103,7 +103,7 @@ const DailyDevotional = () => {
   useEffect(() => {
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
-          
+
           if(email==null){
 
           }else{
@@ -124,7 +124,7 @@ const DailyDevotional = () => {
       if (mail===null){
 
       }else{
-        const profile = await getWallet(mail); 
+        const profile = await getWallet(mail);
         setPoints(profile.totalpoints);
 
       }
@@ -137,12 +137,12 @@ const DailyDevotional = () => {
         // should clear the interval when the component unmounts
         clearInterval(myInterval);
       };
-  
+
       }, []);
 
     useEffect(() => {
       let interval;
-  
+
       if (isActive && (minutes > 0 || seconds > 0)) {
         interval = setInterval(() => {
           if (seconds === 0) {
@@ -164,7 +164,7 @@ const DailyDevotional = () => {
         setIsCompleted(true);
         //display completed message
       }
-  
+
       return () => {
         clearInterval(interval);
       };
@@ -176,17 +176,17 @@ const DailyDevotional = () => {
     const startTimer = () => {
       setIsActive(true);
     };
-  
+
     const stopTimer = () => {
       setIsActive(false);
     };
-  
+
     const resetTimer = () => {
       setIsActive(false);
       setMinutes(initialMinutes);
       setSeconds(initialSeconds);
     };
-    
+
 
 
 
@@ -210,7 +210,7 @@ const DailyDevotional = () => {
       // The screen is focused
       // Call any action
       setShouldShow(true);
-      
+
     });
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -245,7 +245,7 @@ const DailyDevotional = () => {
   const timerCallbackFunc = (timerFlag) => {
 
       setTimerEnd(timerFlag);
-     
+
 
 
   };
@@ -343,11 +343,11 @@ const DailyDevotional = () => {
       if(res.data.status===1){
         Vibration.vibrate(10 * ONE_SECOND_IN_MS);
         setRneMessage(res.data.response);
-        
+
         setVisibleCongs(true);
         //call method to insert in read and earn Dates
         setReadingCompleted();
-        
+
 
       }else{
         setRneMessage(res.data.response);
@@ -373,10 +373,10 @@ const DailyDevotional = () => {
     const BA= Strings.VERSE_URL+item.BA;
     const BB= Strings.VERSE_URL+item.BB;
 
-    
+
 
     return (
-      
+
       <View >
         <Image
           style={{width: 'auto', height: Dimensions.get('window').height*0.23,borderRadius: 5}}
@@ -385,7 +385,7 @@ const DailyDevotional = () => {
           }}
           // resizeMode={'cover'} // cover or contain its upto you view look
         />
-        
+
         <AccountChips style={{marginTop:10}}/>
         {/* <ReadAndEarn/> */}
         {status===undefined ?(
@@ -396,8 +396,8 @@ const DailyDevotional = () => {
         ):(
 
           <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-               
-                <View style={{flexDirection:'row'}}> 
+
+                <View style={{flexDirection:'row'}}>
                     <MaterialCommunityIcons style={{marginTop:-2}} name="timer-outline" size={25} color="red" />
                     {
                       readCompletion &&(
@@ -406,11 +406,11 @@ const DailyDevotional = () => {
                             Completed
                             </Text>
                         </TouchableOpacity>
-                      
+
                       )
                     }
 
-                    {!readCompletion&&( 
+                    {!readCompletion&&(
                         <Text>
                           {minutes.toString().padStart(2, '0')}:
                           {seconds.toString().padStart(2, '0')}
@@ -429,18 +429,18 @@ const DailyDevotional = () => {
 
 
         )}
-        
 
-        
+
+
         {shouldShow ? ( <View  style={{padding:10}}>
           <View style={{justifyContent:'center'}}>
           <Text style={styles.heading} >{item.title}</Text></View>
-          <Divider style={{width:100,color:'#DAA520', alignSelf:'center'}} color='red' width={2}/>
+          <Divider style={{width:100,color:'#DAA520', alignSelf:'center'}} color='#fe5000'  width={0.9}/>
           <Text style={styles.excerpt}>{item.excerpt}</Text>
           <View style={styles.fixToText}>
              <TouchableOpacity style={{backgroundColor:"red",height:40,borderRadius:5}} onPress={readMore}>
-               <Text style={{color:"#FFFFFF", fontWeight:'bold',alignSelf:'center',padding:10}} >Read more</Text>
-             </TouchableOpacity> 
+               <Text style={{color:"#FFFFFF", fontWeight:'500',alignSelf:'center', paddingTop: 10, paddingBottom : 0, paddingRight :10 , paddingLeft : 10 }} >Read more</Text>
+             </TouchableOpacity>
           </View>
           </View>
         ) : null
@@ -459,9 +459,9 @@ const DailyDevotional = () => {
                 toggleOverlay(url);
               }}
               stylesheet={webViewStyle}
-              
+
             />
-            
+
             <Text style={styles.heading}>{Strings.prayer}</Text>
             <Text style={styles.confess}>{item.confess}</Text>
             <Text style={styles.heading}>{Strings.furtherStudy}</Text>
@@ -481,22 +481,22 @@ const DailyDevotional = () => {
 
             <DailyQuiz/>
             <Overlay ModalComponent={Modal} fullScreen={false}
-              isVisible={visible} 
+              isVisible={visible}
               onBackdropPress={toggleOverlay} overlayStyle={{width:windowWidth,height:windowHeight}}>
                 <Text style={styles.textSecondary}>
                      SCRIPTURE REFERENCE
                 </Text>
                 <WebView source={{ uri: Strings.READING }} style={{ flex: 1 }} />
-              </Overlay> 
+              </Overlay>
 
               <Overlay ModalComponent={Modal} fullScreen={false}
-              isVisible={visibleCongs} 
+              isVisible={visibleCongs}
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
-                
+
                 <View style={{alignSelf:'center'}}>
                    <Image style={styles.sunrays} source={require('../assets/sunrays.png')} />
                    <Image  style={styles.logo} source={require('../assets/logo.png')} />
-                   
+
                 </View>
                 <View style={{flexDirection:'row',alignSelf:'center',marginTop:70}}>
                    <Image style={styles.wing} source={require('../assets/left_wing.png')} />
@@ -505,7 +505,7 @@ const DailyDevotional = () => {
                    </Text>
                    <Image style={styles.wing} source={require('../assets/right_wing.png')} />
                 </View>
-                
+
                 <Text style={{flexWrap:'wrap',alignSelf:'center'}}>
                      {rneMessage}
                 </Text>
@@ -516,13 +516,13 @@ const DailyDevotional = () => {
               </Overlay>
 
           </View>) }
-          
+
           {/* Overlay for read message */}
           <Overlay ModalComponent={Modal} fullScreen={false}
-              isVisible={visibleRead} 
+              isVisible={visibleRead}
               onBackdropPress={toggleReadOverlay} overlayStyle={{width:windowWidth,height:windowHeight*0.5}}>
                 <View style={{backgroundColor:'#D8A623',height:70}}>
-                   
+
                 </View>
                 <Image  style={styles.logo2} source={require('../assets/logo.png')} />
                 <Text style={{alignSelf:'center',marginTop:20}}>
@@ -541,13 +541,13 @@ const DailyDevotional = () => {
 
           {subscribed==='inactive' ? (
             <Overlay ModalComponent={Modal} fullScreen={false}
-              isVisible={visibleCongs} 
+              isVisible={visibleCongs}
               onBackdropPress={toggleReadingOverlay} overlayStyle={{width:windowWidth,height:windowHeight,padding:30}}>
-                
+
                 <View style={{alignSelf:'center'}}>
                    <Image style={styles.sunrays} source={require('../assets/sunrays.png')} />
                    <Image  style={styles.logo} source={require('../assets/logo.png')} />
-                   
+
                 </View>
                 <View style={{flexDirection:'row',alignSelf:'center',marginTop:70}}>
                    <Image style={styles.wing} source={require('../assets/left_wing.png')} />
@@ -556,7 +556,7 @@ const DailyDevotional = () => {
                    </Text>
                    <Image style={styles.wing} source={require('../assets/right_wing.png')} />
                 </View>
-                
+
                 <Text style={{alignSelf:'center'}}>
                     To unlock the full bible, enjoy the Further
                 </Text>
@@ -572,33 +572,37 @@ const DailyDevotional = () => {
                 />
               </Overlay>)
          : null}
-       
+
       </View>
     );
   };
 
 
 return (
-  
+
   <>
     <View style={styles.container} >
       <FlatList data={devotional} renderItem={renderDevotional} />
     </View>
-    
+
   </>
 );
 };
 
-const webViewStyle = StyleSheet.create({ 
-  p: { fontSize:16 } ,
-  a:{
-    textDecorationLine:'underline',
-  color:'#007cc0'}
+const webViewStyle = StyleSheet.create({
+  p: {
+    fontSize: 16
+  },
+  a: {
+    textDecorationLine: 'underline',
+    color: '#007cc0'
+  }
 });
 
 const styles = StyleSheet.create({
 container: {
   flex: 1,
+  backgroundColor: '#ffffff',
 },
 
 fixToText: {
@@ -615,21 +619,27 @@ verses: {
   fontSize:18
 },
 excerpt: {
-  fontFamily: 'robo-regular',
-  fontSize:16
+  //fontFamily: 'robo-regular',
+  fontFamily : 'Roboto',
+  fontSize:15,
+  lineHeight:22,
+  paddingLeft:20,
+  paddingRight :20,
+  paddingTop :10 ,
+  fontWeight :'300'
 },
 heading: {
   alignItems:'center',
-  fontFamily: 'robo-bold',
+  fontFamily: 'roboto',
   marginTop: 10,
   marginBottom:10,
   alignSelf:'center',
   flex: 1,
   flexDirection:'column',
   justifyContent: 'center',
-  alignItems: 'center',
   flexWrap: 'wrap',
-  fontSize:20
+  fontSize:20,
+  fontWeight : '700'
 },
 confess: {
   fontFamily: 'robo-regular',
