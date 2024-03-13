@@ -57,8 +57,8 @@ const LiveTV=()=> {
         
         <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{marginBottom:15,alignItems:'flex-start'}}>
-            <Text style={{marginLeft:10,fontWeight:'bold'}}>LIVE: RHAPSODY TV 24-HOURS{'\n'}LIVESTREAM</Text>
-            <Text style={{marginLeft:10,color:'#999999'}}>SHOWING NOW</Text>
+            <Text style={{marginLeft:10,fontWeight:'500', fontSize: 12}}>LIVE: RHAPSODY TV 24-HOURS{'\n'}LIVESTREAM</Text>
+            <Text style={{marginLeft:10,color:'#999999', fontSize: 10}}>SHOWING NOW</Text>
           </View>
           <View style={{marginBottom:15,alignItems:'flex-end',marginRight:10}}>
             {/* <Button

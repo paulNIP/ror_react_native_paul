@@ -65,7 +65,7 @@ const AdsSlider = () => {
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:20,
+        marginTop:40,
         mrgingBottom:20,
         marginHorizontal:10,
         marginLeft:20,

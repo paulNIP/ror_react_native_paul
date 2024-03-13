@@ -619,7 +619,6 @@ verses: {
   fontSize:18
 },
 excerpt: {
-  //fontFamily: 'robo-regular',
   fontFamily : 'Roboto',
   fontSize:15,
   lineHeight:22,
@@ -649,7 +648,7 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: 22,
+  marginTop: 22
 },
 modalView: {
   margin: 20,

@@ -79,16 +79,26 @@ return (
 
       {subscribed==='inactive' || !subscribed  ? (
       <View style={{flexDirection:'row'}}>
-          <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
-           name="information" size={35} color="#D8A623" /> 
-          <Text style={{flexWrap:'wrap'}}>To unlock the complete devotional for the month and enjoy its full features,
-           subscribe to the Premium Plan 
-            <TouchableOpacity onPress={()=>{ navigation.navigate('Subscription');}}>
-              <Text style={{color:'#FF0000',marginTop:10}}> UPGRADE </Text>
-            </TouchableOpacity>
+          <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center', paddingTop : 9, paddingBottom : 10}}
+           name="information" size={35} color="#D8A623" />
+          <Text style={{marginTop : 0, paddingRight : 10}}> Subscribe to Premium &#160;
+              <TouchableOpacity
+                  onPress={() => { navigation.navigate('Subscription'); }}
+                  style={{
+                      borderColor: '#FF0000',
+                      borderWidth: 0.5,
+                      borderRadius: 5,
+                      paddingTop: 8,
+                      paddingLeft : 15,
+                      paddingRight : 15,
+                      paddingBottom : 5,
+                      backgroundColor: 'transparent'
+                  }}
+              ><Text style={{color: '#FF0000', fontSize: 12}}>UPGRADE</Text>
+              </TouchableOpacity>
            </Text>
           
-        </View>):(null)}
+        </View>):null}
   </>
 );
 };

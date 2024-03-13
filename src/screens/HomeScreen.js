@@ -51,6 +51,7 @@ const HomeScreen = () => {
     rotateAnimation.setValue(0);
   });
 
+
   const interpolateRotating = rotateAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '720deg'],
@@ -86,7 +87,9 @@ const HomeScreen = () => {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}>
-        <View>
+        <View style={{
+          backgroundColor : '#ffffff'
+        }}>
           <DailyDevotional />
           <PremiumNotification />
           <RecentArticles />
@@ -100,31 +103,7 @@ const HomeScreen = () => {
               marginBottom: 20,
             }}>
             <Divider orientation="vertical" width={5} />
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{marginBottom: 15, alignItems: 'flex-start'}}>
-                <Text style={{marginLeft: 10, fontWeight: 'bold'}}>
-                  RHAPSODY TV
-                </Text>
-                <Text style={{marginLeft: 10, color: '#999999'}}>
-                  Real Impact, Real Stories
-                </Text>
-              </View>
-              <View style={{marginBottom: 15, alignItems: 'flex-end'}}>
-                <Button
-                  title="VIEW ALL"
-                  type="outline"
-                  color="warning"
-                  onPress={() => {
-                    navigation.navigate('Rhapsody TV');
-                  }}
-                />
-              </View>
-            </View>
+
           </View>
           <LiveTV />
           <AdsSlider />
@@ -133,11 +112,11 @@ const HomeScreen = () => {
             style={{
               flexDirection: 'row',
               marginHorizontal: 10,
-              marginTop: 15,
+              marginTop: 40,
               marginBottom: 15,
               alignContent: 'space-between',
             }}>
-            <Divider orientation="vertical" width={5} />
+            <Divider orientation="vertical" width={2}  />
 
             <View
               style={{
@@ -146,10 +125,10 @@ const HomeScreen = () => {
                 justifyContent: 'space-between',
               }}>
               <View style={{marginBottom: 15, alignItems: 'flex-start'}}>
-                <Text style={{marginLeft: 10, fontWeight: 'bold'}}>
+                <Text style={styles.sectionTitle}>
                   LATEST BOOKS
                 </Text>
-                <Text style={{marginLeft: 10, color: '#999999'}}>
+                <Text style={styles.sectionSubTitle}>
                   Books by Pastor Chris Oyakhilome
                 </Text>
               </View>
@@ -161,6 +140,7 @@ const HomeScreen = () => {
                   onPress={() => {
                     navigation.navigate('LatestBooks');
                   }}
+                  titleStyle={styles.sectionViewAllButton}
                 />
               </View>
             </View>
@@ -184,10 +164,10 @@ const HomeScreen = () => {
                 justifyContent: 'space-between',
               }}>
               <View style={{marginBottom: 15, alignItems: 'flex-start'}}>
-                <Text style={{marginLeft: 10, fontWeight: 'bold'}}>
+                <Text style={styles.sectionTitle}>
                   RHAPSODY TV
                 </Text>
-                <Text style={{marginLeft: 10, color: '#999999'}}>
+                <Text style={styles.sectionSubTitle}>
                   Real Impact, Real Stories
                 </Text>
               </View>
@@ -199,6 +179,7 @@ const HomeScreen = () => {
                   onPress={() => {
                     navigation.navigate('Rhapsody TV');
                   }}
+                  titleStyle={styles.sectionViewAllButton}
                 />
               </View>
             </View>
@@ -222,10 +203,10 @@ const HomeScreen = () => {
                 justifyContent: 'space-between',
               }}>
               <View style={{marginBottom: 15, alignItems: 'flex-start'}}>
-                <Text style={{marginLeft: 10, fontWeight: 'bold'}}>
+                <Text style={styles.sectionTitle}>
                   RHAPSODY NEWS
                 </Text>
-                <Text style={{marginLeft: 10, color: '#999999'}}>
+                <Text style={styles.sectionSubTitle}>
                   Your latest news from Rhapsody of Realities
                 </Text>
               </View>
@@ -334,7 +315,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F6F6F6',
   },
   scrollView: {
     marginHorizontal: 5,
@@ -376,6 +357,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: -100,
   },
+  sectionTitle : {
+    marginLeft: 10,
+    fontWeight: '600',
+    fontSize : 15
+  },
+  sectionSubTitle : {
+    marginLeft: 10,
+    color: '#999999',
+    fontWeight : '300',
+    fontSize:13
+  },
+  sectionViewAllButton :{
+    fontSize: 12
+  }
 });
 
 export default HomeScreen;
