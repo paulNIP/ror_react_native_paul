@@ -58,7 +58,7 @@ const WalletScreen = () => {
     {wallet &&(
       <View>
       <View style={[styles.card3, styles.shadowProp]}>
-      <View style={{backgroundColor:'#004d73',height:Dimensions.get('window').height*0.2,justifyContent:'center',alignContent:'center'}}>
+      <View style={{backgroundColor:'#004d73',height:Dimensions.get('window').height*0.2,justifyContent:'center',alignContent:'center', paddingLeft : 10, paddingRight : 10}}>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <View style={{justifyContent:'flex-start'}}>
                 <Text style={{color:"white", fontSize : 30 }}>
@@ -70,8 +70,8 @@ const WalletScreen = () => {
                 <Text style={{color:"#D8A623",fontWeight:'bold'}}>
                   {user}
                 </Text>
-                <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#03c0c1',borderRadius:1, width : 150, marginBottom : 15 }}
-                onPress={() => Alert.alert('Simple Button pressed')} >
+                <TouchableOpacity style={{marginTop:20,height:40,backgroundColor:'#03c0c1',borderRadius:1, width : 150, marginBottom : 20 }}
+                onPress={() => navigation.navigate('Subscription') } >
                 <Text style={{color:'white',alignSelf:'center',fontWeight:'700',marginTop:13, fontSize : 12 }}>
                   UPGRADE ACCOUNT
                 </Text>
@@ -133,11 +133,7 @@ const WalletScreen = () => {
 
 
         <View style={[styles.card, styles.shadowProp]}>
-        <View>
-          
-          <Text style={{alignSelf:"center",color:"#D8A623",fontWeight:"bold"}}>
-          RHAPSODY SUBSCRIPTION
-          </Text>
+        <View >
           <Text style={{flexWrap:'wrap',marginBottom:5}}>Hello {user}, your subscription is valid until {wallet.expiry_date} </Text>
           <Text style={{fontWeight:'bold',flexWrap:'wrap',marginBottom:5}}>Your points have been reset in preparation for the new year 2024! </Text>
           <Text style={{flexWrap:'wrap',marginBottom:5}}>Total Points - is the total point you get from subscription, reading, enlisting others and quiz points
