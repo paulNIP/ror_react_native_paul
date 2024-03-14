@@ -1,11 +1,12 @@
 import React , { useEffect, useState,useRef,useCallback } from 'react';
-import { View,Modal, StyleSheet,Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration,Alert } from 'react-native';
+import { View,Modal,ScrollView, StyleSheet,
+  Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration,Alert,TextInput } from 'react-native';
 import Strings from '../constants/Strings';
-import { getDailyDevotional } from '../service/devotionalService';
+import { getDailyDevotional, getLanguages } from '../service/devotionalService';
 import AccountChips from './AccountChips';
 import HTMLView from 'react-native-htmlview';
 import DailyQuiz from './DailyQuiz';
-import {Overlay } from '@rneui/themed';
+import {Overlay,ListItem } from '@rneui/themed';
 import { WebView } from 'react-native-webview';
 import axios from 'axios';
 
@@ -58,6 +59,9 @@ const DailyDevotional = () => {
   const [userEmail, setUserEmail] = useState();
   const [rneMessage, setRneMessage] = useState();
   const [readCompletion,setReadCompletion] =useState();
+  const [language, setLanguage] = useState();
+  const [allTranslatedLanguages, setAllTranslatedLanguages] = useState();
+  const [searchText, setSearchText] = useState('');
 
 
   // Factory to create context bound to a key
@@ -79,6 +83,25 @@ const DailyDevotional = () => {
     Platform.OS === 'android'
       ? 'wait 1s, vibrate 2s, wait 3s'
       : 'wait 1s, vibrate, wait 2s, vibrate, wait 3s';
+
+  const searchFunction = (text) => {
+    setSearchText(text);
+    text = text.toLowerCase();
+    if (text === "") {
+        setAllTranslatedLanguages(allTranslatedLanguages);
+    }
+    else {
+      let filteredLanguages = allTranslatedLanguages.filter(allTranslatedLanguage => (allTranslatedLanguage.toLowerCase().startsWith(text)))
+      setAllTranslatedLanguages(filteredLanguages);
+    }
+  }
+
+  const setPrefferdLanguage =async (lang) => {
+    await AsyncStorage.setItem('language',lang);
+    const data = await getDailyDevotional();
+    setDevotional(data)
+    setVisible(!visible);
+  }
 
 
 
@@ -112,6 +135,16 @@ const DailyDevotional = () => {
         const data = await getProfile(email);
         setStatus(data.subscription.status);
       }
+
+      const lang =await getLanguages();
+        setAllTranslatedLanguages(lang.languages)
+        let data = await AsyncStorage.getItem('language');
+        if(data==null){
+          setLanguage('English')
+        }else{
+          setLanguage(data)
+        }
+
     }
     fetchData();
 
@@ -368,7 +401,91 @@ const DailyDevotional = () => {
           // resizeMode={'cover'} // cover or contain its upto you view look
         />
 
-        <AccountChips style={{marginTop:10}}/>
+        {/* <AccountChips style={{marginTop:10}}/> */}
+
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+      <View style={styles.contentView}>
+      
+          <TouchableOpacity style={styles.roundButton}
+            onPress={()=>{
+              if(status==='active'){
+                navigation.navigate('My Wallet');
+              }else if(status!=='active' && status !=null){
+                navigation.navigate('My Wallet');
+              }else{
+                navigation.navigate('Login');
+              }
+            }}
+            >
+            <Text>Check Wallet</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.roundButton}
+            onPress={()=>{
+              if(status==='active'){
+                navigation.navigate('Subscription');
+
+              }else if(status!=='active' && status !=null){
+                navigation.navigate('Subscription');
+
+              }else{
+                navigation.navigate('Subscription');
+
+              }
+            }}
+            >
+            <Text>Upgrade Subscription</Text>
+          </TouchableOpacity>
+
+            <TouchableOpacity style={styles.roundButton}
+            onPress={()=>{
+              setVisible(true);
+
+            }}
+            >
+            <View style={{flexDirection:"row"}}>
+                {/* <FontAwesome name="globe" size={20} color="#900" /> */}
+                <MaterialCommunityIcons  size={20} name='earth' color='gray'/>
+                <Text> Language - {language}</Text>
+            </View>
+          </TouchableOpacity>
+
+
+      </View>
+
+      <Overlay ModalComponent={Modal} fullScreen={false}
+            isVisible={visible} 
+            onBackdropPress={toggleOverlay} overlayStyle={{width:Dimensions.get('window').width*0.8,height:Dimensions.get('window').height*0.8}}>
+                <Text style={{alignSelf:'center',marginTop:20,fontWeight:'bold'}}>
+                        Choose Language
+                </Text>
+                <TextInput 
+                placeholderTextColor="black"
+                placeholder="Search available languages"
+                value={searchText}
+                style={{height:40}}
+                onChangeText={text => searchFunction(text)}
+                />
+                <FlatList   
+                data={allTranslatedLanguages} 
+                extraData={ allTranslatedLanguages }
+                showsVerticalScrollIndicator={ false }
+                keyExtractor={(item) => item} 
+                 renderItem={({item}) =>   
+                 <ListItem bottomDivider onPress={()=>{setPrefferdLanguage(item)}}>
+                 <ListItem.Content>
+                   <ListItem.Title>{item} </ListItem.Title>
+                 </ListItem.Content>
+               </ListItem>} />
+            </Overlay> 
+      </ScrollView>
+
+
+
+
+
+
+
         {/* <ReadAndEarn/> */}
         {status===undefined ?(
                     <View>
@@ -634,6 +751,28 @@ heading: {
   fontSize:20,
   fontWeight : '700',
   color :'#52565e'
+},
+contentView: {
+  flex: 1,
+  flexDirection:'row',
+  alignItems:'center',
+  alignSelf:'center',
+  // justifyContent: 'space-between',
+  justifyContent: 'center',
+  marginVertical: 15,
+  padding:5,
+  alignContent:"center"
+
+
+},
+roundButton: {
+  height: 40,
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 10,
+  marginEnd:5,
+  borderRadius: 20,
+  backgroundColor: '#D8D9DA',
 },
 confess: {
   fontFamily : 'Roboto',

@@ -2,27 +2,48 @@
 import axios from 'axios';
 import Strings from '../constants/Strings';
 import { DatabaseConnection } from '../database/database-connection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const db = DatabaseConnection.getdevotionalsDB();
 
 
 
 const getDailyDevotional = async () => {
-    return new Promise((resolve, reject) => {
+    let lang= await AsyncStorage.getItem('language');
+    if(lang ===null){
+      return new Promise((resolve, reject) => {
+              axios.post(Strings.API_URL+'/v2/devotional', {
+                          date: new Date().toISOString().slice(0, 10)
 
-            axios.post(Strings.API_URL+'/v2/devotional', {
-                date: new Date().toISOString().slice(0, 10)
+                        })
+                        .then((res) => {
+                          //console.log(res.data.result)
+                          resolve(res.data.result);
+                          console.log("Devotional data",res.data.result)
+                      })
+                        .catch((err) => {
+                          reject(err)
+                      });
+              });
 
-              })
-              .then((res) => {
-                //console.log(res.data.result)
-                resolve(res.data.result);
-                console.log("Devotional data",res.data.result)
-            })
-              .catch((err) => {
-                reject(err)
-            });
-    });
+    }else{
+
+      return new Promise((resolve, reject) => {
+        let url ='https://api.rorangel.com/?devotional&date='+new Date().toISOString().slice(0, 10)+'&lang='+lang;
+        axios.get(url)
+                  .then((res) => {
+                    //console.log(res.data.result)
+                    resolve(res.data.devotionals);
+                    console.log("Devotional data",res.data.devotionals)
+                })
+                  .catch((err) => {
+                    reject(err)
+                });
+        });
+
+
+    }
+
 };
 
 
@@ -73,6 +94,21 @@ const getAudioArticles =async(month) => {
   });
 
   
+
+}
+
+const getLanguages =async(month) => {
+  //loop through getting month devotionals
+  return new Promise((resolve, reject) => {
+  axios.get('https://api.rorangel.com/?languages')
+        .then((res) => {
+          resolve(res.data);
+
+      })
+        .catch((err) => {
+          reject(err)
+      });
+  });
 
 }
 
@@ -130,4 +166,4 @@ const getRelatedArticles =async(title) => {
 
 
 export { getDailyDevotional ,getArticleDetails,getPastArticles,
-     getRelatedArticles,getAudioArticles,getPlaylist}
+     getRelatedArticles,getAudioArticles,getPlaylist,getLanguages}
