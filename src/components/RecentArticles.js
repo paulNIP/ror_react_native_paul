@@ -6,6 +6,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useNavigation } from '@react-navigation/native';
 import { getDailyDevotional } from '../service/devotionalService';
 import { DatabaseConnection } from '../database/database-connection';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import strings from "../constants/Strings";
 
 
 const RecentArticles=()=> {
@@ -46,10 +48,25 @@ const RecentArticles=()=> {
   
       }, []);
   
-      let navigateToRelated = () => {
-        navigation.navigate("Related Articles",{title:devotional[0].title})
- 
-      };
+
+    const navigateToRelated = async()=>{
+        const email= await AsyncStorage.getItem('email')
+        if(email){
+            const devotionalTitle = devotional && devotional[0] ? devotional[0].title : '';
+            navigation.navigate("Related Articles", { title: devotionalTitle });
+        }else{
+            navigation.navigate('Login')
+        }
+    }
+
+    const navigateToPastArticles = async()=>{
+        const email= await AsyncStorage.getItem('email')
+        if(email){
+            navigation.navigate('Past Articles')
+        }else{
+            navigation.navigate('Login')
+        }
+    }
 
 
       const date=new Date().toISOString().slice(0, 10).toString();
@@ -127,8 +144,9 @@ const RecentArticles=()=> {
             
             <View style={styles.content}>
             <TouchableOpacity style={styles.roundButton}
-            onPress={()=>navigation.navigate('Past Articles')}
-            >
+            onPress={
+                navigateToPastArticles
+            }>
             <MaterialCommunityIcons style={{alignSelf:'center'}} name="history" size={25} color="#D8A623" />
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>PAST </Text>
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>ARTICLES</Text>
@@ -145,8 +163,10 @@ const RecentArticles=()=> {
             </View>
             <View style={styles.content}>
             <TouchableOpacity style={styles.roundButton}
-            onPress={()=>navigation.navigate('Saved Articles')}
-            >
+                onPress={()=>{
+                    navigation.navigate('Saved Articles')
+                }
+            }>
                 <MaterialCommunityIcons style={{alignSelf:'center'}} name="format-list-bulleted-square" size={25} color="#D8A623" />
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>SAVED </Text>
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>ARTICLES</Text>
