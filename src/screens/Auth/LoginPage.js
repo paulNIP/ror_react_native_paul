@@ -59,32 +59,27 @@ function LoginPage() {
               setIsLoading(false);
               //login logic
               if (res.data.status == 1) {
-                if(res.data.is_registered==="yes"){
-                    if (res.data.platform==="app") {
-                                navigation.navigate('PasswordVerification',{
-                                  email: email
-                                })
-                    } else if(res.data.platform==="rae"){
-                                console.log(res.data);
-                                navigation.navigate('EmailCodeAuth',{
-                                  user_data: res.data,
-                                  email:email
-
-                                })
-
-                    }
-                }else{
-                            navigation.navigate('Registration',{
-                              email:email
-
-                            })
+                if (res.data.is_registered === "yes") {
+                  if (res.data.platform === "app") {
+                    navigation.navigate('PasswordVerification', {
+                      email: email
+                    })
+                  } else if (res.data.platform === "rae") {
+                    console.log(res.data);
+                    navigation.navigate('EmailCodeAuth', {
+                      user_data: res.data,
+                      email: email
+                    })
+                  }
+                } else {
+                  navigation.navigate('Registration', {
+                    email: email
+                  })
                 }
             } else {
               //toggle snack bar
               onToggleSnackBar
             }//end of login logic
-
-
           })
             .catch((err) => {
               reject(err)

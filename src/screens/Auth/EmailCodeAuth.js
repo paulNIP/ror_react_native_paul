@@ -30,9 +30,6 @@ const EmailCodeAuth=({ route, navigation })=> {
       if (value && index < newOtp.length - 1) {
         inputs[index + 1].focus();
       }
-
-
-
     };  
 
     React.useEffect(() => {
@@ -61,7 +58,7 @@ const EmailCodeAuth=({ route, navigation })=> {
     const saveUserData = async() =>{
 
       //Flip Onboarding
-      await AsyncStorage.setItem('user_id',user_data.user_id);
+     // await AsyncStorage.setItem('user_id',user_data.user_id);
       await AsyncStorage.setItem('country',user_data.country);
       await AsyncStorage.setItem('email',user_data.email);
       await AsyncStorage.setItem('expiry_date',user_data.expiry_date);
@@ -110,7 +107,7 @@ const EmailCodeAuth=({ route, navigation })=> {
             console.log(res.data)
             resolve(res.data)
             //login logic
-            if (res.data.status == 1) {
+            if (res.data.status === 1) {
               //insert data into user DB local storage sqlite
 
               saveUserData();
