@@ -32,7 +32,40 @@ const getWallet = async (email) => {
             .then((res) => {
 
               resolve(res.data);
-              console.log("Profile ",res.data);
+
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
+const getEnlisted = async (referenceid) => {
+
+  return new Promise((resolve, reject) => {
+
+          axios.post("https://rhapsodysubscriptions.org/api/admin/enlisted_users_data",{
+            "ref_id": referenceid
+          })
+            .then((res) => {
+              resolve(res.data);
+              console.log("Profile ",res.data.response);
+          })
+            .catch((err) => {
+              reject(err)
+          });
+  });
+};
+
+const getWalletInfo = async () => {
+
+    
+  return new Promise((resolve, reject) => {
+
+          axios.get('https://rhapsodysubscriptions.org/api/v1/wallet_info')
+            .then((res) => {
+              resolve(res.data);
+              console.log("Wallet info uujnf",res.data);
           })
             .catch((err) => {
               reject(err)
@@ -42,4 +75,4 @@ const getWallet = async (email) => {
 
 
 
-export { getProfile,getWallet}
+export { getProfile,getWallet,getEnlisted,getWalletInfo}

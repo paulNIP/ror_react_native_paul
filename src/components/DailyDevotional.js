@@ -251,7 +251,7 @@ const DailyDevotional = () => {
 
 
 
-  const [devotional, setDevotional] = useState([]);
+  const [devotional, setDevotional] = useState();
 
   useEffect(() => {
 
@@ -379,11 +379,10 @@ const DailyDevotional = () => {
 
 }
 
-  const renderDevotional = ({ item }) => {
+  const renderDevotional = ( {item} ) => {
 
-    const img = item.image;
-    const body = item.body;
-
+    const img = item.photo_link;
+    const body = item.content_body;
     const study= Strings.VERSE_URL+item.study;
     const BA= Strings.VERSE_URL+item.BA;
     const BB= Strings.VERSE_URL+item.BB;
@@ -562,20 +561,20 @@ const DailyDevotional = () => {
             />
 
             <Text style={styles.heading}>{Strings.prayer}</Text>
-            <Text style={styles.confess}>{item.confess}</Text>
-            <Text style={styles.heading}>{Strings.furtherStudy}</Text>
+            <Text style={styles.confess}>{item.confession_or_prayer}</Text>
+            <Text style={styles.heading}>{item.further_study_title}</Text>
             <Pressable onPress={()=>toggleOverlay(study)} >
-              <Text style={styles.verses} >{item.study}</Text>
+              <Text style={styles.verses} >{item.further_study}</Text>
             </Pressable>
 
-            <Text style={styles.heading}>{Strings.oneyrBibleReadingPlan}</Text>
+            <Text style={styles.heading}>{item.one_yearbb_title}</Text>
             <Pressable onPress={()=>toggleOverlay(BA)}  >
-              <Text style={styles.verses}>{item.BA}</Text>
+              <Text style={styles.verses}>{item.one_yearbb}</Text>
             </Pressable>
 
-            <Text style={styles.heading}>{Strings.secondyrBibleReadingPlan}</Text>
+            <Text style={styles.heading}>{item.two_yearbb_title}</Text>
             <Pressable onPress={()=>toggleOverlay(BB)}>
-              <Text style={styles.verses}>{item.BB}</Text>
+              <Text style={styles.verses}>{item.two_yearbb}</Text>
             </Pressable>
 
             <DailyQuiz/>

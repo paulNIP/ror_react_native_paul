@@ -3,8 +3,10 @@ import {View, Text,Button, SafeAreaView,ScrollView,Alert,FlatList,
    TextInput,StyleSheet,TouchableOpacity,Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {Dimensions} from 'react-native';
-import { getWallet } from "../service/authService";
+import { BottomSheet,ListItem } from '@rneui/themed';
+import { getEnlisted, getWallet, getWalletInfo } from "../service/authService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HTMLView from 'react-native-htmlview';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -24,6 +26,9 @@ const WalletScreen = () => {
   const [totalpoints, setTotalPoints] = useState();
   const [pointsBalance, setPointsBalance] = useState();
   const [shareid, setShareid] = useState();
+  const [isVisible, setIsVisible] = useState(false);
+  const [enlister, setEnlisters] = useState();
+  const [walletinfo, setWalletInfo] = useState();
 
 
 
@@ -33,23 +38,54 @@ const WalletScreen = () => {
       const fetchData = async () => {
           const email= await AsyncStorage.getItem('email');
           const data = await getWallet(email);
+          console.log("Wallet data 67378383",data)
           setWallet(data);
-
           setCopiesSponsored(data.CopiesSponsored);
           setUser(data.fullnames);
           setStatus(data.status);
           setTotalPoints(data.totalpoints);
           setPointsBalance(data.PointsBalance);
           setShareid('rhapsodysubscriptions.org/me/'+data.shareid);
+          const enlist =await getEnlisted(data.shareid);
+          console.log("Enlisters",enlist.response);
+          setEnlisters(enlist.response)
+
+      }
+
+      const fetchWalletInfo = async () => {
+          const walletinfo2 = await getWalletInfo();
+          console.log("walletinfo",walletinfo2);
+          setWalletInfo(walletinfo2);
 
       }
       fetchData();
+      fetchWalletInfo();
 
     }, []);
 
 
 
+    const renderEnlisters = ( {item} ) => {
+      return (
+  
+        <View style={{flex:1,flexDirection:"row",justifyContent:'space-between',padding:10}}>
+          <Text>{item.fullnames}</Text>
+          <Text>{item.zoneid}</Text>
+          <Text>{item.read_status}</Text>
+      </View>
+      );
+    };
 
+    const renderWalletInfo = ( {item} ) => {
+      return (
+  
+        <View style={{flex:1,flexDirection:"row",justifyContent:'space-between'}}>
+          <Text>Name</Text>
+          <Text>Zone</Text>
+          <Text>Read Status</Text>
+      </View>
+      );
+    };
 
   return (
     <SafeAreaView >
@@ -122,24 +158,31 @@ const WalletScreen = () => {
       </View>
 
 
-
-        {/*<TouchableOpacity style={{marginTop:10,marginBottom:10,height:40,backgroundColor:'#49c0b6'}}*/}
-        {/*    onPress={() => Alert.alert('Simple Button pressed')}*/}
-        {/*  >*/}
-        {/*    <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10}}>*/}
-        {/*      REDEEM POINTS BALANCE*/}
-        {/*    </Text>*/}
-        {/*</TouchableOpacity>*/}
-
-
         <View style={[styles.card, styles.shadowProp]}>
         <View >
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Hello {user}, your subscription is valid until {wallet.expiry_date} </Text>
-          <Text style={{fontWeight:'bold',flexWrap:'wrap',marginBottom:5}}>Your points have been reset in preparation for the new year 2024! </Text>
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Total Points - is the total point you get from subscription, reading, enlisting others and quiz points
-          80% of yout total points is instantly converted to copies of Rhapsody of realities didtributed to others
-          on your behalf. The balanace is what is called POINTS BALANCE </Text>
-          <Text style={{flexWrap:'wrap',marginBottom:5}}>Points Balance - are Redeemable points </Text>
+        {walletinfo &&(
+            <View>
+              <HTMLView style={{marginTop:10,alignSelf:'center'}}
+                  value={walletinfo.text_definitions_card_application_title}
+                />
+              <Text style={{flexWrap:'wrap',marginBottom:5}}>Hello {user}, 
+              your subscription is valid until {wallet.expiry_date} </Text>
+
+              <HTMLView style={{marginTop:5}}
+                  value={walletinfo.text_points_reset}
+                />
+                <HTMLView style={{marginTop:5}}
+                  value={walletinfo.text_total_points_definition}
+                />
+                <HTMLView style={{marginTop:5}}
+                  value={walletinfo.text_points_balance_definition}
+                />
+
+            </View>
+            
+            
+          )}
+          
           </View>
         
         </View>
@@ -167,7 +210,7 @@ const WalletScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#0c3866'}}
-            onPress={() => Alert.alert('Simple Button pressed')}
+            onPress={() => {setIsVisible(true)}}
           >
             <Text style={{color:'white',alignSelf:'center',fontWeight:'500',marginTop:10}}>
               VIEW ENLISTED PEOPLE
@@ -269,7 +312,29 @@ const WalletScreen = () => {
 
     )}
 
-    
+      <BottomSheet isVisible={isVisible} 
+      containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      onPress={()=>{
+        setIsVisible(false);
+      }}>
+        <View style={{ backgroundColor: 'white', height: Dimensions.get('window').width*0.45 }}>
+          <Text style={{fontWeight:'bold',marginTop:10}}>Your enlisted users</Text>
+          <View style={{flex:1,flexDirection:"row",justifyContent:'space-between',padding:10}}>
+             <Text style={{fontWeight:'bold'}}>Name</Text>
+             <Text style={{fontWeight:'bold'}}>Zone</Text>
+             <Text style={{fontWeight:'bold'}}>Read Status</Text>
+          </View>
+
+          <FlatList data={enlister} renderItem={renderEnlisters} />
+             <TouchableOpacity style={{backgroundColor:"red",height:40,borderRadius:5}} 
+                onPress={()=>{setIsVisible(false)}}>
+               <Text style={{color:"#FFFFFF", fontWeight:'500',alignSelf:'center', 
+               paddingTop: 10, paddingBottom : 0, paddingRight :10 , paddingLeft : 10 }} >Close</Text>
+             
+             </TouchableOpacity>
+          </View>
+
+      </BottomSheet>
 
       </ScrollView >
    </SafeAreaView >
