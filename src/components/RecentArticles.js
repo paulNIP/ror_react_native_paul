@@ -68,76 +68,93 @@ const RecentArticles=()=> {
         }
     }
 
+    const navigateToSavedArticles = async () => {
+        const email = await AsyncStorage.getItem('email')
+        if (email) {
+            navigation.navigate('Saved Articles')
+        } else {
+            navigation.navigate('Login')
+        }
+    }
 
-      const date=new Date().toISOString().slice(0, 10).toString();
-      const devo=JSON.stringify(devotional);
-    
-      const bookmarkArticle = () => {
+    const navigateToSearch = async()=>{
+        const email = await AsyncStorage.getItem('email')
+        if (email) {
+            navigation.navigate('Search Article')
+        } else {
+            navigation.navigate('Login')
+        }
+    }
 
-        const data={
-            title:devotional[0].title,
-            excerpt:devotional[0].excerpt,
-            img:devotional[0].image,
-            full_devo:devotional[0].body,
-            further:devotional[0].study,
-            confession:devotional[0].confess,
-            r1:devotional[0].BA,
-            r2:devotional[0].BB,
-            title_confession:devotional[0].confess_title,
-            pdate: new Date().toISOString().slice(0, 10),
-            opening_scripture:"-"
-      }
 
-      const currentDate=new Date().toISOString().slice(0, 10);
-      let info =JSON.stringify(data);
+    const date = new Date().toISOString().slice(0, 10).toString();
+    const devo = JSON.stringify(devotional);
 
-        db.transaction(function (txn) {
-            txn.executeSql(
-              "SELECT article_date_key FROM bookmarked_articles_table WHERE article_date_key=?",
-              [currentDate],
-              function (tx, res) {
-                console.log('item:', res.rows.length);
-                if (res.rows.length <= 0) {
-                  //insert into DB
-                  txn.executeSql(
-                    'INSERT INTO bookmarked_articles_table (article_date_key,article_json) VALUES(? ,?)',
-                    [
-                      currentDate,
-                      info,
-                    ]
-                  );
-    
-                  Alert.alert(
-                    'Success',
-                    'Bookmarked sucessfully',
-                    [
-                      {
-                        text: 'Ok'
-                      },
-                    ],
-                    { cancelable: false }
-                  );
+    const bookmarkArticle = async () => {
+        const email = await AsyncStorage.getItem('email')
+        if (!email) {
+            navigation.navigate('Login')
+        } else {
+            const data = {
+                title: devotional[0].title,
+                excerpt: devotional[0].excerpt,
+                img: devotional[0].image,
+                full_devo: devotional[0].body,
+                further: devotional[0].study,
+                confession: devotional[0].confess,
+                r1: devotional[0].BA,
+                r2: devotional[0].BB,
+                title_confession: devotional[0].confess_title,
+                pdate: new Date().toISOString().slice(0, 10),
+                opening_scripture: "-"
+            }
 
-                }else{
-                  Alert.alert(
-                    'Error',
-                    'Failed to Bookmark article',
-                    [
-                      {
-                        text: 'Ok'
-                      },
-                    ],
-                    { cancelable: false }
-                  );
-      
-                }
-              }
-            );
-          });
-      
+            const currentDate = new Date().toISOString().slice(0, 10);
+            let info = JSON.stringify(data);
 
-        
-      };
+            db.transaction(function (txn) {
+                txn.executeSql(
+                    "SELECT article_date_key FROM bookmarked_articles_table WHERE article_date_key=?",
+                    [currentDate],
+                    function (tx, res) {
+                        console.log('item:', res.rows.length);
+                        if (res.rows.length <= 0) {
+                            //insert into DB
+                            txn.executeSql(
+                                'INSERT INTO bookmarked_articles_table (article_date_key,article_json) VALUES(? ,?)',
+                                [
+                                    currentDate,
+                                    info,
+                                ]
+                            );
+
+                            Alert.alert(
+                                'Success',
+                                'Bookmarked sucessfully',
+                                [{
+                                    text: 'Ok'
+                                }, ], {
+                                    cancelable: false
+                                }
+                            );
+
+                        } else {
+                            Alert.alert(
+                                'Error',
+                                'Failed to Bookmark article',
+                                [{
+                                    text: 'Ok'
+                                }, ], {
+                                    cancelable: false
+                                }
+                            );
+
+                        }
+                    }
+                );
+            });
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -163,10 +180,8 @@ const RecentArticles=()=> {
             </View>
             <View style={styles.content}>
             <TouchableOpacity style={styles.roundButton}
-                onPress={()=>{
-                    navigation.navigate('Saved Articles')
-                }
-            }>
+                onPress={navigateToSavedArticles}
+            >
                 <MaterialCommunityIcons style={{alignSelf:'center'}} name="format-list-bulleted-square" size={25} color="#D8A623" />
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>SAVED </Text>
                 <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>ARTICLES</Text>
@@ -190,7 +205,7 @@ const RecentArticles=()=> {
             {/* receipt */}
             <View style={styles.content}> 
                 <TouchableOpacity style={styles.roundButton}
-                onPress={()=>navigation.navigate('Search Article')}
+                onPress={navigateToSearch}
                 >
                     <MaterialCommunityIcons style={{alignSelf:'center'}} name="magnify" size={25} color="#D8A623" />
                     <Text style={{alignSelf:'center',fontSize:10,color:'#D8A623'}}>ROR </Text>
