@@ -100,37 +100,35 @@ const DailyDevotional = () => {
 
   }, []);
 
+
   useEffect(() => {
-      const fetchData = async () => {
-          const email= await AsyncStorage.getItem('email');
+    const fetchData = async () => {
+      const email = await AsyncStorage.getItem('email');
 
-          if(email==null){
+      if (email == null) {
 
-          }else{
-            setUserEmail(email);
-            const data = await getProfile(email);
-            setStatus(data.subscription.status);
-
-          }
-
+      } else {
+        setUserEmail(email);
+        const data = await getProfile(email);
+        setStatus(data.subscription.status);
       }
-      fetchData();
+    }
+    fetchData();
 
-    }, []);
+  }, []);
 
     //Fetch Points every 2 minute
-    const fetchPoints = async() => {
+    const fetchPoints = async () => {
       const mail = await AsyncStorage.getItem('email');
-      if (mail===null){
+      if (mail === null) {
 
-      }else{
+      } else {
         const profile = await getWallet(mail);
         setPoints(profile.totalpoints);
-
       }
-
     };
 
+    
     useEffect(() => {
       const myInterval = setInterval(fetchPoints, 5000);
       return () => {
@@ -138,7 +136,8 @@ const DailyDevotional = () => {
         clearInterval(myInterval);
       };
 
-      }, []);
+    }, []);
+
 
     useEffect(() => {
       let interval;
@@ -156,7 +155,7 @@ const DailyDevotional = () => {
             setSeconds((prevSeconds) => prevSeconds - 1);
           }
         }, 1000);
-      }else if(readCompletion){
+      } else if (readCompletion) {
         //Do read if complet
         doReadAndEarnArticlePoints();
         // toggleReadingOverlay();
@@ -591,7 +590,12 @@ return (
 
 const webViewStyle = StyleSheet.create({
   p: {
-    fontSize: 16
+    fontSize: 15,
+    fontFamily : 'Roboto',
+    lineHeight:22,
+    fontWeight :'300',
+    paddingLeft:10,
+    paddingRight :10
   },
   a: {
     textDecorationLine: 'underline',
@@ -615,8 +619,13 @@ verses: {
   justifyContent: 'center',
   color:'#007cc0',
   alignSelf:'center',
-  fontFamily: 'robo-med',
-  fontSize:18
+  fontFamily : 'Roboto',
+  fontSize:15,
+  lineHeight:22,
+  paddingLeft:20,
+  paddingRight :20,
+  paddingTop :10 ,
+  fontWeight :'300'
 },
 excerpt: {
   fontFamily : 'Roboto',
@@ -638,11 +647,17 @@ heading: {
   justifyContent: 'center',
   flexWrap: 'wrap',
   fontSize:20,
-  fontWeight : '700'
+  fontWeight : '700',
+  color :'#52565e'
 },
 confess: {
-  fontFamily: 'robo-regular',
-  fontSize:16
+  fontFamily : 'Roboto',
+  fontSize:15,
+  lineHeight:22,
+  paddingLeft:20,
+  paddingRight :20,
+  paddingTop :10 ,
+  fontWeight :'300'
 },
 centeredView: {
   flex: 1,

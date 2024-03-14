@@ -30,9 +30,6 @@ const EmailCodeAuth=({ route, navigation })=> {
       if (value && index < newOtp.length - 1) {
         inputs[index + 1].focus();
       }
-
-
-
     };  
 
     React.useEffect(() => {
@@ -61,7 +58,7 @@ const EmailCodeAuth=({ route, navigation })=> {
     const saveUserData = async() =>{
 
       //Flip Onboarding
-      await AsyncStorage.setItem('user_id',user_data.user_id);
+     // await AsyncStorage.setItem('user_id',user_data.user_id);
       await AsyncStorage.setItem('country',user_data.country);
       await AsyncStorage.setItem('email',user_data.email);
       await AsyncStorage.setItem('expiry_date',user_data.expiry_date);
@@ -69,9 +66,7 @@ const EmailCodeAuth=({ route, navigation })=> {
       await AsyncStorage.setItem('name',user_data.name);
       await AsyncStorage.setItem('platform',user_data.platform);
       await AsyncStorage.setItem('subscription',user_data.subscription);
-
       await AsyncStorage.setItem('hasLoggedIn',"true");
-      
     }
 
     const resendCode =() => {
@@ -85,14 +80,13 @@ const EmailCodeAuth=({ route, navigation })=> {
       axios.post(Strings.RESEND_CODE, data)
       .then(response => {
         console.log("Resend Response:",response.data.status);
-        if(response.data.status == 1){
+        if(response.data.status === 1){
           setShowResend(true);
         }
 
       })
       .catch(error => {
         console.error("Error sending data: ", error);
-
       });
 
 
@@ -110,9 +104,8 @@ const EmailCodeAuth=({ route, navigation })=> {
             console.log(res.data)
             resolve(res.data)
             //login logic
-            if (res.data.status == 1) {
+            if (res.data.status === 1) {
               //insert data into user DB local storage sqlite
-
               saveUserData();
               DeviceEventEmitter.emit('reload.app');
               navigation.navigate('HomeScreen');
