@@ -92,9 +92,9 @@ return (
                resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
              />
              <ListItem.Content>
-               <ListItem.Title>{l.title}</ListItem.Title>
-               <ListItem.Subtitle style={{color:'#999999'}} numberOfLines={3}>{l.excerpt}</ListItem.Subtitle>
-               <Text style={{color:'#606060'}}>{l.pdate}</Text>
+               <ListItem.Title style={styles.RelatedArticlesTitle}>{l.title}</ListItem.Title>
+               <ListItem.Subtitle style={styles.RelatedArticlesExcerpt} numberOfLines={3}>{l.excerpt}</ListItem.Subtitle>
+               <Text style={styles.RelatedArticlesDate}>{l.pdate}</Text>
              </ListItem.Content>
           </ListItem>
           </TouchableOpacity>
@@ -145,6 +145,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
   },
+  RelatedArticlesExcerpt: {
+    color:'#59626a',
+    lineHeight:22,
+    fontWeight :'300',
+    fontSize:14
+  },
+  RelatedArticlesTitle : {
+    fontSize:14,
+    fontWeight :'600'
+  },
+  RelatedArticlesDate : {
+    color:'#cf8d2e',
+    fontSize:12 ,
+    textTransform : 'uppercase'
+  }
   });
 
 export default RelatedArticles;

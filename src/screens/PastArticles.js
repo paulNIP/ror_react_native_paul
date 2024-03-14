@@ -75,39 +75,39 @@ const PastArticles = () => {
               if (packageLevel !=="" ) {
                 if (packageLevel==="level1" || packageLevel==="level2") {
                     setPadLock(true);
-      
+
                 }else if (subscription_status===1 || packageLevel==="level1" || packageLevel==="level2") {
                   setPadLock(true);
-      
+
                 }else{
                   navigation.navigate('Rhapsody of Realities',{date:l.date});
                 }
-      
+
               }
 
               }}>
             <ListItem key={i} bottomDivider>
                <Image
                  style={styles.image}
-                 source={{uri: l.image}} 
+                 source={{uri: l.image}}
                  resizeMode={"cover"} // <- needs to be "cover" for borderRadius to take effect on Android
                />
                <ListItem.Content>
-                 <ListItem.Title>{l.title}</ListItem.Title>
-                 <ListItem.Subtitle style={{color:'#999999'}} numberOfLines={3}>{l.excerpt}</ListItem.Subtitle>
-                 <Text style={{color:'#606060'}}>{l.date}</Text>
+                 <ListItem.Title style = {styles.partArticlesTitle}>{l.title}</ListItem.Title>
+                 <ListItem.Subtitle style={styles.excerptPastArticles} numberOfLines={3}>{l.excerpt}</ListItem.Subtitle>
+                 <Text style={styles.pastArticlesDate}>{l.date}</Text>
                </ListItem.Content>
             </ListItem>
             </TouchableOpacity>
             )
           })
-     }  
+     }
 
-     </ScrollView> 
+     </ScrollView>
 
       {padLock && (
 
-      <View intensity={100}  style={{ height: 500, 
+      <View intensity={100}  style={{ height: 500,
         backgroundColor: 'white',
         opacity:0.7,
         position:'absolute',width:Dimensions.get('window').width, top:630}}>
@@ -150,6 +150,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
   },
+  excerptPastArticles: {
+    color:'#59626a',
+    lineHeight:22,
+    fontWeight :'300',
+    fontSize:14
+  },
+  partArticlesTitle : {
+    fontSize:14,
+    fontWeight :'600'
+  },
+  pastArticlesDate : {
+    color:'#cf8d2e',
+    fontSize:12 ,
+    textTransform : 'uppercase'
+  }
   });
 
 export default PastArticles;
