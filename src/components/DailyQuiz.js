@@ -135,9 +135,9 @@ const DailyQuiz = () => {
   const renderQuiz = ({ item }) => {
 
     return (
-      <View style={{backgroundColor:"#fdedeb",marginTop:30,padding:20}}>
-        <Text h4 style={{alignSelf:'center'}}> TODAY'S QUIZ</Text>
-            <Text style={{flexWrap:'wrap'}}>{item.question}</Text>
+      <View style={{backgroundColor:"#fdedeb",marginTop:30,padding:20, borderRadius : 30}}>
+        <Text h4 style={{alignSelf:'center', fontWeight : '700', marginBottom: 20, color : '#d20962' }}> TODAY'S QUIZ</Text>
+            <Text style={{flexWrap:'wrap', fontSize : 16}}> {item.question}</Text>
 
             <RadioButton.Group
                      onValueChange={formik.handleChange('gender')}
@@ -174,7 +174,7 @@ const DailyQuiz = () => {
                         <Text style={{color:'#FFFFFF',alignSelf:'center'}}>SUBMIT ANSWER</Text>
                       </TouchableOpacity>
 
-                   <Text style={{marginTop:10,alignSelf:'center'}}>EARN 1 BONUS POINT</Text>
+                   <Text style={{marginTop:5,alignSelf:'center', fontSize : 10}}>EARN 1 BONUS POINT</Text>
 
       </View>
     );

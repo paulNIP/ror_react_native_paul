@@ -66,9 +66,7 @@ const EmailCodeAuth=({ route, navigation })=> {
       await AsyncStorage.setItem('name',user_data.name);
       await AsyncStorage.setItem('platform',user_data.platform);
       await AsyncStorage.setItem('subscription',user_data.subscription);
-
       await AsyncStorage.setItem('hasLoggedIn',"true");
-      
     }
 
     const resendCode =() => {
@@ -82,14 +80,13 @@ const EmailCodeAuth=({ route, navigation })=> {
       axios.post(Strings.RESEND_CODE, data)
       .then(response => {
         console.log("Resend Response:",response.data.status);
-        if(response.data.status == 1){
+        if(response.data.status === 1){
           setShowResend(true);
         }
 
       })
       .catch(error => {
         console.error("Error sending data: ", error);
-
       });
 
 
@@ -109,7 +106,6 @@ const EmailCodeAuth=({ route, navigation })=> {
             //login logic
             if (res.data.status === 1) {
               //insert data into user DB local storage sqlite
-
               saveUserData();
               DeviceEventEmitter.emit('reload.app');
               navigation.navigate('HomeScreen');
