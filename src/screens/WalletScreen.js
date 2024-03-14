@@ -58,10 +58,10 @@ const WalletScreen = () => {
     {wallet &&(
       <View>
       <View style={[styles.card3, styles.shadowProp]}>
-      <View style={{backgroundColor:'#0c3866',height:Dimensions.get('window').height*0.2,justifyContent:'center',alignContent:'center'}}>
+      <View style={{backgroundColor:'#004d73',height:Dimensions.get('window').height*0.2,justifyContent:'center',alignContent:'center'}}>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <View style={{justifyContent:'flex-start'}}>
-                <Text style={{color:"white"}}>
+                <Text style={{color:"white", fontSize : 30 }}>
                    {copiesSponsored}
                 </Text>
                 <Text style={{color:"white"}}>
@@ -70,10 +70,9 @@ const WalletScreen = () => {
                 <Text style={{color:"#D8A623",fontWeight:'bold'}}>
                   {user}
                 </Text>
-                <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#49c0b6',borderRadius:5}}
-                onPress={() => Alert.alert('Simple Button pressed')}
-              >
-                <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10,marginStart:10,marginEnd:10}}>
+                <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#03c0c1',borderRadius:1, width : 150, marginBottom : 15 }}
+                onPress={() => Alert.alert('Simple Button pressed')} >
+                <Text style={{color:'white',alignSelf:'center',fontWeight:'700',marginTop:13, fontSize : 12 }}>
                   UPGRADE ACCOUNT
                 </Text>
               </TouchableOpacity>
@@ -90,14 +89,10 @@ const WalletScreen = () => {
                 </Text>
 
               )}
-
-              
-                
-
             </View>
 
             <View style={{justifyContent:'flex-end'}}>
-                <Text style={{color:"#D8A623"}}>
+                <Text style={{color:"#D8A623", fontSize : 30}}>
                   {pointsBalance}
                 </Text>
                 <Text style={{color:"white"}}>
@@ -109,7 +104,7 @@ const WalletScreen = () => {
                 <TouchableOpacity style={{marginTop:10,height:40}}
                 onPress={() => Alert.alert('Simple Button pressed')}
               >
-                <Text style={{color:'#D8A623',fontWeight:'bold',marginTop:10}}>
+                <Text style={{color:'#D8A623',marginTop:10, fontSize : 30}}>
                   {totalpoints}
                 </Text>
               </TouchableOpacity>
@@ -128,13 +123,13 @@ const WalletScreen = () => {
 
 
 
-        <TouchableOpacity style={{marginTop:10,marginBottom:10,height:40,backgroundColor:'#49c0b6'}}
-            onPress={() => Alert.alert('Simple Button pressed')}
-          >
-            <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10}}>
-              REDEEM POINTS BALANCE
-            </Text>
-        </TouchableOpacity>
+        {/*<TouchableOpacity style={{marginTop:10,marginBottom:10,height:40,backgroundColor:'#49c0b6'}}*/}
+        {/*    onPress={() => Alert.alert('Simple Button pressed')}*/}
+        {/*  >*/}
+        {/*    <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10}}>*/}
+        {/*      REDEEM POINTS BALANCE*/}
+        {/*    </Text>*/}
+        {/*</TouchableOpacity>*/}
 
 
         <View style={[styles.card, styles.shadowProp]}>
@@ -156,7 +151,7 @@ const WalletScreen = () => {
         <View style={[styles.card, styles.shadowProp]}>
         <View>
           </View>
-          <Text style={{alignSelf:"center",color:"#D8A623",fontWeight:"bold"}}>
+          <Text style={{alignSelf:"center",color:"#D8A623",fontWeight:"700"}}>
           PERSONAL LINK
           </Text>
           <TextInput
@@ -170,7 +165,7 @@ const WalletScreen = () => {
           <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#D8A623'}}
             onPress={() => Alert.alert('Simple Button pressed')}
           >
-            <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10}}>
+            <Text style={{color:'white',alignSelf:'center',fontWeight:'500',marginTop:10}}>
               COPY LINK
             </Text>
           </TouchableOpacity>
@@ -178,7 +173,7 @@ const WalletScreen = () => {
           <TouchableOpacity style={{marginTop:10,height:40,backgroundColor:'#0c3866'}}
             onPress={() => Alert.alert('Simple Button pressed')}
           >
-            <Text style={{color:'white',alignSelf:'center',fontWeight:'bold',marginTop:10}}>
+            <Text style={{color:'white',alignSelf:'center',fontWeight:'500',marginTop:10}}>
               VIEW ENLISTED PEOPLE
             </Text>
           </TouchableOpacity>
@@ -192,24 +187,24 @@ const WalletScreen = () => {
       <View style={{flexDirection:'row',justifyContent:"space-between"}}>
         <View style={[styles.card, styles.shadowProp,styles.dimension]}>
           <Image
-          style={{width:40,height:40,alignSelf:'center'}}
+          style={styles.pointsIcon}
           source={require('../assets/trophy.png')}/>
-          <Text style={{alignSelf:"center",color:"#FF0000"}}>
+          <Text style={styles.points}>
           {wallet.totalpoints}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
           Total Points
           </Text>
         </View>
 
         <View style={[styles.card, styles.shadowProp,styles.dimension]}>
           <Image
-          style={{width:40,height:40,alignSelf:'center'}}
+          style={styles.pointsIcon}
           source={require('../assets/articles_read.png')}/>
-          <Text style={{alignSelf:"center",marginTop:5}}>
+          <Text style={styles.points}>
           {wallet.total_articles_read}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
           Articles Read
           </Text>
         </View>
@@ -220,12 +215,12 @@ const WalletScreen = () => {
       <View style={{flexDirection:'row',justifyContent:"space-between"}}>
         <View style={[styles.card, styles.shadowProp,styles.dimension]}>
           <Image
-          style={{width:40,height:40,alignSelf:'center'}}
+          style={styles.pointsIcon}
           source={require('../assets/open_book.png')}/>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.points}>
                 {wallet.reading_points}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
           Reading Points Earned
           </Text>
         </View>
@@ -234,10 +229,10 @@ const WalletScreen = () => {
           <Image
           style={{width:40,height:40,alignSelf:'center'}}
           source={require('../assets/pencil.png')}/>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.points}>
              {wallet.quiz_points}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
            Quiz Points Earned
           </Text>
         </View>
@@ -248,24 +243,24 @@ const WalletScreen = () => {
     <View style={{flexDirection:'row',justifyContent:"space-between"}}>
         <View style={[styles.card, styles.shadowProp,styles.dimension]}>
           <Image
-          style={{width:40,height:40,alignSelf:'center'}}
+          style={styles.pointsIcon}
           source={require('../assets/add_user2.png')}/>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.points}>
           {wallet.total_enlistment}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
           Subscribers Enlisted
           </Text>
         </View>
 
         <View style={[styles.card, styles.shadowProp,styles.dimension]}>
           <Image
-          style={{width:40,height:40,alignSelf:'center'}}
+          style={styles.pointsIcon}
           source={require('../assets/people.png')}/>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.points}>
           {wallet.total_enlistment_points}
           </Text>
-          <Text style={{alignSelf:"center"}}>
+          <Text style={styles.pointSubTitle}>
           Enlistment points Earned
           </Text>
         </View>
@@ -316,18 +311,28 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   card3: {
-    backgroundColor: '#0c3866',
+    backgroundColor: '#004d73',
     borderRadius: 8,
     paddingVertical: 15,
     paddingHorizontal: 10,
     marginVertical: 5,
   },
-  input: {
-    height: 40,
-    borderWidth: 1,
-  },
   dimension:{
     width:Dimensions.get('window').width*0.45
+  },
+  points :{
+    fontSize :30  ,
+    alignSelf:"center",
+    color : '#1c79c0'
+    },
+  pointsIcon : {
+    width:50,
+    height:50,
+    alignSelf:'center'
+  },
+  pointSubTitle : {
+    alignSelf:"center",
+    fontWeight:'300'
   }
 });
 
