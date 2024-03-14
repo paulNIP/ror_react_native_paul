@@ -250,20 +250,9 @@ const DailyDevotional = () => {
   };
 
   const readMore = async () => {
-
     const email= await AsyncStorage.getItem('email');
     if(email==null){
-      Alert.alert(
-        'Warning',
-        'Please login to access premium content',
-        [
-          {
-            text: 'Ok'
-          },
-        ],
-        { cancelable: false }
-      );
-
+      navigation.navigate('Login');
     }else{
       const data = await getProfile(email);
       if(data.subscription.status==='active'){
@@ -274,17 +263,11 @@ const DailyDevotional = () => {
           startTimer();
           setTimerEnd(false);
           refTimer.current.resetTimer();
-
         }
-
-
       }else{
         navigation.navigate('Subscription');
       }
-
     }
-
-
   }
 
   //set reading completed

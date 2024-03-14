@@ -62,13 +62,10 @@ return (
             onPress={()=>{
               if(status==='active'){
                 navigation.navigate('My Wallet');
-
               }else if(status!=='active' && status !=null){
                 navigation.navigate('My Wallet');
-
               }else{
                 navigation.navigate('Login');
-
               }
             }}
             >
