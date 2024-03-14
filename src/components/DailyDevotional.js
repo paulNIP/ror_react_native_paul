@@ -573,12 +573,13 @@ return (
 
 const webViewStyle = StyleSheet.create({
   p: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily : 'Roboto',
     lineHeight:22,
     fontWeight :'300',
     paddingLeft:10,
-    paddingRight :10
+    paddingRight :10,
+    color : '#000000'
   },
   a: {
     textDecorationLine: 'underline',
@@ -612,12 +613,13 @@ verses: {
 },
 excerpt: {
   fontFamily : 'Roboto',
-  fontSize:15,
+  fontSize:16,
   lineHeight:22,
   paddingLeft:20,
   paddingRight :20,
   paddingTop :10 ,
-  fontWeight :'300'
+  fontWeight :'300',
+  color : '#000000'
 },
 heading: {
   alignItems:'center',
