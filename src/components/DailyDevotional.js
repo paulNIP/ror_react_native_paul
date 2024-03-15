@@ -282,6 +282,51 @@ const DailyDevotional = () => {
 
   };
 
+  const navigateToSubscription =async() =>{
+    const mail=await AsyncStorage.getItem('email');
+    if(mail===null){
+       navigation.navigate('Login');
+    }else{
+      if(status==='active'){
+        navigation.navigate('Subscription');
+
+      }else if(status!=='active' && status !=null){
+        navigation.navigate('Subscription');
+
+      }else{
+        navigation.navigate('Subscription');
+
+      }
+
+    }
+
+  }
+
+  const navigateToLanguages =async() =>{
+    const mail=await AsyncStorage.getItem('email');
+    if(mail===null){
+       navigation.navigate('Login');
+    }else{
+      setVisible(true);
+
+    }
+    
+  }
+
+  const navigateToWallet =async ()=>{
+    const mail = await AsyncStorage.getItem('email');
+    if(mail===null){
+      navigation.navigate('Login');
+    }else{
+      if(status==='active'){
+        navigation.navigate('My Wallet');
+      }else if(status!=='active' && status !=null){
+        navigation.navigate('My Wallet');
+      }
+    }
+    
+  }
+
   const readMore = async () => {
     const email= await AsyncStorage.getItem('email');
     if(email==null){
@@ -406,41 +451,19 @@ const DailyDevotional = () => {
       <View style={styles.contentView}>
       
           <TouchableOpacity style={styles.roundButton}
-            onPress={()=>{
-              if(status==='active'){
-                navigation.navigate('My Wallet');
-              }else if(status!=='active' && status !=null){
-                navigation.navigate('My Wallet');
-              }else{
-                navigation.navigate('Login');
-              }
-            }}
+            onPress={navigateToWallet}
             >
             <Text>Check Wallet</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.roundButton}
-            onPress={()=>{
-              if(status==='active'){
-                navigation.navigate('Subscription');
-
-              }else if(status!=='active' && status !=null){
-                navigation.navigate('Subscription');
-
-              }else{
-                navigation.navigate('Subscription');
-
-              }
-            }}
+            onPress={navigateToSubscription}
             >
             <Text>Upgrade Subscription</Text>
           </TouchableOpacity>
 
             <TouchableOpacity style={styles.roundButton}
-            onPress={()=>{
-              setVisible(true);
-
-            }}
+            onPress={navigateToLanguages}
             >
             <View style={{flexDirection:"row"}}>
                 {/* <FontAwesome name="globe" size={20} color="#900" /> */}
