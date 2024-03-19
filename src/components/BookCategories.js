@@ -101,13 +101,14 @@ const BookCategories = () => {
                 <Divider orientation="vertical" width={5} />
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.65}}>
-                    <Text style={{marginLeft:10}}>BOOK CATEGORIES</Text>
+                    <Text style={styles.CategoryTitle}>BOOK CATEGORIES</Text>
                     
                 </View>
                 <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
                     <Button title="VIEW ALL" type="outline"  color="warning" onPress={()=>{
                         goToTranslatedBooks();
-                    }}/>
+                    }}
+                    titleStyle={styles.StoreViewAllButton} />
                 </View>
                 </View>
             </View>
@@ -142,6 +143,24 @@ const styles = StyleSheet.create({
       fontSize: wp(4),
       color: 'black'
     },
+    CategoryTitle : {
+        marginLeft: 10,
+        fontWeight: '600',
+        fontSize : 16,
+        color :'#52565e',
+        textTransform : 'uppercase'
+    },
+    StoreViewAllButton :{
+        fontSize: 12
+    },
+    BookTitle : {
+        marginBottom: 5,
+        marginTop:5,
+        flexWrap: 'wrap',
+        alignSelf:'center',
+        fontSize : 10,
+        textTransform : 'uppercase'
+    }
 
   });
   

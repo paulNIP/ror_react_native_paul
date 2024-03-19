@@ -46,7 +46,6 @@ const StoreScreen = ({ navigation }) => {
 
     const getAllBooks = async () => {
       try {
-        
         const response = await axios.get(Strings.BOOKS_URL+'/fetch').then((res) => {
           setIsLoading(false);
           setAllBooks(response.data.EBOOK_APP);
@@ -54,7 +53,6 @@ const StoreScreen = ({ navigation }) => {
         .catch((err) => {
           console.log(err)
         });
-      
       }catch(e){
         console.log(e);
         }
@@ -65,10 +63,11 @@ const StoreScreen = ({ navigation }) => {
         setBooks(data);
         const translated = await getTranslatedBooks();
         setTranslatedBooks(translated.languages);
-
     }
+
     fetchData();
     getAllBooks();
+
 
   }, []);
 
@@ -496,7 +495,7 @@ const StoreScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-
+    backgroundColor :'#ffffff'
   },
   scrollView: {
 
