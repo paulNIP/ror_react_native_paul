@@ -12,46 +12,16 @@ import { useNavigation } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get('window').width;
 
-const renderItem = ({ item }) => {
 
-    const imgr = item.book_cover_img;
 
-    
-    return (
-      <View style={{marginEnd:10, width:Dimensions.get('window').width*0.25}}>
-        <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
-            <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
-                <Image
-                  source={{uri:imgr,cache: 'force-cache'}}
-                  style={{
-                    height: Dimensions.get('window').height*0.2,
-                    width: windowWidth*0.25
-                  }}
-                  // resizeMode="contain"
-                />
-
-              <View style={{height:50}}>
-                <Text style={styles.BookTitle} numberOfLines={5}>{item.book_title}</Text>
-              </View>
-              {/*<Text style={{ marginBottom: 5,marginLeft:3}}>*/}
-              {/*    {item.author_name}*/}
-              {/*</Text>*/}
-            </View>
-            </View>
-          </TouchableOpacity>
-      </View>
-    );
-  };
-
-const KidsBooks = ({navigation}) => {
+const KidsBooks = () => {
     
     const [books, setBooks] = useState();
     const [bookCategory, setBookCategory] = useState();
     const [categoryID, setCategoryID] = useState();
     const [bookDescription, setBookDescription] = useState();
 
-    // const navigation =useNavigation()
+    const navigation =useNavigation()
 
 
     useEffect(() => {
@@ -67,13 +37,39 @@ const KidsBooks = ({navigation}) => {
 
         }, []);
 
-    console.log("Category",categoryID);
 
     const goToTranslatedBooks=(cat)=>{
         navigation.navigate('GroupedBooks',{cat_id:cat,category:bookCategory});
     }
 
+    const renderItem = ({ item }) => {
+        const imgr = item.book_cover_img;
+        return (
+            <View style={{marginEnd:10, width:Dimensions.get('window').width*0.25}}>
+                <TouchableOpacity onPress={()=>{
+                    navigation.navigate('BookDetails',{book_id:item.id})
+                }
+                }>
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
+                        <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
+                            <Image
+                                source={{uri:imgr,cache: 'force-cache'}}
+                                style={{
+                                    height: Dimensions.get('window').height*0.2,
+                                    width: windowWidth*0.25
+                                }}
+                                // resizeMode="contain"
+                            />
 
+                            <View style={{height:50}}>
+                                <Text style={styles.BookTitle} numberOfLines={5}>{item.book_title}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
   return (
     <View>

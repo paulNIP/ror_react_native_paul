@@ -108,10 +108,9 @@ useEffect(() => {
         </View>
         <View style={{marginEnd:10,width:windowWidth*0.67,marginBottom:10,marginRight:"auto"}}>
             <View >
-                <Text style={{ marginBottom: 5,marginTop:5,flexWrap: 'wrap' }} numberOfLines={2}>{item.title}
+                <Text style={styles.LanguageBookTitle} numberOfLines={2}>{item.title}
                 </Text>
-                <Text style={{ marginBottom: 5,marginTop:5,
-                     flexWrap: 'wrap',color:'#A9A9A9'}} numberOfLines={2}>{item.book_description}
+                <Text style={styles.LanguageBookExcerpt} numberOfLines={2}>{item.book_description}
                 </Text>
             </View>
 
@@ -122,7 +121,7 @@ useEffect(() => {
                     
                     <View>
                      <View style={{flexDirection:'row',marginTop:5,marginBottom:5,}}>
-                         <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>
+                         <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#cf8d2e'}}>
                             {item.author}</Text>
                      </View> 
                      <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/> 
@@ -281,7 +280,7 @@ useEffect(() => {
     container: {
       flex: 1,
       justifyContent: 'center',
-      backgroundColor: '#D8D9DA',
+      backgroundColor: '#ffffff',
     },
     
     buttons: {
@@ -294,6 +293,22 @@ useEffect(() => {
         flex: 1,
         justifyContent: "space-around",
         alignSelf:'center'
+      },
+      LanguageBookExcerpt: {
+          marginBottom: 5,
+          marginTop:5,
+          flexWrap: 'wrap',
+          fontWeight :'300',
+          color : '#59626a',
+          fontSize:14,
+          lineHeight:20,
+      },
+      LanguageBookTitle :{
+          fontSize:15,
+          fontWeight :'600',
+          marginBottom: 5,
+          marginTop:5,
+          flexWrap: 'wrap'
       }
   });
 
