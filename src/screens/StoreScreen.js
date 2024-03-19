@@ -480,7 +480,6 @@ const StoreScreen = ({ navigation }) => {
 
             <Avanzini/>
 
-
             <TranslatedBooks/>
 
       </View>)}

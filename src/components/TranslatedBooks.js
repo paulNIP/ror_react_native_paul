@@ -48,7 +48,6 @@ const TranslatedBooks = () => {
 
     // console.log("Books Translated",translatedBooks);
     // console.log("Books Title",translatedTitle);
-    console.log("Books Description Languages",allTranslatedLanguages);
 
 
     const toggleOverlay = () => {
