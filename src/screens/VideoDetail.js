@@ -1,6 +1,6 @@
 import React, { useEffect, useState ,useRef} from 'react';
 import { Icon,BottomSheet } from '@rneui/themed';
-import {Dimensions,FlatList,TouchableOpacity,Image} from 'react-native';
+import {Dimensions,FlatList,TouchableOpacity,Image, Linking} from 'react-native';
 import {Overlay } from '@rneui/themed';
 import { Button,ListItem } from '@rneui/themed';
 import { TextInput } from 'react-native-paper';
@@ -875,7 +875,10 @@ const VideoDetail= ({ route, navigation }) => {
             <Text>Pledge</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setIsVisible0(true)}>
+          <TouchableOpacity onPress={() => 
+          {
+            Linking.openURL('https://give.rhapsodyofrealities.org/ref/official');
+          }}>
             <Icon style={{ alignSelf:'center'}} name="credit-card" type="material-community" color="grey" />
             <Text>give</Text>
           </TouchableOpacity>

@@ -9,7 +9,6 @@ const getWordOfMonth = async () => {
 
             axios.get(Strings.API_URL+'/cards/all')
               .then((res) => {
-                // console.log(res.data.response)
                 resolve(res.data.response)
             })
               .catch((err) => {

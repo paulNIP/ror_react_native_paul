@@ -8,6 +8,7 @@ const db = DatabaseConnection.getdevotionalsDB();
 
 
 
+
 const getDailyDevotional = async () => {
     let lang= await AsyncStorage.getItem('language');
     if(lang ===null){
@@ -32,7 +33,6 @@ const getDailyDevotional = async () => {
         let url ='https://api.rorangel.com/?devotional&date='+new Date().toISOString().slice(0, 10)+'&lang='+lang;
         axios.get(url)
                   .then((res) => {
-                    //console.log(res.data.result)
                     resolve(res.data.devotionals);
                     console.log("Devotional data",res.data.devotionals)
                 })
@@ -47,17 +47,14 @@ const getDailyDevotional = async () => {
 };
 
 
-const getArticleDetails =async (date)=>{
+const getArticleDetails =async (id)=>{
 
   return new Promise((resolve, reject) => {
 
-    axios.post(Strings.API_URL+'/devotional', {
-        date: date
-
-      })
+    axios.get(Strings.API_URL+'/cards/'+id)
       .then((res) => {
-        //console.log(res.data.result)
-        resolve(res.data.result)
+        // console.log("Arttstyudifjn",res.data.response[0])
+        resolve(res.data.response)
     })
       .catch((err) => {
         reject(err)

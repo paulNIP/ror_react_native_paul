@@ -37,8 +37,9 @@ const WordOfMonth=()=>{
             {
               words.slice(0, 4).map((l, i) => {
 
+
                 return i === 0 ?
-<TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
+<TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{id:l.id})}}>
 <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10,marginBottom:10 }}>
 <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
     <Image
@@ -61,7 +62,7 @@ const WordOfMonth=()=>{
               
 
                    :
-                <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{id:l.id})}}>
                 <ListItem key={i} bottomDivider>
                    <Image
                      style={styles.image}

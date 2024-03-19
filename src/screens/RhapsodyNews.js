@@ -10,6 +10,7 @@ import { FlatList } from 'react-native';
 import { getWordOfMonth } from '../service/wordOfMonthService';
 import { ListItem } from '@rneui/themed';
 import {Dimensions} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,7 +18,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const RhapsodyNews = () => {
 
-
+    const navigation =  useNavigation();
     const [words, setWords] = useState([]);
    
     useEffect(() => {
@@ -32,11 +33,9 @@ const RhapsodyNews = () => {
 
     const renderItem =({item})=>{
 
-      console.log("Items News", item);
-
       return(
         <View>
-          <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{date:l.pdate})}}>
+          <TouchableOpacity onPress={()=>{navigation.navigate('Rhapsody of Realities',{id:item.id})}}>
                 <ListItem bottomDivider>
                    <Image
                      style={styles.image}
@@ -61,6 +60,7 @@ const RhapsodyNews = () => {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
          <FlatList data={words} renderItem={renderItem} 
          ItemSeparatorComponent={() => <View style={{height: 2}} />}/>
+         
         
       </ScrollView>
     </SafeAreaView>

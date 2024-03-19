@@ -4,6 +4,8 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LogBox } from 'react-native';
+
 //import AppIntroSlider to use it
 import 'react-native-gesture-handler';
 
@@ -83,6 +85,7 @@ export type StackParamList = {
   Registration:{email:string};
   LanguageBooks:{lang:string};
   BookDetails:{book_id:string};
+  ArticleDetails:{id:string};
   GroupedBooks:{cat_id:string,category:string};
   BookCategories:undefined;
   AllCategories:undefined;
@@ -143,6 +146,7 @@ function HomeStackNavigator() {
   const navigation = useNavigation<StackNavigation>();
    
   useEffect(() => {
+      LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
 
       const fetchData = async () => {
           let mail=await AsyncStorage.getItem('email');
