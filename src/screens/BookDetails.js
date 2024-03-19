@@ -103,12 +103,8 @@ const BookDetails = ({ route, navigation }) => {
                       // resizeMode="contain"
                     />
                   <View style={{height:50}}>
-                    <Text style={{ marginBottom: 5,marginTop:5,fontSize:10, 
-                      flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
+                    <Text style={styles.RelatedBookTitle} numberOfLines={5}>{item.book_title}</Text>
                   </View>
-                  <Text style={{ marginBottom: 5,fontSize:10}}>
-                      By {item.author_name}
-                  </Text>
                 </View>
                 </View>
               </TouchableOpacity>
@@ -148,14 +144,14 @@ const BookDetails = ({ route, navigation }) => {
                 />
                 <View style={{flexDirection:"row",marginLeft:10,marginBottom:10}}>
                     <Image
-                        style={{width: Dimensions.get('window').width*0.2, height: 150,borderRadius: 10, marginTop:-100}}
+                        style={{width: Dimensions.get('window').width*0.27, height: 180,borderRadius: 10, marginTop:-100}}
                         source={{uri: cover}} 
                         // resizeMode={"cover"} 
                     />
                     <View style={{marginTop:-50,marginBottom:20}}>
-                        <TouchableOpacity style={{backgroundColor:'#C0C0C0'}}>
-                        <Text style={{marginLeft:10,color:'#FFFFFF',fontWeight:'bold'}}>{item.book_title}</Text>
-                        <Text style={{marginLeft:10, color:'#FFFFFF'}}>By {item.author_name}</Text>
+                        <TouchableOpacity style={{backgroundColor:'#050505', paddingTop:15, paddingBottom : 15, paddingRight: 10 }}>
+                        <Text style={styles.BookTitle}>{item.book_title}</Text>
+                        <Text style={styles.BookAuthor}>By {item.author_name}</Text>
                         </TouchableOpacity>
 
                         <View style={{flexDirection:"row",alignContent:"space-between",marginTop:10,marginLeft:15}}>
@@ -174,12 +170,12 @@ const BookDetails = ({ route, navigation }) => {
                                
                               }}
                                >
-                                <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>BUY US ${item.price}</Text>
+                                <Text style={{color:'#FFFFFF',fontWeight:'500'}}>BUY ${item.price}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',
-                                                  backgroundColor: '#D8A623'}}>
-                            <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>VOUCHER</Text>
-                            </TouchableOpacity>
+                            {/*<TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',*/}
+                            {/*                      backgroundColor: '#D8A623'}}>*/}
+                            {/*<Text style={{color:'#FFFFFF',fontWeight:'500'}}>VOUCHER CODE</Text>*/}
+                            {/*</TouchableOpacity>*/}
                         </View>
                     </View>
                 </View>
@@ -276,17 +272,17 @@ db.transaction(function (txn) {
                 <Divider/>
                 <Text style={{marginTop:10,marginLeft:10,fontSize:20,fontWeight:"bold"}}>Description</Text>
                 <Divider/>
-                <Text style={{marginTop:10,marginLeft:20}}>{item.book_description}</Text>
+                <Text style={styles.BookDescription}>{item.book_description}</Text>
 
-                <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
+                <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:30,marginBottom:0,alignContent:'space-between' }}>
                 <Divider orientation="vertical" width={5} />
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                     <View style={{marginBottom:15,alignItems:'flex-start'}}>
-                        <Text style={{marginLeft:10,fontWeight:'bold'}}>RELATED BOOKS</Text>
-                        <Text style={{marginLeft:10,color:'#999999'}}>Books related to the title above</Text>
+                        <Text style={styles.CategoryTitle}>RELATED BOOKS</Text>
+                        <Text style={styles.CategorySubTitle}>Books related to the title above</Text>
                     </View>
-                    <View style={{marginBottom:15,alignItems:'flex-end'}}>
-                        <Button title="VIEW ALL" type="outline"  color="warning" />
+                    <View style={{marginBottom:0,alignItems:'flex-end'}}>
+                        <Button title="VIEW ALL" type="outline"  color="warning"   titleStyle={styles.StoreViewAllButton} />
                     </View>
                 </View>
 
@@ -322,6 +318,7 @@ db.transaction(function (txn) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor : '#ffffff'
     },
     absolute: {
       position: "absolute",
@@ -329,6 +326,54 @@ const styles = StyleSheet.create({
       left: 0,
       bottom: 0,
       right: 0
+    },
+    BookTitle : {
+        marginLeft:10,
+        color:'#FFFFFF',
+        fontWeight:'500',
+        fontSize : 18
+    },
+    BookAuthor : {
+        marginLeft:10,
+        color:'#e3a709',
+        fontWeight:'200',
+        fontSize : 12,
+    },
+    BookDescription : {
+        fontFamily : 'Roboto',
+        fontSize:16,
+        lineHeight:22,
+        paddingLeft:20,
+        paddingRight :20,
+        paddingTop :10 ,
+        fontWeight :'300',
+        color : '#000000',
+        marginTop:10,
+        marginLeft:10
+    },
+    CategoryTitle : {
+        marginLeft: 10,
+        fontWeight: '600',
+        fontSize : 16,
+        color :'#52565e',
+        textTransform : 'uppercase'
+    },
+    CategorySubTitle : {
+        marginLeft: 10,
+        color: '#999999',
+        fontWeight : '400',
+        fontSize:13
+    },
+    StoreViewAllButton :{
+        fontSize: 12
+    },
+    RelatedBookTitle : {
+        marginBottom: 5,
+        marginTop:5,
+        flexWrap: 'wrap',
+        alignSelf:'center',
+        fontSize : 10,
+        textTransform : 'uppercase'
     }
   });
 
