@@ -62,17 +62,17 @@ const ChildrenBooks = () => {
             const data = await getChildrenBooks();
             setBooks(data.books);
             setCategoryID(data.cat_id);
+            setBookCategory(data.category_name);
+            setBookDescription(data.category_description);
         }
 
         fetchData();
 
         }, []);
 
-    console.log("Prayer Books Good",books);
 
     const goToTranslatedBooks=(cat)=>{
         navigation.navigate('GroupedBooks',{cat_id:categoryID});
-
     }
 
 
@@ -86,8 +86,8 @@ const ChildrenBooks = () => {
             <Divider orientation="vertical" width={5} />
             <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={{marginBottom:15,alignItems:'flex-start',width:windowWidth*0.7}}>
-                <Text style={styles.CategoryTitle}>Childrens Books</Text>
-                <Text style={styles.CategorySubTitle}>Books on prayer by Pastor Chris Oyakhilome D.Sc., D.D.</Text>
+                <Text style={styles.CategoryTitle}>{bookCategory}</Text>
+                <Text style={styles.CategorySubTitle}>{bookDescription}</Text>
                 </View>
                 <View style={{marginBottom:15,alignItems:'flex-end',marginLeft:'auto',width:windowWidth*0.3}}>
                   <Button title="VIEW ALL" type="outline"  color="warning" onPress={()=>{

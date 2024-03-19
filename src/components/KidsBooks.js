@@ -62,8 +62,6 @@ const KidsBooks = ({navigation}) => {
             setBookCategory(data.category_name);
             setCategoryID(data.cat_id);
             setBookDescription(data.category_description);
-
-
         }
         fetchData();
 
