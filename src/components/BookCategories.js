@@ -36,24 +36,18 @@ const BookCategories = () => {
       const fetchData = async () => {
           const data = await getCategories();
           setBooks(data);
-
-  
       }
+
       fetchData();
 
   
     }, []);
 
 
-
-
     const goToTranslatedBooks=(language)=>{
         navigation.navigate('AllCategories');
-
     }
 
-
-        
 
     const renderBooks = ({ item }) => {
         

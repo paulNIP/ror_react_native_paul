@@ -14,6 +14,7 @@ import RNFS from 'react-native-fs';
 import * as Progress from 'react-native-progress';
 import { Platform } from 'react-native';
 import * as RNIap from 'react-native-iap';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -31,8 +32,6 @@ const BookDetails = ({ route, navigation }) => {
 
 
     useEffect(() => {
-
-
         const fetchData = async () => {
             const data = await getBookDetails(book_id);
             setBook(data);
@@ -47,48 +46,55 @@ const BookDetails = ({ route, navigation }) => {
 
 
       const purchaseProduct = async (productId) => {
-        try {
-          const purchase = await RNIap.requestPurchase(productId);
-          console.log('Purchase:', purchase);
-          // Handle successful purchase
-        } catch (error) {
-          console.log('Error purchasing:', error.message);
-          // Handle purchase error
-        }
+          const email = await AsyncStorage.getItem('email')
+          if(email){
+              try {
+                  const purchase = await RNIap.requestPurchase(productId);
+                  console.log('Purchase:', purchase);
+                  // Handle successful purchase
+              } catch (error) {
+                  console.log('Error purchasing:', error.message);
+                  // Handle purchase error
+              }
+          }else{
+              navigation.navigate('Login')
+          }
       };
 
 
-      const downloadFile = () => {
-        const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
-        const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
-    
-        RNFS.downloadFile({
-          fromUrl: url,
-          toFile: filePath,
-          background: true, // Enable downloading in the background (iOS only)
-          discretionary: true, // Allow the OS to control the timing and speed (iOS only)
-          progress: (res) => {
-            // Handle download progress updates if needed
-            // const progress = (res.bytesWritten / res.contentLength) * 100;
-            setProgress((res.bytesWritten / res.contentLength) * 100);
-            console.log(`Progress: ${progress.toFixed(2)}%`);
-          },
-        })
-          .promise.then((response) => {
-            console.log('File downloaded!', response);
-          })
-          .catch((err) => {
-            console.log('Download error:', err);
-          });
+      const downloadFile = async () => {
+          const email = await AsyncStorage.getItem('email')
+          if(email){
+              const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
+              const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
+
+              RNFS.downloadFile({
+                  fromUrl: url,
+                  toFile: filePath,
+                  background: true, // Enable downloading in the background (iOS only)
+                  discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+                  progress: (res) => {
+                      // Handle download progress updates if needed
+                      // const progress = (res.bytesWritten / res.contentLength) * 100;
+                      setProgress((res.bytesWritten / res.contentLength) * 100);
+                      console.log(`Progress: ${progress.toFixed(2)}%`);
+                  },
+              })
+                  .promise.then((response) => {
+                  console.log('File downloaded!', response);
+              })
+                  .catch((err) => {
+                      console.log('Download error:', err);
+                  });
+          }else{
+              navigation.navigate('Login')
+          }
       };
 
   
 
       const renderRelatedBooks = ({ item }) => {
-
         const imgr = item.book_cover_img;
-    
-        
         return (
           <View style={{marginEnd:10,width:100}}>
             <TouchableOpacity onPress={()=>navigation.push('BookDetails',{book_id:item.id})}>
@@ -103,12 +109,8 @@ const BookDetails = ({ route, navigation }) => {
                       // resizeMode="contain"
                     />
                   <View style={{height:50}}>
-                    <Text style={{ marginBottom: 5,marginTop:5,fontSize:10, 
-                      flexWrap: 'wrap',alignSelf:'center',width:100 }} numberOfLines={5}>{item.book_title}</Text>
+                    <Text style={styles.RelatedBookTitle} numberOfLines={5}>{item.book_title}</Text>
                   </View>
-                  <Text style={{ marginBottom: 5,fontSize:10}}>
-                      By {item.author_name}
-                  </Text>
                 </View>
                 </View>
               </TouchableOpacity>
@@ -148,14 +150,14 @@ const BookDetails = ({ route, navigation }) => {
                 />
                 <View style={{flexDirection:"row",marginLeft:10,marginBottom:10}}>
                     <Image
-                        style={{width: Dimensions.get('window').width*0.2, height: 150,borderRadius: 10, marginTop:-100}}
+                        style={{width: Dimensions.get('window').width*0.27, height: 180,borderRadius: 10, marginTop:-100}}
                         source={{uri: cover}} 
                         // resizeMode={"cover"} 
                     />
                     <View style={{marginTop:-50,marginBottom:20}}>
-                        <TouchableOpacity style={{backgroundColor:'#C0C0C0'}}>
-                        <Text style={{marginLeft:10,color:'#FFFFFF',fontWeight:'bold'}}>{item.book_title}</Text>
-                        <Text style={{marginLeft:10, color:'#FFFFFF'}}>By {item.author_name}</Text>
+                        <TouchableOpacity style={{backgroundColor:'#050505', paddingTop:15, paddingBottom : 15, paddingRight: 10 }}>
+                        <Text style={styles.BookTitle}>{item.book_title}</Text>
+                        <Text style={styles.BookAuthor}>By {item.author_name}</Text>
                         </TouchableOpacity>
 
                         <View style={{flexDirection:"row",alignContent:"space-between",marginTop:10,marginLeft:15}}>
@@ -174,12 +176,12 @@ const BookDetails = ({ route, navigation }) => {
                                
                               }}
                                >
-                                <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>BUY US ${item.price}</Text>
+                                <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>BUY ${item.price}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',
-                                                  backgroundColor: '#D8A623'}}>
-                            <Text style={{color:'#FFFFFF',fontWeight:'bold'}}>VOUCHER</Text>
-                            </TouchableOpacity>
+                            {/*<TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',*/}
+                            {/*                      backgroundColor: '#D8A623'}}>*/}
+                            {/*<Text style={{color:'#FFFFFF',fontWeight:'500'}}>VOUCHER CODE</Text>*/}
+                            {/*</TouchableOpacity>*/}
                         </View>
                     </View>
                 </View>
@@ -188,63 +190,64 @@ const BookDetails = ({ route, navigation }) => {
                 <View style={{flexDirection:"row",justifyContent:"space-around", marginTop:5,marginBottom:5}}>
                     <View>
                       <TouchableOpacity  onPress={()=>{
-                        
+                          const email = AsyncStorage.getItem('email')
+                          if(email){
+                              db.transaction(function (txn) {
+                                  txn.executeSql(
+                                      "SELECT id FROM favourite_books WHERE id=?",
+                                      [item.id],
+                                      function (tx, res) {
+                                          console.log('item:', res.rows.length);
+                                          if (res.rows.length == 0) {
+                                              //insert into DB
+                                              txn.executeSql(
+                                                  'INSERT INTO favourite_books (book_title,book_description, image, cover_image,book_file_type,book_file_url , book_rate ,book_rate_avg,book_view, book_author_name) VALUES(? ,?,?, ?, ?,? , ? ,?,?, ?)',
+                                                  [
+                                                      book_title,
+                                                      book_description,
+                                                      book_bg_img,
+                                                      book_cover_img,
+                                                      book_file_type,
+                                                      book_file_url,
+                                                      total_rate,
+                                                      rate_avg,
+                                                      book_views,
+                                                      author_name]
+                                              );
 
-db.transaction(function (txn) {
-      txn.executeSql(
-        "SELECT id FROM favourite_books WHERE id=?",
-        [item.id],
-        function (tx, res) {
-          console.log('item:', res.rows.length);
-          if (res.rows.length == 0) {
-            //insert into DB
-            txn.executeSql(
-              'INSERT INTO favourite_books (book_title,book_description, image, cover_image,book_file_type,book_file_url , book_rate ,book_rate_avg,book_view, book_author_name) VALUES(? ,?,?, ?, ?,? , ? ,?,?, ?)',
-              [
-                book_title,
-                book_description,
-                book_bg_img,
-                book_cover_img,
-                book_file_type,
-                book_file_url,
-                total_rate,
-                rate_avg,
-                book_views,
-                author_name]
-            );
-
-            setFavouritesColor('#FF0000');
-            Alert.alert(
-              'Success',
-              'Added to Favourites',
-              [
-                {
-                  text: 'Ok'
-                },
-              ],
-              { cancelable: false }
-            );
-            // setVisible(true);
+                                              setFavouritesColor('#FF0000');
+                                              Alert.alert(
+                                                  'Success',
+                                                  'Added to Favourites',
+                                                  [
+                                                      {
+                                                          text: 'Ok'
+                                                      },
+                                                  ],
+                                                  { cancelable: false }
+                                              );
+                                              // setVisible(true);
 
 
-          }else{
-            Alert.alert(
-              'Success',
-              'Book already exists in favourites',
-              [
-                {
-                  text: 'Ok'
-                },
-              ],
-              { cancelable: false }
-            );
+                                          }else{
+                                              Alert.alert(
+                                                  'Success',
+                                                  'Book already exists in favourites',
+                                                  [
+                                                      {
+                                                          text: 'Ok'
+                                                      },
+                                                  ],
+                                                  { cancelable: false }
+                                              );
 
-          }
-        }
-      );
-    });
-
-                             
+                                          }
+                                      }
+                                  );
+                              });
+                          }else{
+                              navigation.navigate('Login')
+                          }
 
                       }}>
                         <MaterialCommunityIcons  style={{alignSelf:"center"}} name="cards-heart" size={30} color={favouritesColor} />
@@ -276,17 +279,17 @@ db.transaction(function (txn) {
                 <Divider/>
                 <Text style={{marginTop:10,marginLeft:10,fontSize:20,fontWeight:"bold"}}>Description</Text>
                 <Divider/>
-                <Text style={{marginTop:10,marginLeft:20}}>{item.book_description}</Text>
+                <Text style={styles.BookDescription}>{item.book_description}</Text>
 
-                <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:15,marginBottom:15,alignContent:'space-between' }}>
+                <View style={{ flexDirection: 'row',marginHorizontal:10, marginTop:30,marginBottom:0,alignContent:'space-between' }}>
                 <Divider orientation="vertical" width={5} />
                 <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
                     <View style={{marginBottom:15,alignItems:'flex-start'}}>
-                        <Text style={{marginLeft:10,fontWeight:'bold'}}>RELATED BOOKS</Text>
-                        <Text style={{marginLeft:10,color:'#999999'}}>Books related to the title above</Text>
+                        <Text style={styles.CategoryTitle}>RELATED BOOKS</Text>
+                        <Text style={styles.CategorySubTitle}>Books related to the title above</Text>
                     </View>
-                    <View style={{marginBottom:15,alignItems:'flex-end'}}>
-                        <Button title="VIEW ALL" type="outline"  color="warning" />
+                    <View style={{marginBottom:0,alignItems:'flex-end'}}>
+                        <Button title="VIEW ALL" type="outline"  color="warning"   titleStyle={styles.StoreViewAllButton} />
                     </View>
                 </View>
 
@@ -322,6 +325,7 @@ db.transaction(function (txn) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor : '#ffffff'
     },
     absolute: {
       position: "absolute",
@@ -329,6 +333,57 @@ const styles = StyleSheet.create({
       left: 0,
       bottom: 0,
       right: 0
+    },
+    BookTitle : {
+        marginLeft:10,
+        color:'#FFFFFF',
+        fontWeight:'500',
+        fontSize : 18
+    },
+    BookAuthor : {
+        marginLeft:10,
+        color:'#e3a709',
+        fontWeight:'200',
+        fontSize : 12,
+    },
+    BookDescription : {
+        fontFamily : 'Roboto',
+        fontSize:16,
+        lineHeight:22,
+        paddingLeft:20,
+        paddingRight :20,
+        paddingTop :10 ,
+        fontWeight :'300',
+        color : '#000000',
+        marginTop:10,
+        marginLeft:10
+    },
+    CategoryTitle : {
+        marginLeft: 10,
+        fontWeight: '600',
+        fontSize : 16,
+        color :'#52565e',
+        textTransform : 'uppercase'
+    },
+    CategorySubTitle : {
+        marginLeft: 10,
+        color: '#999999',
+        fontWeight : '400',
+        fontSize:13
+    },
+    StoreViewAllButton :{
+        fontSize: 12
+    },
+    RelatedBookTitle : {
+        marginBottom: 5,
+        marginTop:5,
+        flexWrap: 'wrap',
+        alignSelf:'center',
+        fontSize : 10,
+        textTransform : 'uppercase'
+    },
+    menuText : {
+        alignSelf:"center",
     }
   });
 
