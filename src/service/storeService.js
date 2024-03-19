@@ -48,9 +48,12 @@ const getProsperity = async () => {
 const getHolySpirit = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.holy_spirit);
+                const holyspiritBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 15 );
+                if (holyspiritBooks) {
+                    resolve(holyspiritBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -61,9 +64,12 @@ const getHolySpirit = async () => {
 const getDivineHealing = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.divine_healing);
+                const healingBooks = res.data.EBOOK_APP.find((category) => category.cat_id  === 17 );
+                if (healingBooks) {
+                    resolve(healingBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -74,9 +80,12 @@ const getDivineHealing = async () => {
 const getSoulWining = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.soul_wining);
+                const soulwinningBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 3);
+                if (soulwinningBooks) {
+                    resolve(soulwinningBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -96,12 +105,32 @@ const getChildrenDevotional = async () => {
           });
   });
 };
+
+const getChildrenBooks = async () => {
+    return new Promise((resolve, reject) => {
+
+        axios.get(Strings.BOOKS_URL_V2)
+            .then((res) => {
+                const childrenBooks = res.data.EBOOK_APP.find((category) => category.cat_id=== 1);
+                if (childrenBooks) {
+                    resolve(childrenBooks);
+                }
+            })
+            .catch((err) => {
+                reject(err)
+            });
+    });
+};
+
 const getChistianLiving = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.christian_living);
+                const xtianlivingBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 16);
+                if (xtianlivingBooks) {
+                    resolve(xtianlivingBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -111,11 +140,12 @@ const getChistianLiving = async () => {
 
 const getFaithProsperity = async () => {
   return new Promise((resolve, reject) => {
-
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.prayer);
-              console.log("Prayer Books",res.data.EBOOK_APP.prayer);
+                const prosperityBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 14 );
+                if (prosperityBooks) {
+                    resolve(prosperityBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -126,10 +156,12 @@ const getFaithProsperity = async () => {
 const getPrayer = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.prayer);
-              console.log("Prayer Books",res.data.EBOOK_APP.prayer);
+                const prayerBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 18 );
+                if (prayerBooks) {
+                    resolve(prayerBooks);
+                }
           })
             .catch((err) => {
               reject(err)
@@ -140,14 +172,33 @@ const getPrayer = async () => {
 const getTeenDevotional = async () => {
   return new Promise((resolve, reject) => {
 
-          axios.get(Strings.BOOKS_URL+'/fetch')
+          axios.get(Strings.BOOKS_URL_V2)
             .then((res) => {
-              resolve(res.data.EBOOK_APP.teen_devotional);
+                const teevoBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 19);
+                if (teevoBooks) {
+                    resolve(teevoBooks);
+                }
           })
             .catch((err) => {
               reject(err)
           });
   });
+};
+
+export const getAvanziniBooks = async () => {
+    return new Promise((resolve, reject) => {
+
+        axios.get(Strings.BOOKS_URL_V2)
+            .then((res) => {
+                const avanziniBooks = res.data.EBOOK_APP.find((category) => category.cat_id === 30);
+                if (avanziniBooks) {
+                    resolve(avanziniBooks);
+                }
+            })
+            .catch((err) => {
+                reject(err)
+            });
+    });
 };
 
 const getPopularBooks = async () => {
@@ -205,6 +256,9 @@ const getKidsBooks = async () => {
   });
 };
 
+
+
+
 const getEarlyReaders = async () => {
   return new Promise((resolve, reject) => {
 
@@ -245,6 +299,8 @@ const getAllTranslatedBooks = async () => {
           });
   });
 };
+
+
 
 const getLangaugeTranslatedBooks = async (language) => {
   console.log("API Language",language.lang);
@@ -297,7 +353,7 @@ const getPrivacyPolicy = async () => {
 export { getBooks,getTranslatedBooks,getAllTranslatedBooks,getLangaugeTranslatedBooks,getFeaturedBooks,
   getCategories,getProsperity,
   getHolySpirit,getDivineHealing,
-  getSoulWining,getChildrenDevotional,
+  getSoulWining,getChildrenDevotional,getChildrenBooks,
   getChistianLiving,getPrayer,getTeenDevotional,
   getKidsBooks,getCategorySelectedBooks,getPrivacyPolicy,
   getEarlyReaders,getDailyDevotionalBooks,getFaithProsperity

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Divider,Button} from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
-import { getChildrenDevotional } from "../service/storeService";
+import { getAvanziniBooks } from "../service/storeService";
 
 
 
@@ -59,14 +59,11 @@ const Avanzini = () => {
     useEffect(() => {
 
         const fetchData = async () => {
-            const data = await getChildrenDevotional();
-            setBooks(data);
-            setCategoryID(data[0].cat_id);
-
-            
-
-
+            const data = await getAvanziniBooks();
+            setBooks(data.books);
+            setCategoryID(data.cat_id);
         }
+
         fetchData();
 
         }, []);
