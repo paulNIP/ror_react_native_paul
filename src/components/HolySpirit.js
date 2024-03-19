@@ -58,12 +58,8 @@ const HolySpirit = () => {
 
         const fetchData = async () => {
             const data = await getHolySpirit();
-            setBooks(data);
-            setCategoryID(data[0].cat_id);
-
-            
-
-
+            setBooks(data.books);
+            setCategoryID(data.cat_id);
         }
         fetchData();
 

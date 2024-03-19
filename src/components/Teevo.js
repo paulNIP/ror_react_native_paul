@@ -6,7 +6,7 @@ import {
   StatusBar,View,TouchableOpacity,Image,Dimensions,FlatList
 } from 'react-native';
 import { Divider,Button} from '@rneui/themed';
-import { getKidsBooks } from "../service/storeService";
+import {getKidsBooks, getTeenDevotional} from "../service/storeService";
 import { useNavigation } from "@react-navigation/native";
 
 
@@ -57,19 +57,15 @@ const Teevo = () => {
     useEffect(() => {
 
         const fetchData = async () => {
-            const data = await getKidsBooks();
+            const data = await getTeenDevotional();
             setBooks(data.books);
             setBookCategory(data.category_name);
             setCategoryID(data.cat_id);
             setBookDescription(data.category_description);
-
-
         }
         fetchData();
 
         }, []);
-
-    console.log("Category mmmm",categoryID);
 
     const goToTranslatedBooks=(cat)=>{
         navigation.navigate('GroupedBooks',{cat_id:cat,category:bookCategory});

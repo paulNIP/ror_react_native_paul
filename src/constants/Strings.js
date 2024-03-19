@@ -7,6 +7,7 @@ export default {
     secondyrBibleReadingPlan:'2 - YEAR BIBLE READING PLAN',
     API_URL:"https://backend3.rhapsodyofrealities.org",
     BOOKS_URL:"https://books-api.rhapsodyofrealities.org",
+    BOOKS_URL_V2:"https://books-api.rhapsodyofrealities.org/v2/fetch",
     VERSE_URL:"https://bibleapi.rhapsodyofrealities.org/",
     BRIDGE_URL:"https://api-bridge.rhapsodysubscriptions.org/",
     REGISTER_RHAPSODYPLUS_USER: "https://rhapsodysubscriptions.org/user/register",
