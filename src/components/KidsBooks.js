@@ -44,14 +44,14 @@ const renderItem = ({ item }) => {
     );
   };
 
-const KidsBooks = ({navigation}) => {
+const KidsBooks = () => {
     
     const [books, setBooks] = useState();
     const [bookCategory, setBookCategory] = useState();
     const [categoryID, setCategoryID] = useState();
     const [bookDescription, setBookDescription] = useState();
 
-    // const navigation =useNavigation()
+    const navigation =useNavigation()
 
 
     useEffect(() => {
