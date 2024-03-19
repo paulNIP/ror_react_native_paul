@@ -14,6 +14,7 @@ import RNFS from 'react-native-fs';
 import * as Progress from 'react-native-progress';
 import { Platform } from 'react-native';
 import * as RNIap from 'react-native-iap';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -31,8 +32,6 @@ const BookDetails = ({ route, navigation }) => {
 
 
     useEffect(() => {
-
-
         const fetchData = async () => {
             const data = await getBookDetails(book_id);
             setBook(data);
@@ -47,48 +46,55 @@ const BookDetails = ({ route, navigation }) => {
 
 
       const purchaseProduct = async (productId) => {
-        try {
-          const purchase = await RNIap.requestPurchase(productId);
-          console.log('Purchase:', purchase);
-          // Handle successful purchase
-        } catch (error) {
-          console.log('Error purchasing:', error.message);
-          // Handle purchase error
-        }
+          const email = await AsyncStorage.getItem('email')
+          if(email){
+              try {
+                  const purchase = await RNIap.requestPurchase(productId);
+                  console.log('Purchase:', purchase);
+                  // Handle successful purchase
+              } catch (error) {
+                  console.log('Error purchasing:', error.message);
+                  // Handle purchase error
+              }
+          }else{
+              navigation.navigate('Login')
+          }
       };
 
 
-      const downloadFile = () => {
-        const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
-        const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
-    
-        RNFS.downloadFile({
-          fromUrl: url,
-          toFile: filePath,
-          background: true, // Enable downloading in the background (iOS only)
-          discretionary: true, // Allow the OS to control the timing and speed (iOS only)
-          progress: (res) => {
-            // Handle download progress updates if needed
-            // const progress = (res.bytesWritten / res.contentLength) * 100;
-            setProgress((res.bytesWritten / res.contentLength) * 100);
-            console.log(`Progress: ${progress.toFixed(2)}%`);
-          },
-        })
-          .promise.then((response) => {
-            console.log('File downloaded!', response);
-          })
-          .catch((err) => {
-            console.log('Download error:', err);
-          });
+      const downloadFile = async () => {
+          const email = await AsyncStorage.getItem('email')
+          if(email){
+              const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
+              const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
+
+              RNFS.downloadFile({
+                  fromUrl: url,
+                  toFile: filePath,
+                  background: true, // Enable downloading in the background (iOS only)
+                  discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+                  progress: (res) => {
+                      // Handle download progress updates if needed
+                      // const progress = (res.bytesWritten / res.contentLength) * 100;
+                      setProgress((res.bytesWritten / res.contentLength) * 100);
+                      console.log(`Progress: ${progress.toFixed(2)}%`);
+                  },
+              })
+                  .promise.then((response) => {
+                  console.log('File downloaded!', response);
+              })
+                  .catch((err) => {
+                      console.log('Download error:', err);
+                  });
+          }else{
+              navigation.navigate('Login')
+          }
       };
 
   
 
       const renderRelatedBooks = ({ item }) => {
-
         const imgr = item.book_cover_img;
-    
-        
         return (
           <View style={{marginEnd:10,width:100}}>
             <TouchableOpacity onPress={()=>navigation.push('BookDetails',{book_id:item.id})}>
@@ -170,7 +176,7 @@ const BookDetails = ({ route, navigation }) => {
                                
                               }}
                                >
-                                <Text style={{color:'#FFFFFF',fontWeight:'500'}}>BUY ${item.price}</Text>
+                                <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>BUY ${item.price}</Text>
                             </TouchableOpacity>
                             {/*<TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',*/}
                             {/*                      backgroundColor: '#D8A623'}}>*/}
@@ -184,63 +190,64 @@ const BookDetails = ({ route, navigation }) => {
                 <View style={{flexDirection:"row",justifyContent:"space-around", marginTop:5,marginBottom:5}}>
                     <View>
                       <TouchableOpacity  onPress={()=>{
-                        
+                          const email = AsyncStorage.getItem('email')
+                          if(email){
+                              db.transaction(function (txn) {
+                                  txn.executeSql(
+                                      "SELECT id FROM favourite_books WHERE id=?",
+                                      [item.id],
+                                      function (tx, res) {
+                                          console.log('item:', res.rows.length);
+                                          if (res.rows.length == 0) {
+                                              //insert into DB
+                                              txn.executeSql(
+                                                  'INSERT INTO favourite_books (book_title,book_description, image, cover_image,book_file_type,book_file_url , book_rate ,book_rate_avg,book_view, book_author_name) VALUES(? ,?,?, ?, ?,? , ? ,?,?, ?)',
+                                                  [
+                                                      book_title,
+                                                      book_description,
+                                                      book_bg_img,
+                                                      book_cover_img,
+                                                      book_file_type,
+                                                      book_file_url,
+                                                      total_rate,
+                                                      rate_avg,
+                                                      book_views,
+                                                      author_name]
+                                              );
 
-db.transaction(function (txn) {
-      txn.executeSql(
-        "SELECT id FROM favourite_books WHERE id=?",
-        [item.id],
-        function (tx, res) {
-          console.log('item:', res.rows.length);
-          if (res.rows.length == 0) {
-            //insert into DB
-            txn.executeSql(
-              'INSERT INTO favourite_books (book_title,book_description, image, cover_image,book_file_type,book_file_url , book_rate ,book_rate_avg,book_view, book_author_name) VALUES(? ,?,?, ?, ?,? , ? ,?,?, ?)',
-              [
-                book_title,
-                book_description,
-                book_bg_img,
-                book_cover_img,
-                book_file_type,
-                book_file_url,
-                total_rate,
-                rate_avg,
-                book_views,
-                author_name]
-            );
-
-            setFavouritesColor('#FF0000');
-            Alert.alert(
-              'Success',
-              'Added to Favourites',
-              [
-                {
-                  text: 'Ok'
-                },
-              ],
-              { cancelable: false }
-            );
-            // setVisible(true);
+                                              setFavouritesColor('#FF0000');
+                                              Alert.alert(
+                                                  'Success',
+                                                  'Added to Favourites',
+                                                  [
+                                                      {
+                                                          text: 'Ok'
+                                                      },
+                                                  ],
+                                                  { cancelable: false }
+                                              );
+                                              // setVisible(true);
 
 
-          }else{
-            Alert.alert(
-              'Success',
-              'Book already exists in favourites',
-              [
-                {
-                  text: 'Ok'
-                },
-              ],
-              { cancelable: false }
-            );
+                                          }else{
+                                              Alert.alert(
+                                                  'Success',
+                                                  'Book already exists in favourites',
+                                                  [
+                                                      {
+                                                          text: 'Ok'
+                                                      },
+                                                  ],
+                                                  { cancelable: false }
+                                              );
 
-          }
-        }
-      );
-    });
-
-                             
+                                          }
+                                      }
+                                  );
+                              });
+                          }else{
+                              navigation.navigate('Login')
+                          }
 
                       }}>
                         <MaterialCommunityIcons  style={{alignSelf:"center"}} name="cards-heart" size={30} color={favouritesColor} />
@@ -374,6 +381,9 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         fontSize : 10,
         textTransform : 'uppercase'
+    },
+    menuText : {
+        alignSelf:"center",
     }
   });
 
