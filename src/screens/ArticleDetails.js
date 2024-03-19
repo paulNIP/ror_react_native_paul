@@ -98,6 +98,7 @@ const ArticleDetails = ({ route, navigation }) => {
         <Text style={{fontWeight:"bold",marginTop:25,marginLeft:10}}>More Rhapsody News</Text>
         <FlatList data={moreNews} renderItem={renderMoreNews} 
           ItemSeparatorComponent={() => <View style={{height:1}} />}/>
+        
       </View>
 
 
