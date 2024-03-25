@@ -8,11 +8,25 @@ import Carousel from 'react-native-snap-carousel';
 import {Overlay } from '@rneui/themed';
 
 import * as RNIap from 'react-native-iap';
+import {
+    decode,
+    verify,
+    isSignatureValid,
+    SignJWT,
+    thumbprint,
+    sha256ToBase64,
+    EncryptJwe,
+    getRemoteJWKSet,
+  } from '@pagopa/io-react-native-jwt';
+  
+  import { generate, sign, getPublicKey,CryptoError } from '@pagopa/io-react-native-crypto';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 
 import styles from '../screens/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 const windowHeight = Dimensions.get('window').height*0.4;
 const windowWidth = Dimensions.get('window').width*0.8;
 
@@ -28,6 +42,16 @@ const ReadingPlans = () => {
    const [visible, setVisible] = useState(false);
    const [isEligibleForFreeTrial, setIsEligibleForFreeTrial] = useState(false);
    const [isSubscribed, setIsSubscribed] = useState(false);
+   const [voucher, setVoucher] = useState();
+   const [skuProduct,setSkuProduct] = useState();
+   const [subscriptionPackage,setSubscriptionPackage] = useState();
+
+   
+   
+
+   
+   const [visibleError, setVisibleError] = useState(false);
+   const [errorMessage,setErrorMessage] = useState();
 
    useEffect(() => {
     checkFreeTrialEligibility();
@@ -103,6 +127,10 @@ const ReadingPlans = () => {
     setVisible(!visible);
    };
 
+   const toggleErrorOverlay = () => {
+    setVisibleError(!visibleError);
+   };
+
 
 
     const [lista, setLista] = useState([
@@ -167,6 +195,123 @@ const ReadingPlans = () => {
                 </TouchableOpacity>
             </View>
         )
+    }
+
+
+    const submit_voucherV2=async(code)=> {
+        toggleOverlay();
+        let mail= await AsyncStorage.getItem("email");
+        const  URL = "https://core-service.universalvoucher.org/voucher/redeem";
+
+        const data={
+            "email":mail,
+            "code":code,
+            "platform": "loveworld-app"
+        }
+
+        axios.post(URL,data)
+        .then(function (res) {
+            console.log("Response 536637373377474-",res.data);
+            if(res.data.status===1){
+                rhapsodyPlusSubscription();
+
+            }else if(res.data.status===0){
+                setErrorMessage(res.data.response);
+                setVisibleError(true);
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
+    const rhapsodyPlusSubscription=async()=> {
+        let mail= await AsyncStorage.getItem("email");
+        if(activeIndex===0){
+            setSubscriptionPackage(2.99);
+
+        }else if(activeIndex===1){
+            setSubscriptionPackage(4.0);
+
+        }else if(activeIndex===2){
+            setSubscriptionPackage(6.0);
+
+        }else if(activeIndex===3){
+            setSubscriptionPackage(12.0);
+
+        }else if(activeIndex===4){
+            setSubscriptionPackage(24.0);
+
+        }else if(activeIndex===5){
+            setSubscriptionPackage(48.0);
+
+        }
+
+        const randomKeyTag = Math.random().toString(36).substring(2, 5);
+        try {
+        const pk = await generate(randomKeyTag);
+        // console.log("pksnsnndnd",pk)
+        } catch (e) {
+        const {message, userInfo} =  e;
+        // console.log("Generation Erriorttt",message);
+        }
+
+        const crypto = createCryptoContext(randomKeyTag);
+
+        // Create jwt
+        const signedJwt = await new SignJWT(crypto)
+        .setPayload({
+            sub: 'demoApp',
+            iss: 'PagoPa',
+        })
+        .setProtectedHeader({ typ: 'JWT' })
+        .sign();
+
+        const data={
+            "email":mail,
+            "password":"rabadaba",
+            "source":"app",
+            "package":subscriptionPackage
+        }
+
+        axios.post('https://rowtoken.rhapsodyofrealities.org/api/subscription/add',data, {
+        //example with bearer token
+        headers: {
+            'Authentication': 'Bearer '+signedJwt
+        }
+        })
+        .then(function (res) {
+        console.log("rhapsodyPlusSubscription responsesbdbdhfbfb",res.data.response);
+        if(res.data.status===1){
+
+            if(subscriptionPackage===2.99){
+    
+            }else if(subscriptionPackage===4.0){
+    
+            }else if(subscriptionPackage===6.0){
+    
+            }else if(subscriptionPackage===12.0){
+    
+            }else if(subscriptionPackage===24.0){
+    
+            }else if(subscriptionPackage===48.0){
+    
+            }
+
+
+        }else{
+
+
+        }
+
+
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
     }
   
 
@@ -414,12 +559,12 @@ const ReadingPlans = () => {
                                             padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{}}>
                                             <Text>SUBSCRIBE</Text>
                                         </TouchableOpacity>
-                                        <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text>
-                                        <TouchableOpacity style={{alignItems: 'center',
+                                        {/* <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text> */}
+                                        {/* <TouchableOpacity style={{alignItems: 'center',
                                             backgroundColor: '#12A3B4',
                                             padding: 10,borderRadius:5}} onPress={()=>toggleOverlay()}>
                                             <Text>USE VOUCHER CODE</Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
 
                                         <View style={{height:100}}>
 
@@ -447,6 +592,7 @@ const ReadingPlans = () => {
                                     leftIcon={
                                         <MaterialCommunityIcons  name='qrcode' size={24} color='black' />
                                     }
+                                    onChangeText={newText => setVoucher(newText)}
                                     errorStyle={{ color: 'red' }}
                                     errorMessage='Enter a valid code'
                                     containerStyle={{marginTop:20}}
@@ -454,7 +600,10 @@ const ReadingPlans = () => {
 
                                 <TouchableOpacity style={{alignItems: 'center',
                                             backgroundColor: '#D8A623',
-                                            padding: 10,borderRadius:5,marginTop:10}} onPress={()=>toggleOverlay()}>
+                                            padding: 10,borderRadius:5,marginTop:10}} 
+                                            onPress={()=>{
+                                                
+                                                submit_voucherV2(voucher);}}>
                                             <Text>Submit Code</Text>
                                 </TouchableOpacity>
                                 <Text style={{alignSelf:'center',color:"#007FFF",marginTop:10}}>
@@ -463,6 +612,35 @@ const ReadingPlans = () => {
                                 <Text style={{alignSelf:'center',color:"#007FFF"}}>
                                     Vouchers.rhapsodyofrealities.org
                                 </Text>
+                                
+                        </Overlay> 
+
+                        <Overlay ModalComponent={Modal} fullScreen={false}
+                            isVisible={visibleError} 
+                            onBackdropPress={toggleErrorOverlay} overlayStyle={{width:windowWidth,height:windowHeight*0.6}}>
+                                <Image
+                                    source={require('../assets/logo.png')}
+                                    style={{alignSelf:"center",width:50,height:50,marginTop:-30}}
+                                />
+                                <View style={{flex:1,
+                                            justifyContent:'center',
+                                            alignItems:'center'}}>
+                                <Text style={{alignSelf:"center",fontWeight:'bold',fontSize:20,marginTop:10}}>
+                                    An Error Occurred
+                                </Text>
+
+                                <Text style={{alignSelf:"center",marginTop:10}}>
+                                    {errorMessage}
+                                </Text>
+
+                                <TouchableOpacity style={{alignItems: 'center',
+                                            backgroundColor: '#D8A623',
+                                            padding: 10,borderRadius:5,marginTop:10}} onPress={()=>toggleErrorOverlay()}>
+                                            <Text>Okay</Text>
+                                </TouchableOpacity>
+
+                                </View>
+                                
                                 
                         </Overlay> 
                 </View>

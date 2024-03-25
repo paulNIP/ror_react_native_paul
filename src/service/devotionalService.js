@@ -27,10 +27,13 @@ const getDailyDevotional = async () => {
                       });
               });
 
+              
+
     }else{
 
       return new Promise((resolve, reject) => {
         let url ='https://api.rorangel.com/?devotional&date='+new Date().toISOString().slice(0, 10)+'&lang='+lang;
+        console.log("urlllllll",url);
         axios.get(url)
                   .then((res) => {
                     resolve(res.data.devotionals);

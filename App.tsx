@@ -757,13 +757,13 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
           // uploadCalenderData();
 
 
-            axios.get('https://backend3.rhapsodyofrealities.org/read/get/'+email)
-                    .then((res) => {
-                console.log("Read Dates",res.data);
-            })
-              .catch((err) => {
-                console.log("Error",err)
-            });
+            // axios.get('https://backend3.rhapsodyofrealities.org/read/get/'+email)
+            //         .then((res) => {
+            //     console.log("Read Dates",res.data);
+            // })
+            //   .catch((err) => {
+            //     console.log("Error",err)
+            // });
 
 
           const link = 'https://backend3.rhapsodyofrealities.org/get/notes';
@@ -771,13 +771,13 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
             "email":email
           }
           
-          axios.post(link,syncData)
-            .then((res) => {
-              console.log("Sync Results ",res.data.result)
-          })
-            .catch((err) => {
-              console.log(err);
-          });
+          // axios.post(link,syncData)
+          //   .then((res) => {
+          //     console.log("Sync Results ",res.data.result)
+          // })
+          //   .catch((err) => {
+          //     console.log(err);
+          // });
 
         }
      
