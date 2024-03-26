@@ -63,6 +63,7 @@ const PremiumNotification = () => {
         // let initialLocation =prnDt.split(',')[0]; 
         // console.log("Initial Location", initialLocation);
         // openEpub(url,initialLocation);
+        
         RNReactNativeFolioReader.show(url,id,null,(result)=>{});
 
 
