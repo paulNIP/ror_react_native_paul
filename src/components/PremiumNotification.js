@@ -11,6 +11,7 @@ import { getDailyDevotionalBooks } from '../service/storeService';
 import { getProfile } from '../service/authService';
 import { getBookDetails } from '../service/libraryService';
 import { useNavigation } from '@react-navigation/native';
+import RNReactNativeFolioReader from 'wcchimiiz-react-native-folio-reader';
 
 const db = DatabaseConnection.getdb();
 
@@ -52,14 +53,18 @@ const PremiumNotification = () => {
    }
 
     const openRhapsodyReader = () => {
+        console.log("Bookksjhdnddmdmdm",books[0]);
 
+        // <React/RCTDefines.h> file not found
         let url =books[0].book_file_url;
-        let options = { weekday: 'long', day: 'numeric'};
-        let prnDt =  new Date().toLocaleTimeString('en-us', options);
-        let initialLocation =prnDt.split(',')[0]; 
-        console.log("Initial Location", initialLocation);
-        openEpub(url,initialLocation);
-        
+        let id =books[0].aid;
+        // let options = { weekday: 'long', day: 'numeric'};
+        // let prnDt =  new Date().toLocaleTimeString('en-us', options);
+        // let initialLocation =prnDt.split(',')[0]; 
+        // console.log("Initial Location", initialLocation);
+        // openEpub(url,initialLocation);
+        RNReactNativeFolioReader.show(url,id,null,(result)=>{});
+
 
     };
 
