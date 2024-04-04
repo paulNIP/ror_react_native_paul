@@ -6,6 +6,7 @@ import { getLibrary } from "../service/libraryService";
 import RNFS from 'react-native-fs';
 import { DatabaseConnection } from '../database/database-connection';
 import {Dimensions} from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const db = DatabaseConnection.getdb();
@@ -29,18 +30,13 @@ const LibraryScreen = ({navigation}) => {
           setEmail(mail);
           if(mail==null){
             setLoggedIn(false);
-
           }else{
             setLoggedIn(true);
-
           }
-          
-          
-
       }
+
       const header = booksNo+"";
       fetchData();
-
 
     }, []);
 

@@ -62,12 +62,10 @@ const BookDetails = ({ route, navigation }) => {
       };
 
 
-      const downloadFile = async () => {
+      const downloadFile = async (url) => {
           const email = await AsyncStorage.getItem('email')
           if(email){
-              const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
-              const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
-
+              const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
               RNFS.downloadFile({
                   fromUrl: url,
                   toFile: filePath,
@@ -255,7 +253,9 @@ const BookDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                      <TouchableOpacity onPress={downloadFile}
+                      <TouchableOpacity onPress={()=>{
+                          downloadFile(item.book_file_url)
+                      }}
                       >
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
                         <Text style={{alignSelf:"center"}}>Download</Text>
