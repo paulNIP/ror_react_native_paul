@@ -274,7 +274,7 @@ const BookDetails = ({ route, navigation }) => {
               <CustomAlert
                   modalVisible={modalVisible}
                   setModalVisible={setModalVisible}
-                  title={'Book Exists ... '}
+                  title={'Book Exists'}
                   message={'You have already downloaded this book. Proceed to read it.'}
                   ios={{
                       container: {
