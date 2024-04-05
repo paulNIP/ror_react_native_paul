@@ -1,5 +1,17 @@
 import React , { useEffect, useState } from 'react';
-import {StyleSheet,ScrollView,View,Text,Image,Alert,FlatList,TouchableOpacity} from 'react-native';
+import {
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    Image,
+    Alert,
+    FlatList,
+    TouchableOpacity,
+    TouchableHighlight,
+    Modal,
+    Pressable
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useWindowDimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,7 +30,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
-
 const BookDetails = ({ route, navigation }) => {
 
   const book_id = route.params.book_id;
@@ -30,6 +41,7 @@ const BookDetails = ({ route, navigation }) => {
   const db = DatabaseConnection.getdb();
   const [progress, setProgress] = useState(0);
 
+  const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,6 +49,7 @@ const BookDetails = ({ route, navigation }) => {
             setBook(data);
   
         }
+
         fetchData();
         navigation.setOptions({
           title: title,
@@ -51,10 +64,8 @@ const BookDetails = ({ route, navigation }) => {
               try {
                   const purchase = await RNIap.requestPurchase(productId);
                   console.log('Purchase:', purchase);
-                  // Handle successful purchase
               } catch (error) {
                   console.log('Error purchasing:', error.message);
-                  // Handle purchase error
               }
           }else{
               navigation.navigate('Login')
@@ -62,36 +73,43 @@ const BookDetails = ({ route, navigation }) => {
       };
 
 
-      const downloadFile = async () => {
-          const email = await AsyncStorage.getItem('email')
-          if(email){
-              const url = 'https://rhapsodyofrealities.b-cdn.net/app/books/rork-february-german.pdf';
-              const filePath = RNFS.DocumentDirectoryPath + '/rork-february-german.pdf';
+    const downloadFile = async (url) => {
+        const email = await AsyncStorage.getItem('email');
+        if (email) {
+            const fileName = url.split("/").pop();
+            const filePath = RNFS.DocumentDirectoryPath + '/' + fileName; // Ensure you have the '/' between the directory path and file name
 
-              RNFS.downloadFile({
-                  fromUrl: url,
-                  toFile: filePath,
-                  background: true, // Enable downloading in the background (iOS only)
-                  discretionary: true, // Allow the OS to control the timing and speed (iOS only)
-                  progress: (res) => {
-                      // Handle download progress updates if needed
-                      // const progress = (res.bytesWritten / res.contentLength) * 100;
-                      setProgress((res.bytesWritten / res.contentLength) * 100);
-                      console.log(`Progress: ${progress.toFixed(2)}%`);
-                  },
-              })
-                  .promise.then((response) => {
-                  console.log('File downloaded!', response);
-              })
-                  .catch((err) => {
-                      console.log('Download error:', err);
-                  });
-          }else{
-              navigation.navigate('Login')
-          }
-      };
+            // Check if the file already exists
+            const fileExists = await RNFS.exists(filePath);
+            if (fileExists) {
+                console.log('File already exists:', filePath);
+                //Alert.alert('You have already downloaded this book. ');
+                setModalVisible(true)
+            } else {
+                RNFS.downloadFile({
+                    fromUrl: url,
+                    toFile: filePath,
+                    background: true, // Enable downloading in the background (iOS only)
+                    discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+                    progress: (res) => {
+                        // Handle download progress updates if needed
+                        const progress = (res.bytesWritten / res.contentLength) * 100;
+                        setProgress(progress);
+                        console.log(`Progress: ${progress.toFixed(2)}%`);
+                    },
+                })
+                    .promise.then((response) => {
+                    console.log('File downloaded!', response);
+                })
+                    .catch((err) => {
+                        console.log('Download error:', err);
+                    });
+            }
+        } else {
+            navigation.navigate('Login');
+        }
+    };
 
-  
 
       const renderRelatedBooks = ({ item }) => {
         const imgr = item.book_cover_img;
@@ -118,14 +136,125 @@ const BookDetails = ({ route, navigation }) => {
         );
       };
 
+    const CustomAlert = (props) => {
+        const [iOSDefaults, setIOSDefaults] = useState({
+            container: {
+                backgroundColor: (props.ios && props.ios.container && props.ios.container.backgroundColor) || '#F8F8F8',
+            },
+            title: {
+                color: (props.ios && props.ios.title && props.ios.title.color) || '#000000',
+                fontFamily: (props.ios && props.ios.title && props.ios.title.fontFamily) || 'initial',
+                fontSize: (props.ios && props.ios.title && props.ios.title.fontSize) || 17,
+                fontWeight: (props.ios && props.ios.title && props.ios.title.fontWeight) || '600',
+            },
+            message: {
+                color: (props.ios && props.ios.message && props.ios.message.color) || '#000000',
+                fontFamily: (props.ios && props.ios.message && props.ios.message.fontFamily) || 'initial',
+                fontSize: (props.ios && props.ios.message && props.ios.message.fontSize) || 13,
+                fontWeight: (props.ios && props.ios.message && props.ios.message.fontWeight) || 'normal',
+            },
+            button: {
+                color: '#387ef5',
+                fontFamily: 'initial',
+                fontSize: 17,
+                fontWeight: '500',
+                textTransform: 'none',
+                backgroundColor: 'transparent',
+            },
+        });
+
+        const IOSButtonBox = () => {
+            const buttonProps = props.buttons && props.buttons.length > 0 ? props.buttons : [{}]
+            const [buttonLayoutHorizontal, setButtonLayoutHorizontal] = useState(buttonProps.length === 2 ? 1 : 0);
+            return (
+                <View style={[styles.iOSButtonGroup, {
+                    flexDirection: buttonLayoutHorizontal === 1 ? "row" : "column",
+                }]} onLayout={(e) => {
+                    if (e.nativeEvent.layout.height > 60)
+                        setButtonLayoutHorizontal(0);
+                }}>
+                    {
+                        buttonProps.map((item, index) => {
+                            let defaultButtonText = 'OK'
+                            if (buttonProps.length > 2) {
+                                if (index === 0)
+                                    defaultButtonText = 'ASK ME LATER'
+                                else if (index === 1)
+                                    defaultButtonText = 'CANCEL';
+                            } else if (buttonProps.length === 2 && index === 0)
+                                defaultButtonText = 'CANCEL';
+                            const singleButtonWrapperStyle = {}
+                            let singleButtonWeight = iOSDefaults.button.fontWeight;
+                            if (index === buttonProps.length - 1) {
+                                singleButtonWeight = '700';
+                            }
+                            if (buttonLayoutHorizontal === 1) {
+                                singleButtonWrapperStyle.minWidth = '50%';
+                                if (index === 0) {
+                                    singleButtonWrapperStyle.borderStyle = 'solid';
+                                    singleButtonWrapperStyle.borderRightWidth = 0.55;
+                                    singleButtonWrapperStyle.borderRightColor = '#dbdbdf';
+                                }
+
+                            }
+                            return (
+                                <View style={[styles.iOSButton, singleButtonWrapperStyle]}>
+                                    <Pressable onPress={() => {
+                                        props.setModalVisible(false)
+                                        if (item.func && typeof (item.func) === 'function')
+                                            item.func();
+                                    }}>
+                                        <View
+                                            style={[styles.iOSButtonInner, {backgroundColor: (item.styles && item.styles.backgroundColor) || iOSDefaults.button.backgroundColor}]}>
+                                            <Text
+                                                style={{
+                                                    color: (item.styles && item.styles.color) || iOSDefaults.button.color,
+                                                    fontFamily: (item.styles && item.styles.fontFamily) || iOSDefaults.button.fontFamily,
+                                                    fontSize: (item.styles && item.styles.fontSize) || iOSDefaults.button.fontSize,
+                                                    fontWeight: (item.styles && item.styles.fontWeight) || singleButtonWeight,
+                                                    textTransform: (item.styles && item.styles.textTransform) || iOSDefaults.button.textTransform,
+                                                    textAlign: 'center'
+                                                }}
+                                            >{item.text || defaultButtonText}</Text>
+                                        </View>
+                                    </Pressable>
+                                </View>
+                            )
+                        })
+
+                    }
+                </View>
+            );
+        }
+        return (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={props.modalVisible}
+                onRequestClose={() => {
+                    props.setModalVisible(false);
+                }}>
+                <Pressable
+                    style={[ styles.iOSBackdrop , styles.backdrop ]}
+                    onPress={() => props.setModalVisible(false)}/>
+                <View style={styles.alertBox}>
+                    {
+                            <View style={[styles.iOSAlertBox, iOSDefaults.container]}>
+                                <Text style={[styles.iOSTitle, iOSDefaults.title]}>{props.title || 'Message'}</Text>
+                                <Text style={[styles.iOSMessage, iOSDefaults.message]}>{props.message || ''}</Text>
+                                <IOSButtonBox/>
+                            </View>
+                    }
+                </View>
+            </Modal>
+        )
+    }
 
 
     const renderBook = ({ item }) => {
         console.log("Selected Book Details" ,item);
         const bg=item.book_bg_img;
         const cover=item.book_cover_img;
-
-
         const id=item.id;
         const book_title=item.book_title;
         const book_description=item.book_description;
@@ -139,10 +268,35 @@ const BookDetails = ({ route, navigation }) => {
         const author_name=item.author_name;
         const product=item.apple_product_code;
 
-
         return (
-    
           <View>
+
+              <CustomAlert
+                  modalVisible={modalVisible}
+                  setModalVisible={setModalVisible}
+                  title={'Book Exists'}
+                  message={'You have already downloaded this book. Proceed to read it.'}
+                  ios={{
+                      container: {
+                          backgroundColor: 'white'
+                      },
+                      title: {
+                          color: '#52565e',
+                          fontSize: 26,
+                          fontWeight : '500'
+                      },
+                      message: {
+                          color: '#52565e',
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: 'regular',
+                      },
+                  }}
+                  buttons={[{
+                      text: 'OK'
+                  }]}
+              />
+
                 <Image
                      style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height*0.25}}
                      source={{uri: bg}} 
@@ -178,10 +332,7 @@ const BookDetails = ({ route, navigation }) => {
                                >
                                 <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>BUY ${item.price}</Text>
                             </TouchableOpacity>
-                            {/*<TouchableOpacity style={{borderRadius: 4,padding:4,height:30,justifyContent:'center',alignContent:'center',*/}
-                            {/*                      backgroundColor: '#D8A623'}}>*/}
-                            {/*<Text style={{color:'#FFFFFF',fontWeight:'500'}}>VOUCHER CODE</Text>*/}
-                            {/*</TouchableOpacity>*/}
+
                         </View>
                     </View>
                 </View>
@@ -255,15 +406,17 @@ const BookDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                      <TouchableOpacity onPress={downloadFile}
-                      >
+                      <TouchableOpacity onPress={()=>{
+                          downloadFile(item.book_file_url)
+                      }}>
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
                         <Text style={{alignSelf:"center"}}>Download</Text>
                         </TouchableOpacity>
                     </View>
                     <View>
-                     <TouchableOpacity  onPress={()=>{}}>
-
+                     <TouchableOpacity  onPress={()=>{
+                         //openBook()
+                     }}>
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="file-multiple-outline" size={30} color="#9AC4F8" />
                         <Text style={{alignSelf:"center"}} >Read</Text>
                         </TouchableOpacity>
@@ -320,7 +473,11 @@ const BookDetails = ({ route, navigation }) => {
         </SafeAreaView>
 
   );
+
+
 };
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -384,7 +541,85 @@ const styles = StyleSheet.create({
     },
     menuText : {
         alignSelf:"center",
+    },
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    iOSBackdrop: {
+        backgroundColor: "#000000",
+        opacity: 0.3
+    },
+    androidBackdrop: {
+        backgroundColor: "#232f34",
+        opacity: 0.32
+    },
+    backdrop: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    alertBox: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    iOSAlertBox: {
+        maxWidth: 270,
+        width: '100%',
+        zIndex: 10,
+        borderRadius: 13,
+    },
+    iOSTitle: {
+        paddingTop: 12,
+        paddingRight: 16,
+        paddingBottom: 7,
+        paddingLeft: 16,
+        marginTop: 8,
+        textAlign: "center",
+    },
+    iOSMessage: {
+        paddingTop: 0,
+        paddingRight: 16,
+        paddingBottom: 21,
+        paddingLeft: 16,
+        textAlign: "center"
+    },
+    iOSButtonGroup: {
+        marginRight: -0.55
+    },
+    iOSButton: {
+
+        borderTopColor: '#dbdbdf',
+        borderTopWidth: 0.55,
+        borderStyle: 'solid',
+    },
+    iOSButtonInner: {
+        minHeight: 44,
+        justifyContent: 'center'
     }
+
   });
+
+
 
 export default BookDetails;

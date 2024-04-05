@@ -10,8 +10,7 @@ import { DatabaseConnection } from '../database/database-connection';
 import { getDailyDevotionalBooks } from '../service/storeService';
 import { getProfile } from '../service/authService';
 import { getBookDetails } from '../service/libraryService';
-import { useNavigation } from '@react-navigation/native';
-import RNReactNativeFolioReader from 'wcchimiiz-react-native-folio-reader';
+import { useNavigation } from '@react-navigation/native'; 
 
 const db = DatabaseConnection.getdb();
 
@@ -62,9 +61,7 @@ const PremiumNotification = () => {
         // let prnDt =  new Date().toLocaleTimeString('en-us', options);
         // let initialLocation =prnDt.split(',')[0]; 
         // console.log("Initial Location", initialLocation);
-        // openEpub(url,initialLocation);
-        
-        RNReactNativeFolioReader.show(url,id,null,(result)=>{});
+        // openEpub(url,initialLocation); 
 
 
     };
