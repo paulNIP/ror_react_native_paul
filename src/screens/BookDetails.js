@@ -408,8 +408,7 @@ const BookDetails = ({ route, navigation }) => {
                     <View>
                       <TouchableOpacity onPress={()=>{
                           downloadFile(item.book_file_url)
-                      }}
-                      >
+                      }}>
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
                         <Text style={{alignSelf:"center"}}>Download</Text>
                         </TouchableOpacity>
