@@ -99,7 +99,8 @@
     "react-native-webview": "^13.8.1",
     "rn-fetch-blob": "^0.12.0",
     "sharingan-rn-modal-dropdown": "^1.4.0",
-    "uuid-random": "^1.3.2"
+    "uuid-random": "^1.3.2",
+    "wcchimiiz-react-native-folio-reader": "^0.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.0",

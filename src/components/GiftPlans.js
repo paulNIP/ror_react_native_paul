@@ -190,12 +190,12 @@ const GiftPlans = () => {
                                             padding: 10,borderRadius:5}} onPress={()=>{}}>
                                             <Text>SUBSCRIBE</Text>
                                         </TouchableOpacity>
-                                        <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text>
-                                        <TouchableOpacity style={{alignItems: 'center',
+                                        {/* <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text> */}
+                                        {/* <TouchableOpacity style={{alignItems: 'center',
                                             backgroundColor: '#12A3B4',
                                             padding: 10,borderRadius:5}} onPress={()=>{}}>
                                             <Text>USE VOUCHER CODE</Text>
-                                        </TouchableOpacity>
+                                        </TouchableOpacity> */}
 
                                         <View style={{height:100}}>
 

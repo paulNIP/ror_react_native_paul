@@ -16,6 +16,7 @@ import {
   useIAP,
   validateReceiptIos,
 } from "react-native-iap";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -76,9 +77,11 @@ const SubscriptionsScreen = ({ navigation }) => {
  }
 
   useEffect(() => {
-    handleGetPurchaseHistory();
-    fetchTheme();
-  }, [connected]);
+    // handleGetPurchaseHistory();
+    // fetchTheme();
+  }
+  // , [connected]
+  );
 
   const handleGetSubscriptions = async () => {
     try {
@@ -89,72 +92,75 @@ const SubscriptionsScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    handleGetSubscriptions();
-  }, [connected]);
+    // handleGetSubscriptions();
+  }
+  // , [connected]
+  
+  );
 
-  useEffect(() => {
-    // ... listen if connected, purchaseHistory and subscriptions exist
-    if (
-      purchaseHistory.find(
-        (x) => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
-      )
-    ) {
-      navigation.navigate("Home");
-    }
-  }, [connected, purchaseHistory, subscriptions]);
+  // useEffect(() => {
+  //   // ... listen if connected, purchaseHistory and subscriptions exist
+  //   if (
+  //     purchaseHistory.find(
+  //       (x) => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
+  //     )
+  //   ) {
+  //     navigation.navigate("Home");
+  //   }
+  // }, [connected, purchaseHistory, subscriptions]);
 
-  const handleBuySubscription = async (productId) => {
-    try {
-      await requestSubscription({
-        sku: productId,
-      });
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof PurchaseError) {
-        errorLog({ message: `[${error.code}]: ${error.message}`, error });
-      } else {
-        errorLog({ message: "handleBuySubscription", error });
-      }
-    }
-  };
+  // const handleBuySubscription = async (productId) => {
+  //   try {
+  //     await requestSubscription({
+  //       sku: productId,
+  //     });
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     if (error instanceof PurchaseError) {
+  //       errorLog({ message: `[${error.code}]: ${error.message}`, error });
+  //     } else {
+  //       errorLog({ message: "handleBuySubscription", error });
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    const checkCurrentPurchase = async (purchase) => {
-      if (purchase) {
-        try {
-          const receipt = purchase.transactionReceipt;
-          if (receipt) {
-            if (Platform.OS === "ios") {
-              const isTestEnvironment = __DEV__;
+  // useEffect(() => {
+  //   const checkCurrentPurchase = async (purchase) => {
+  //     if (purchase) {
+  //       try {
+  //         const receipt = purchase.transactionReceipt;
+  //         if (receipt) {
+  //           if (Platform.OS === "ios") {
+  //             const isTestEnvironment = __DEV__;
 
-              //send receipt body to apple server to validete
-              const appleReceiptResponse = await validateReceiptIos(
-                {
-                  "receipt-data": receipt,
-                  password: 'YourGENERATEDCodeGoesHere',
-                },
-                isTestEnvironment,
-              );
+  //             //send receipt body to apple server to validete
+  //             const appleReceiptResponse = await validateReceiptIos(
+  //               {
+  //                 "receipt-data": receipt,
+  //                 password: 'YourGENERATEDCodeGoesHere',
+  //               },
+  //               isTestEnvironment,
+  //             );
 
-              //if receipt is valid
-              if (appleReceiptResponse) {
-                const { status } = appleReceiptResponse;
-                if (status) {
-                  navigation.navigate("Home");
-                }
-              }
+  //             //if receipt is valid
+  //             if (appleReceiptResponse) {
+  //               const { status } = appleReceiptResponse;
+  //               if (status) {
+  //                 navigation.navigate("Home");
+  //               }
+  //             }
 
-              return;
-            }
-          }
-        } catch (error) {
-          console.log("error", error);
-        }
-      }
-    };
-    checkCurrentPurchase(currentPurchase);
-  }, [currentPurchase, finishTransaction]);
+  //             return;
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.log("error", error);
+  //       }
+  //     }
+  //   };
+  //   checkCurrentPurchase(currentPurchase);
+  // }, [currentPurchase, finishTransaction]);
 
   //segmented control
   // For single select SegmentedControlTab
