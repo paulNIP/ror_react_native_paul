@@ -101,7 +101,7 @@ const ReadingPlans = () => {
       const purchase = await RNIap.requestSubscription('your_subscription_product_id');
       
       // Handle the purchase response accordingly
-      console.log('Subscription purchased successfully:', purchase);
+    //   console.log('Subscription purchased successfully:', purchase);
       
       // Optionally, update the UI to reflect the subscription status
       setIsSubscribed(true);
@@ -117,7 +117,7 @@ const ReadingPlans = () => {
       // This could involve making a purchase using react-native-iap
       // and handling the purchase response accordingly.
       // For simplicity, this example assumes a successful free trial initiation.
-      console.log('Free trial started successfully!');
+    //   console.log('Free trial started successfully!');
     } catch (error) {
       console.warn('Error starting free trial:', error);
     }
@@ -211,7 +211,7 @@ const ReadingPlans = () => {
 
         axios.post(URL,data)
         .then(function (res) {
-            console.log("Response 536637373377474-",res.data);
+            // console.log("Response 536637373377474-",res.data);
             if(res.data.status===1){
                 rhapsodyPlusSubscription();
 

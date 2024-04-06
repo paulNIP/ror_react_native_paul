@@ -46,13 +46,13 @@ const PremiumNotification = () => {
 
   }, []);
    const openEpub=(url,init)=>{
-    console.log("urlfile",url);
+    // console.log("urlfile",url);
     navigation.navigate('EpubReader',{file2:url,init:init});
 
    }
 
     const openRhapsodyReader = () => {
-        console.log("Bookksjhdnddmdmdm",books[0]);
+        // console.log("Bookksjhdnddmdmdm",books[0]);
 
         // <React/RCTDefines.h> file not found
         let url =books[0].book_file_url;

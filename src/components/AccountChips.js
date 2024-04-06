@@ -76,7 +76,7 @@ const AccountChips = () => {
           setAllTranslatedLanguages(allTranslatedLanguages);
       }
       else {
-        console.log("MMIIIII",text  );
+        // console.log("MMIIIII",text  );
         // let filteredLanguages = allTranslatedLanguages.filter(allTranslatedLanguage => (allTranslatedLanguage.toLowerCase().startsWith(text)))
         // setAllTranslatedLanguages(filteredLanguages);
       }

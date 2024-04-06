@@ -1,7 +1,8 @@
-
 import axios from 'axios';
 import Strings from '../constants/Strings';
+import {DatabaseConnection} from '../database/database-connection';
 
+const jsoncache = DatabaseConnection.getjsoncacheDB();
 
 const getBooks = async () => {
   return new Promise((resolve, reject) => {
@@ -18,19 +19,99 @@ const getBooks = async () => {
 };
 
 const getCategories = async () => {
-    return new Promise((resolve, reject) => {
+    const getCat = await checkCache('bookcategories')
+    if(getCat){
+        return getCat
+    }else{
+        //fetch the data from live URL
+        try {
+            const response = await axios.get(`${Strings.BOOKS_URL}/fetch`);
+            const categoryData = response.data.EBOOK_APP.category_list;
+            await putDataIntoCache('bookcategories', JSON.stringify ( categoryData) );
+            return categoryData;
+        } catch (error) {
+            console.error('bookcategories Failed to get categories', error);
+        }
+    }
+};
 
-            axios.get(Strings.BOOKS_URL+'/fetch')
-              .then((res) => {
-                
-                resolve(res.data.EBOOK_APP.category_list);
-                console.log("Book Categories",res.data.EBOOK_APP.category_list);
-            })
-              .catch((err) => {
-                reject(err)
-            });
+const checkCache = (key) => {
+    return new Promise((resolve, reject) => {
+        jsoncache.transaction((txn) => {
+            txn.executeSql(
+                'SELECT jsoncontent FROM jsoncache WHERE jsontitle = ? and jsondate = ? order by id desc limit 1',
+                [key, getCurrentDate()],
+                (tx, results) => {
+                    if (results.rows.length > 0) {
+                        //cache found
+                        const data = results.rows.item(0).jsoncontent;
+                        resolve(JSON.parse(data));
+                    } else {
+                        //cache not found
+                        resolve(null);
+                    }
+                },
+                (error) => {
+                    console.error('Failed to execute query', error);
+                    reject(error);
+                },
+            );
+        });
     });
 };
+
+/**
+ * Inserts data into the JSON cache if it does not already exist.
+ * @param {string} key - The key for the data in the cache.
+ * @param {any} data - The data to insert into the cache.
+ * @returns {Promise<void>} - A promise that resolves when the data is inserted successfully or rejects with an error.
+ */
+const putDataIntoCache = async (key, data) => {
+    try {
+        return jsoncache.transaction((txn) => {
+            txn.executeSql(
+                'SELECT jsontitle FROM jsoncache WHERE jsontitle = ? and jsondate = ?',
+                [key, getCurrentDate()],
+                (tx, selectResults) => {
+                    if (selectResults.rows.length > 0) {
+                        console.log('Data already exists, insertion not needed');
+                    } else {
+                        txn.executeSql(
+                            'INSERT into jsoncache (jsontitle, jsoncontent, jsondate) values(?,?, ?)',
+                            [key, data, getCurrentDate() ],
+                            (tx, insertResults) => {
+                                if (insertResults.rowsAffected > 0) {
+                                    console.log('Data inserted successfully');
+                                }
+                            },
+                            (error) => {
+                                console.error('Failed to execute query', error);
+                            }
+                        );
+                    }
+                },
+                (error) => {
+                    console.error('Failed to execute query', error);
+                }
+            );
+        });
+    } catch (error) {
+        console.error('Failed to put data into cache', error);
+    }
+};
+
+
+/**
+ * Returns the current date in the format "YYYY-MM-DD".
+ * @returns {string} The current date in the format "YYYY-MM-DD".
+ */
+const getCurrentDate=()=>{
+    let date = new Date().getDate(),
+        month = new Date().getMonth() + 1,
+        year = new Date().getFullYear()
+    return year + '-' + month + '-' + date;
+}
+
 
 const getProsperity = async () => {
   return new Promise((resolve, reject) => {

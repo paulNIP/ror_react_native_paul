@@ -28,7 +28,7 @@ const LiveTV=()=> {
     const renderLiveTvs = ({ item }) => {
 
       const video_url = item.url;;
-      console.log(video_url);
+      // console.log(video_url);
 
       
       return (

@@ -69,7 +69,7 @@ const DailyQuiz = () => {
 
   }, []);
   // setAnswer(quiz[0].answer);
-  console.log("Answer me",answer);
+  // console.log("Answer me",answer);
 
 
   const [checked, setChecked] = React.useState('');
