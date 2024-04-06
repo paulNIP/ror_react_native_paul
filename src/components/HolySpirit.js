@@ -37,7 +37,7 @@ const HolySpirit = () => {
 
         }, []);
 
-    console.log("Prayer Books Good",books);
+    // console.log("Prayer Books Good",books);
 
     const goToTranslatedBooks=(cat)=>{
         navigation.navigate('GroupedBooks',{cat_id:categoryID});

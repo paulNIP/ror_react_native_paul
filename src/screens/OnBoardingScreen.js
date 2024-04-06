@@ -165,7 +165,7 @@ const OnboardingScreen = () => {
             );
           
             jsoncacheDB.executeSql(
-              'CREATE TABLE IF NOT EXISTS jsoncache (id integer primary key, jsontitle text, jsoncontent json, jsondate text)',[], (result) => {
+              'CREATE TABLE IF NOT EXISTS jsoncache (id integer primary key, jsontitle text, jsoncontent text, jsondate text)',[], (result) => {
                 console.log("jsoncache Table created successfully");
               }, (error) => {
                 console.log("Create table error", error)

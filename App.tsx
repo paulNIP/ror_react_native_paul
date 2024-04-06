@@ -722,7 +722,7 @@ const latestVersion = Platform.OS === 'ios'? await fetch('https://itunes.apple.c
                           title,
                           photo_link],
                         (tx:any, results:any) => {
-                          console.log('INSERT successful');
+                          // console.log('INSERT successful');
                         },
                         (error:any) => {
                           console.error('Error executing INSERT SQL: ', error);

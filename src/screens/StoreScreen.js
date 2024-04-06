@@ -437,18 +437,15 @@ const StoreScreen = ({ navigation }) => {
       <View style={{
         justifyContent: 'center',
         alignItems: 'center',
-        
-      
-      }}
-        >
-        <Text style={{alignSelf:'center',justifyContent: 'center',
-        alignItems: 'center'}}> Loading Store components ....</Text>
+      }} >
+       
         <ActivityIndicator
         style={{justifyContent: 'center',
         alignItems: 'center'}}
             color="#FFFFFF"
             size="large"
           />
+          
       </View>
       </View>
       ):(
