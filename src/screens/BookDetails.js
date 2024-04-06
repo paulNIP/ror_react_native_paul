@@ -42,6 +42,8 @@ const BookDetails = ({ route, navigation }) => {
   const [progress, setProgress] = useState(0);
 
   const [modalVisible, setModalVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,8 +84,8 @@ const BookDetails = ({ route, navigation }) => {
             // Check if the file already exists
             const fileExists = await RNFS.exists(filePath);
             if (fileExists) {
-                console.log('File already exists:', filePath);
-                //Alert.alert('You have already downloaded this book. ');
+                setAlertTitle("Book Exists")
+                setAlertMessage("Sorry you have already downloaded this book and it's available in your library.")
                 setModalVisible(true)
             } else {
                 RNFS.downloadFile({
@@ -99,7 +101,9 @@ const BookDetails = ({ route, navigation }) => {
                     },
                 })
                     .promise.then((response) => {
-                    console.log('File downloaded!', response);
+                    setAlertTitle("Success")
+                    setAlertMessage("The book download is complete and it is now available in your app library.")
+                    setModalVisible(true)
                 })
                     .catch((err) => {
                         console.log('Download error:', err);
@@ -274,8 +278,8 @@ const BookDetails = ({ route, navigation }) => {
               <CustomAlert
                   modalVisible={modalVisible}
                   setModalVisible={setModalVisible}
-                  title={'Book Exists'}
-                  message={'You have already downloaded this book. Proceed to read it.'}
+                  title={alertTitle}
+                  message={alertMessage}
                   ios={{
                       container: {
                           backgroundColor: 'white'
@@ -367,30 +371,14 @@ const BookDetails = ({ route, navigation }) => {
                                               );
 
                                               setFavouritesColor('#FF0000');
-                                              Alert.alert(
-                                                  'Success',
-                                                  'Added to Favourites',
-                                                  [
-                                                      {
-                                                          text: 'Ok'
-                                                      },
-                                                  ],
-                                                  { cancelable: false }
-                                              );
+                                              setAlertTitle("Success")
+                                              setAlertMessage("This book has been added to your favourite books.")
+                                              setModalVisible(true)
                                               // setVisible(true);
-
-
                                           }else{
-                                              Alert.alert(
-                                                  'Success',
-                                                  'Book already exists in favourites',
-                                                  [
-                                                      {
-                                                          text: 'Ok'
-                                                      },
-                                                  ],
-                                                  { cancelable: false }
-                                              );
+                                              setAlertTitle("Book Exists")
+                                              setAlertMessage("This book already exists in your favourite books list.")
+                                              setModalVisible(true)
 
                                           }
                                       }
