@@ -10,7 +10,7 @@ export function OpenExternalLink() {
     <SafeAreaView>
       <ReaderProvider>
         <Reader
-          src="https://rhapsodyofrealities.b-cdn.net/app/books/epub2024-april.epub"
+          src="https://github.com/IDPF/epub3-samples/releases/download/20230704/accessible_epub_3.epub"
           width={width}
           height={height}
           fileSystem={useFileSystem}

@@ -10,7 +10,7 @@ export function InitialLocation() {
     <ReaderProvider>
       <SafeAreaView style={styles.container}>
         <Reader
-          src="https://rhapsodyofrealities.b-cdn.net/app/books/epub2024-april.epub"
+          src="https://s3.amazonaws.com/moby-dick/OPS/package.opf"
           width={width}
           height={height * 0.7}
           fileSystem={useFileSystem}

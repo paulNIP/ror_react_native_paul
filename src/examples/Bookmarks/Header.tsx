@@ -8,7 +8,10 @@ import { IconButton } from 'react-native-paper';
 
 interface Props {
   onOpenBookmarksList: () => void;
+
 }
+
+
 
 export function Header({ onOpenBookmarksList }: Props) {
   const navigation = useNavigation();
@@ -23,7 +26,7 @@ export function Header({ onOpenBookmarksList }: Props) {
   const handleChangeBookmark = () => {
     const location = getCurrentLocation();
 
-    if (!location) return;
+    if (!location) return ;
 
     if (isBookmarked) {
       const bookmark = bookmarks.find(
@@ -36,10 +39,14 @@ export function Header({ onOpenBookmarksList }: Props) {
       removeBookmark(bookmark);
     } else addBookmark(location);
   };
+
+
+
+
   return (
     <View style={styles.container}>
       <IconButton
-        icon="arrow-left"
+        icon="menu"
         size={22}
         onPress={() => navigation.goBack()}
       />
@@ -79,8 +86,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   actions: {
+    alignItems:'flex-end',
+    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
   },
 });

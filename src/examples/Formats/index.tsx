@@ -6,71 +6,20 @@ import {
   Text,
   TouchableOpacity,
   useWindowDimensions,
-  View,StyleSheet
+  View,
 } from 'react-native';
-import { Reader, ReaderProvider,useReader } from '@epubjs-react-native/core';
+import { Reader, ReaderProvider } from '@epubjs-react-native/core';
 import { useFileSystem } from '@epubjs-react-native/file-system';
-import { Header } from '@rneui/themed';
-import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
-
-
 import base64 from './base64';
-
+import { styles } from './styles';
 
 const epub =
-  'https://rhapsodyofrealities.b-cdn.net/app/books/epub2024-april.epub';
-  // const epub ='https://epubjs-react-native.s3.amazonaws.com/failing-forward.epub';
+  'https://epubjs-react-native.s3.amazonaws.com/failing-forward.epub';
 const opf = 'https://s3.amazonaws.com/moby-dick/OPS/package.opf';
-
-function Inner() {
-  const { width, height } = useWindowDimensions();
-  const { goNext, goPrevious } = useReader();
-  // const handleAddMark = (text, cfiRange) => {
-  //   addMark(text, cfiRange);
-  // };
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-       <HeaderRNE
-      leftComponent={{
-        icon: 'menu',
-        color: '#fff',
-      }}
-      rightComponent={
-          <View style={styles.headerRight}>
-            <TouchableOpacity onPress={()=>{}}>
-              <Icon name="description" color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginLeft: 10 }}
-              onPress={()=>{}}
-            >
-              <Icon type="antdesign" name="rocket1" color="white" />
-            </TouchableOpacity>
-          </View>
-      }
-      centerComponent={{ text: 'Header', style: styles.heading }}
-    />
-      <TouchableOpacity onPress={() => goPrevious()}>
-        <Text>Previous</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => goNext()}>
-        <Text>Next</Text>
-      </TouchableOpacity>
-      <Reader
-        src={epub}
-        width={width}
-        enableSelection={true}
-        enableSwipe={true}
-        height={height}
-        fileSystem={useFileSystem}
-      />
-    </SafeAreaView>
-  );
-}
 
 export function Formats() {
   const { width, height } = useWindowDimensions();
-  const [src, setSrc] = React.useState(epub);
+  const [src, setSrc] = React.useState(opf);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.options}>
@@ -109,51 +58,29 @@ export function Formats() {
       </View>
 
       <ReaderProvider>
-        <Inner/>
+        <Reader
+          src={src}
+          width={width}
+          height={height * 0.7}
+          fileSystem={useFileSystem}
+        />
       </ReaderProvider>
+
+      {src === opf && (
+        <Text style={styles.currentFormat}>Current format: .opf</Text>
+      )}
+
+      {src === epub && (
+        <Text style={styles.currentFormat}>Current format: .epub</Text>
+      )}
+
+      {src === base64 && (
+        <Text style={styles.currentFormat}>Current format: base64</Text>
+      )}
+
+      {src !== opf && src !== epub && src !== base64 && (
+        <Text style={styles.currentFormat}>Current format: local</Text>
+      )}
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#397af8',
-    marginBottom: 20,
-    width: '100%',
-    paddingVertical: 15,
-  },
-  heading: {
-    color: 'white',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  headerRight: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 5,
-  },
-  subheaderText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  options: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-  },
-  currentFormat: {
-    textAlign: 'center',
-  },
-  });
-  
-

@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import RNFS from 'react-native-fs';
 import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Annotations } from '../examples';
 
 
 import { DatabaseConnection } from '../database/database-connection';
@@ -45,14 +46,14 @@ const PremiumNotification = () => {
     setData();
 
   }, []);
-   const openEpub=(url,init)=>{
-    // console.log("urlfile",url);
-    navigation.navigate('EpubReader',{file2:url,init:init});
+   const openEpub=(url)=>{
+    console.log("urlfile",url);
+    navigation.navigate('EpubReader',{file2:url});
 
    }
 
     const openRhapsodyReader = () => {
-        // console.log("Bookksjhdnddmdmdm",books[0]);
+        console.log("Bookksjhdnddmdmdm",books[0]);
 
         // <React/RCTDefines.h> file not found
         let url =books[0].book_file_url;
@@ -61,26 +62,27 @@ const PremiumNotification = () => {
         // let prnDt =  new Date().toLocaleTimeString('en-us', options);
         // let initialLocation =prnDt.split(',')[0]; 
         // console.log("Initial Location", initialLocation);
-        // openEpub(url,initialLocation); 
+        openEpub(url); 
 
 
     };
 
 return (
   <>
-     {subscribed==='active' ? (
+     {/* {subscribed==='active' ? ( */}
       <View style={styles.contentView}> 
        <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
        name="book-open-variant" size={25} color="#0099e5" />    
        <Text style={{marginTop:5}}>You are on a Premium Plan</Text>
        <TouchableOpacity onPress={openRhapsodyReader}>
-       <Text style={styles.titleText} >
-        Open in Rhapsody Reader</Text>
+        <Text style={styles.titleText} >
+          Open in Rhapsody Reader</Text>
         </TouchableOpacity>
         
-      </View>):(null)}
+      </View>
+      {/* // ):(null)} */}
 
-      {subscribed==='inactive' || !subscribed  ? (
+      {/* {subscribed==='inactive' || !subscribed  ? (
       <View style={{flexDirection:'row'}}>
           <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center', paddingTop : 9, paddingBottom : 10}}
            name="information" size={35} color="#D8A623" />
@@ -101,7 +103,7 @@ return (
               </TouchableOpacity>
            </Text>
           
-        </View>):null}
+        </View>):null} */}
   </>
 );
 };

@@ -6,6 +6,7 @@ import { Annotation, useReader } from '@epubjs-react-native/core';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
+
 interface Props {
   annotation?: Annotation;
   selection: { cfiRange: string; text: string } | null;
@@ -33,7 +34,7 @@ function AnnotationForm({ annotation, selection, onClose }: Props) {
   }, [annotation]);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Annotations</Text>
+      <Text style={styles.title}>Notes</Text>
 
       {annotation?.type !== 'highlight' && (
         <BottomSheetTextInput
@@ -190,9 +191,6 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     marginRight: 10,
-    borderColor: '#000',
-    borderStyle: 'solid',
-    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -3,7 +3,6 @@ import { Text, View,Image,ImageBackground,StyleSheet,TouchableOpacity,ScrollView
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput,HelperText } from 'react-native-paper';
 import {Dimensions} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PhoneInput from "react-native-phone-number-input";
 import {Dropdown} from 'sharingan-rn-modal-dropdown';
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -12,10 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import SnackBar from 'react-native-snackbar-component';
 import { DatabaseConnection } from '../../database/database-connection';
-import { NetworkInfo } from "react-native-network-info";
-import * as RNLocalize from "react-native-localize";
-import { getContinentCode, getContinentName } from '@brixtol/country-continent';
-import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

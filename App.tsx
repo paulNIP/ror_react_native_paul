@@ -26,6 +26,8 @@ import SearchArticles from './src/screens/SearchArticles';
 import ArticleDetails from './src/screens/ArticleDetails';
 import ProfileScreen from './src/screens/ProfileScreen';
 import RhapsodyTVScreen from './src/screens/RhapsodyTVScreen';
+import { Annotations } from './src/examples';
+
 import Testimony from './src/screens/Testimony';
 import BookDetails from './src/screens/BookDetails';
 import PrayerRequest from './src/screens/PrayerRequest';
@@ -45,9 +47,9 @@ import VersionCheck from 'react-native-version-check';
 import SplashScreen from 'react-native-splash-screen';
 
 
+
 import * as RNLocalize from "react-native-localize";
 import i18n from "i18n-js";
-import memoize from "lodash.memoize"; // Use for caching/memoize for better performance
 import { getAudioArticles } from './src/service/devotionalService';
 import LanguageSelect from './src/screens/LanguageSelect';
 import VideoDetail from './src/screens/VideoDetail';
@@ -60,7 +62,7 @@ import AboutUs from './src/screens/AboutUs';
 import EditProfile from './src/screens/EditProfile';
 import Settings from './src/screens/Settings';
 import { OldSubscription } from './src/screens/OldSubscription';
-import EpubReader from './src/screens/EpubReader';
+// import EpubReader from './src/screens/EpubReader';
 import { DatabaseConnection } from './src/database/database-connection';
 import { getProfile } from './src/service/authService';
 import Splash from './src/screens/Splash';
@@ -74,6 +76,11 @@ import AllNotes from './src/screens/AllNotes';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed",
+  "ColorPropType will be removed",
+  ]);
 
 
 export type StackParamList = {
@@ -95,7 +102,7 @@ export type StackParamList = {
   EditProfile:{email:string};
   PrivacyPolicy:undefined;
   FeedBack:{id:string};
-  EpubReader:{file:string};
+  Annotations:{file:string};
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -146,7 +153,10 @@ function HomeStackNavigator() {
   const navigation = useNavigation<StackNavigation>();
    
   useEffect(() => {
-      LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+      LogBox.ignoreLogs([
+        "ViewPropTypes will be removed",
+        "ColorPropType will be removed",
+        ]);
 
       const fetchData = async () => {
           let mail=await AsyncStorage.getItem('email');
@@ -220,7 +230,7 @@ function HomeStackNavigator() {
        options={{
         title: 'Latest Books',
       }} />
-      <Stack.Screen name="EpubReader" component={EpubReader} 
+      <Stack.Screen name="EpubReader" component={Annotations} 
         options={{
           title: 'Document Reader',
         }}/>
@@ -292,7 +302,7 @@ function LibraryStackNavigator() {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="Rhapsody Library" component={LibraryScreen} />
-      <Stack.Screen name="EpubReader" component={EpubReader} 
+      <Stack.Screen name="EpubReader" component={Annotations} 
       options={{
         title: 'Document Reader',
         }}
@@ -613,6 +623,11 @@ function TabNavigator() {
 
 
 export default function App() {
+
+  LogBox.ignoreLogs([
+    "ViewPropTypes will be removed",
+    "ColorPropType will be removed",
+    ]);
 
   const [showRealApp, setShowRealApp] = useState<any>();
   const [appUrl, setStoreUrl] = useState<any>();

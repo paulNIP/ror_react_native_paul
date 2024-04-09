@@ -11,6 +11,8 @@ import {
 import { Reader, ReaderProvider, useReader } from '@epubjs-react-native/core';
 import { useFileSystem } from '@epubjs-react-native/file-system';
 import { styles } from './styles';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
 
 function Inner() {
   const { width, height } = useWindowDimensions();
@@ -18,12 +20,12 @@ function Inner() {
   const [term, setTerm] = React.useState('');
 
   return (
-    <SafeAreaView style={styles.container}>
+      <SafeAreaProvider>
       <View style={styles.options}>
         <View style={styles.form}>
           <TextInput
             style={styles.input}
-            placeholder="Enter a term"
+            placeholder="Type a name to Search"
             onChangeText={(text) => setTerm(text)}
           />
 
@@ -38,7 +40,7 @@ function Inner() {
       </View>
 
       <Reader
-        src="https://rhapsodyofrealities.b-cdn.net/app/books/epub2024-april.epub"
+        src="https://s3.amazonaws.com/moby-dick/OPS/package.opf"
         width={width}
         height={height * 0.5}
         fileSystem={useFileSystem}
@@ -52,7 +54,8 @@ function Inner() {
           </TouchableOpacity>
         )}
       />
-    </SafeAreaView>
+    </SafeAreaProvider>
+
   );
 }
 

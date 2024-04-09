@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, ScrollView, ImageBackground, StyleSheet, Dimensions, 
-  TextInput, TouchableOpacity,Alert, Image,FlatList,Button } from 'react-native';
+import { View, Text, ScrollView,  StyleSheet, Dimensions, 
+  TouchableOpacity, Image,FlatList } from 'react-native';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import HTMLView from 'react-native-htmlview';
+
 import Carousel from 'react-native-snap-carousel';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
