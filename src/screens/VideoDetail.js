@@ -4,11 +4,8 @@ import {Dimensions,FlatList,TouchableOpacity,Image, Linking} from 'react-native'
 import {Overlay } from '@rneui/themed';
 import { Button,ListItem } from '@rneui/themed';
 import { TextInput } from 'react-native-paper';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import PhoneInput from 'react-native-phone-number-input';
 import {Dropdown} from 'sharingan-rn-modal-dropdown';
-import { StripeProvider } from '@stripe/stripe-react-native';
-import { CardField, useStripe } from '@stripe/stripe-react-native';
 import SnackBar from 'react-native-snackbar-component';
 
 
@@ -51,7 +48,7 @@ const VideoDetail= ({ route, navigation }) => {
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
     const [publishableKey, setPublishableKey] = useState('');
-    const { confirmPayment } = useStripe();
+    
 
     const fetchPublishableKey = async () => {
       const key = await getStripeKey(); // fetch key from your server here

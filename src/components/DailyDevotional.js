@@ -3,21 +3,17 @@ import { View,Modal,ScrollView, StyleSheet,
   Text,Pressable,TouchableOpacity, FlatList,Button, Image,Vibration,Alert,TextInput } from 'react-native';
 import Strings from '../constants/Strings';
 import { getDailyDevotional, getLanguages } from '../service/devotionalService';
-import AccountChips from './AccountChips';
 import HTMLView from 'react-native-htmlview';
 import DailyQuiz from './DailyQuiz';
 import {Overlay,ListItem } from '@rneui/themed';
 import { WebView } from 'react-native-webview';
 import axios from 'axios';
-
 import { Divider } from '@rneui/themed';
-import {Dimensions} from 'react-native';
+import {Dimensions,Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import CountDownTimer from 'react-native-countdown-timer-hooks';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getProfile, getWallet } from '../service/authService';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import uuid from 'uuid-random';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   decode,
   verify,

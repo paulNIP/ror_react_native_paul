@@ -6,19 +6,6 @@ import { Card } from '@rneui/themed';
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MyCalender =()=>{
-
-
-
-
-    return (
-        <View>
-        
-
-       </View>
-
-    )
-}
 
 
 const StudyTracker = () => {

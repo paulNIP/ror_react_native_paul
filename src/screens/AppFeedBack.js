@@ -4,15 +4,13 @@ import {
     View, 
     Text, 
     TouchableOpacity, 
-    FlatList, Image,ActivityIndicator,
-    StyleSheet, ScrollView,SafeAreaView
+    Image,ActivityIndicator,
+    StyleSheet, ScrollView
 } from "react-native";
 import { Divider } from "react-native-paper";
 import { TextInput,HelperText } from 'react-native-paper';
 import axios from 'axios';
-import { Formik } from 'formik';
 import {Dropdown} from 'sharingan-rn-modal-dropdown';
-import { getOSVersion,getAppVersion,getDeviceModel } from "../utils/Utils";
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import VersionCheck from 'react-native-version-check'
 import DeviceInfo from 'react-native-device-info'

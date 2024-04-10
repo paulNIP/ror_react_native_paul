@@ -1,10 +1,9 @@
 import React,{useState,useEffect} from "react";
-import { getAllTranslatedBooks, getCategories, getTranslatedBooks } from "../service/storeService";
+import {  getCategories } from "../service/storeService";
 import { ScrollView,Text,View,Dimensions,
-    TouchableOpacity,Image,FlatList,Modal,TextInput,StyleSheet } from "react-native";
-import { Divider,ListItem} from '@rneui/themed';
+    TouchableOpacity,Image,FlatList,StyleSheet } from "react-native";
+import { Divider} from '@rneui/themed';
 import { Button } from '@rneui/themed';
-import {Overlay } from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
 import {
     widthPercentageToDP as wp,

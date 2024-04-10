@@ -16,7 +16,6 @@ import {
   useIAP,
   validateReceiptIos,
 } from "react-native-iap";
-import { ITUNES_SHARED_SECRET } from "@env";
 import Strings from "../constants/Strings";
 
 const errorLog = ({ message, error }) => {

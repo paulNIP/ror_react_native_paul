@@ -13,12 +13,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import PlayButton from '../components/PlayButton';
 import { getAudioArticles, getPlaylist } from '../service/devotionalService';
-import { DatabaseConnection } from '../database/database-connection';
-import { ListItem ,Avatar} from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import RNFS from 'react-native-fs';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { startDownloadAppSave,FileSaveOptions, FileSaveSuccess } from 'react-native-ios-files-app-save';
+
 
 //import RNFetchBlob from 'rn-fetch-blob';
 

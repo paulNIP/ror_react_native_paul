@@ -1,4 +1,4 @@
-import { View,Dimensions,StyleSheet ,Image,Text,StatusBar} from 'react-native';
+import { View,Dimensions,StyleSheet ,Image,Text,StatusBar,Platform} from 'react-native';
 import React from 'react';
 
 //import AppIntroSlider to use it

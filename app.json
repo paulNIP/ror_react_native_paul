@@ -1,4 +1,10 @@
 {
   "name": "rhapsodyreader",
-  "displayName": "rhapsodyreader"
+  "displayName": "rhapsodyreader",
+  "android": {
+    "package": "com.rhapsodyreader"
+  },
+  "ios": {
+    "bundleIdentifier": "com.rhapsody.dailydevotionals"
+  }
 }

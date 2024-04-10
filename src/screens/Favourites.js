@@ -1,10 +1,8 @@
 import React,{useState,useEffect} from "react";
-import {SafeAreaView,View, Text,
-  StatusBar,FlatList,Image,StyleSheet,TouchableOpacity,ScrollView,Dimensions} from 'react-native';
+import {SafeAreaView,View, Text,Image,StyleSheet,TouchableOpacity,ScrollView,Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NetworkInfo } from "react-native-network-info";
 import { DatabaseConnection } from "../database/database-connection";
-import { ListItem ,Avatar} from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import { Divider } from "react-native-paper";
 
 

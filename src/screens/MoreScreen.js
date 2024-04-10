@@ -9,26 +9,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import {Dimensions,ImageBackground,Image,View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Divider } from '@rneui/themed';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ListItem,Icon } from '@rneui/themed';
-
-
-
-import {
-  ActionSheetCell,
-  ButtonCell,
-  createValidator,
-  DatePickerCell,
-  emailValidator,
-  Form,
-  PushButtonCell,
-  Section,
-  SwitchCell,
-  TextInputCell,
-} from 'react-native-forms';
-// import Icon from 'react-native-vector-icons/Ionicons';
-
 
 
 

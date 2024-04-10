@@ -5,26 +5,20 @@ import {
     View,
     Text,
     Image,
-    Alert,
     FlatList,
     TouchableOpacity,
-    TouchableHighlight,
     Modal,
     Pressable
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, useWindowDimensions } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Divider} from '@rneui/themed';
 import { Button } from '@rneui/themed';
-import Strings from '../constants/Strings';
 import { getBookDetails } from '../service/libraryService';
 import {Dimensions} from 'react-native';
 import { DatabaseConnection } from '../database/database-connection';
 import SnackBar from 'react-native-snackbar-component';
 import RNFS from 'react-native-fs';
-import * as Progress from 'react-native-progress';
-import { Platform } from 'react-native';
 import * as RNIap from 'react-native-iap';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
