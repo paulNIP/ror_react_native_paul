@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, {useState,useCallback, useEffect} from 'react';
 import { SafeAreaView,Animated,FlatList,View,TouchableOpacity,
-  ScrollView,TextInput,Text, StyleSheet, useWindowDimensions,Dimensions } from 'react-native';
+  ScrollView,TextInput,Text, StyleSheet, useWindowDimensions,Dimensions,Linking } from 'react-native';
 import {
   Annotation,
   Reader,
@@ -22,7 +22,11 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { Toc } from '@epubjs-react-native/core';
 import Slider from '@react-native-community/slider';
 
-function Book() {
+function Book(props:any) {
+
+  const epub=props.file;
+  const loc=props.location;
+
   const navigation =useNavigation();
   const { width, height } = useWindowDimensions();
   const [sliderValue1, setSliderValue1] = useState(11);
@@ -36,8 +40,6 @@ function Book() {
     updateBookmark,
     removeBookmark,
     removeBookmarks} = useReader();
-
-
 
 
   React.useLayoutEffect(() => {
@@ -129,6 +131,7 @@ function Book() {
   const bottomSheetSearchRef = React.useRef<BottomSheet>(null);
   const snapPoints = React.useMemo(() => ['50%', '75%', '100%'], []);
   const [term, setTerm] = React.useState('');
+  const [defaultLocation, setDefaultLocation] = useState<any>();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTOCVisible, setModalTOCVisible] = useState(false);
@@ -140,7 +143,7 @@ function Book() {
   } = useReader();
 
   const { toc, section } = useReader();
-  const [data, setData] = useState<Toc>(toc);
+  const [data, setData] = useState(toc);
 
   const [note, setNote] = useState('');
   const [tocContent, setTocContent] = useState();
@@ -165,12 +168,12 @@ function Book() {
       setCurrentBookmark(bookmark);
       setNote(bookmark.data?.note || '');
     }
-
+    
     const ids = toc.map(({ id }) => id);
     const filtered = toc.filter(({ id }, index) =>
         !ids.includes(id, index + 1));
     setData(filtered);
-    console.log("GHHDHHDHhhhhhhh",filtered.length);
+
 
 
   }, [
@@ -180,11 +183,16 @@ function Book() {
     isBookmarked,toc
   ]);
 
+
+
   interface Props {
     annotations: Annotation[];
     onClose: () => void;
   }
 
+
+
+ 
   const handleChangeBookmark = () => {
     const location = getCurrentLocation();
     console.log(location);
@@ -207,6 +215,10 @@ function Book() {
     id: string;
     title: string;
   }
+
+  
+  
+
 
   
   const renderRightActions = (
@@ -255,7 +267,7 @@ function Book() {
   return (
     <GestureHandlerRootView>
       <Reader
-        src="https://rhapsodyofrealities.b-cdn.net/app/books/epub2024-april.epub"
+        src={epub}
         width={width}
         height={height*0.80}
         fileSystem={useFileSystem}
@@ -266,11 +278,26 @@ function Book() {
         onUpdateBookmark={(bookmark) =>
           console.log('onUpdateBookmark', bookmark)
         }
+        onReady={()=>{
+          let obj =Object.entries(data);
+          obj.map((j) => {
+            let chap=j[1].label.trim().toLowerCase();
+            if(chap.startsWith(loc.toLowerCase())){
+              // console.log("Location sgshhhsjsj",j[1].href);
+              let initialloc:any =j[1].href;
+              goToLocation(initialloc);
+            }
+          
+          });
+        }}
+        onPressExternalLink={(url) => {
+          Linking.openURL(url);
+        }}
         // onChangeBookmarks={(bookmarks) =>
         //   console.log('onChangeBookmarks', bookmarks)
         // }
         enableSelection
-        initialLocation="introduction_001.xhtml"
+        // initialLocation={defaultLocation}
         initialAnnotations={[
           // Chapter 1
           {
@@ -880,7 +907,12 @@ Brush Script MT (cursive) */}
   );
 }
 
-export function Annotations() {
+export function Annotations(props:any) {
+
+  // const {location} =props.params.location;
+  const file =props.route.params.file2;
+  const loc  =props.route.params.location;
+
   const navigation =useNavigation();
   const [theme, setTheme] = useState(false);
   const [settings, setSettings] = useState(false);
@@ -890,7 +922,7 @@ export function Annotations() {
   return (
     <SafeAreaView>
       <ReaderProvider>
-        <Book />
+        <Book file={file} location={loc}/>
       </ReaderProvider>
 
 

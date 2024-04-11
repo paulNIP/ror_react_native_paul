@@ -35,6 +35,9 @@ PODS:
   - hermes-engine/Pre-built (0.73.6)
   - JOSESwift (2.4.0)
   - libevent (2.1.12)
+  - NVActivityIndicatorView (5.1.1):
+    - NVActivityIndicatorView/Base (= 5.1.1)
+  - NVActivityIndicatorView/Base (5.1.1)
   - pagopa-io-react-native-crypto (0.3.0):
     - React-Core
   - pagopa-io-react-native-jwt (1.1.0):
@@ -917,6 +920,9 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - react-native-loader-kit (2.0.8):
+    - NVActivityIndicatorView (= 5.1.1)
+    - React-Core
   - react-native-netinfo (11.3.1):
     - React-Core
   - react-native-network-info (5.2.1):
@@ -1188,6 +1194,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-loader-kit (from `../node_modules/react-native-loader-kit`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-network-info (from `../node_modules/react-native-network-info`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1237,6 +1244,7 @@ SPEC REPOS:
     - fmt
     - JOSESwift
     - libevent
+    - NVActivityIndicatorView
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1315,6 +1323,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-loader-kit:
+    :path: "../node_modules/react-native-loader-kit"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-network-info:
@@ -1419,6 +1429,7 @@ SPEC CHECKSUMS:
   hermes-engine: 9cecf9953a681df7556b8cc9c74905de8f3293c0
   JOSESwift: 7ff178bb9173ff42c6e990929a9f2fa702a34f69
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   pagopa-io-react-native-crypto: 6aa9f33e4bf64ef420ad97c720c1ad0f876cd470
   pagopa-io-react-native-jwt: 3d18bb3136bc88aad2d7c7e4d2a8f5b05a764445
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
@@ -1443,6 +1454,7 @@ SPEC CHECKSUMS:
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-image-picker: d3db110a3ded6e48c93aef7e8e51afdde8b16ed0
+  react-native-loader-kit: ed18c8ce83b69083211912326897d8286f37d797
   react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-network-info: d1290ffc0bd0709e11436f5b8d7f605dcc5c4530
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b

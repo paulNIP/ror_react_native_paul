@@ -30,10 +30,11 @@ const PremiumNotification = () => {
 
       }else{
         const subscribe = await getProfile(mail);
-
+        
         const bks = await getDailyDevotionalBooks();
-        //get book details by the current Devotional ID
-        const bookDetail =await getBookDetails(bks.books[0].id);
+        let id =bks.books[0].id;
+        const bookDetail =await getBookDetails(id);
+        console.log("bOOk details",bookDetail);
         setBooks(bookDetail);
         setSubscribed(subscribe.subscription.status);
         
@@ -46,23 +47,29 @@ const PremiumNotification = () => {
     setData();
 
   }, []);
-   const openEpub=(url)=>{
-    console.log("urlfile",url);
-    navigation.navigate('EpubReader',{file2:url});
+   const openEpub=(url,initial)=>{
+    navigation.navigate('EpubReader',{file2:url,location:initial});
 
    }
 
-    const openRhapsodyReader = () => {
-        console.log("Bookksjhdnddmdmdm",books[0]);
+    const openRhapsodyReader = async() => {
 
-        // <React/RCTDefines.h> file not found
+
         let url =books[0].book_file_url;
-        let id =books[0].aid;
-        // let options = { weekday: 'long', day: 'numeric'};
-        // let prnDt =  new Date().toLocaleTimeString('en-us', options);
-        // let initialLocation =prnDt.split(',')[0]; 
-        // console.log("Initial Location", initialLocation);
-        openEpub(url); 
+
+        let options = { weekday: 'long', day: 'numeric'};
+        let prnDt =  new Date().toLocaleTimeString('en-us', options);
+        let initialLocation =prnDt.split(',')[0]; 
+        console.log("Initial Location", initialLocation);
+        const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+        const exists = await RNFS.exists(EPUB_PATH);
+        if (!exists) {
+          Alert.alert("Book doesnot exist in your Library Please Download It from your Library");
+        } else {
+          openEpub(url,initialLocation); 
+        }
+
+        
 
 
     };
