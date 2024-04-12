@@ -137,6 +137,14 @@ const OnboardingScreen = () => {
                 console.log("Create table error", error)
               }
             );
+
+            bookmarked_articles_databaseDB.executeSql(
+              'CREATE TABLE IF NOT EXISTS epub_book_highlights (row_id INTEGER PRIMARY KEY AUTOINCREMENT, book_name TEXT,email TEXT,article_highlighted TEXT,article_highlight_date_key TEXT,instancename TEXT)',[], (result) => {
+                console.log("epub_book_highlights Table created successfully");
+              }, (error) => {
+                console.log("Create table error", error)
+              }
+            );
           
   
             devotionalsDB.executeSql(
