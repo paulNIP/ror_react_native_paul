@@ -76,7 +76,7 @@ const PremiumNotification = () => {
 
 return (
   <>
-     {/* {subscribed==='active' ? ( */}
+     {subscribed==='active' ? (
       <View style={styles.contentView}> 
        <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
        name="book-open-variant" size={25} color="#0099e5" />    
@@ -87,9 +87,9 @@ return (
         </TouchableOpacity>
         
       </View>
-      {/* // ):(null)} */}
+       ):(null)} 
 
-      {/* {subscribed==='inactive' || !subscribed  ? (
+      {subscribed==='inactive' || !subscribed  ? (
       <View style={{flexDirection:'row'}}>
           <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center', paddingTop : 9, paddingBottom : 10}}
            name="information" size={35} color="#D8A623" />
@@ -110,7 +110,7 @@ return (
               </TouchableOpacity>
            </Text>
           
-        </View>):null} */}
+        </View>):null}
   </>
 );
 };

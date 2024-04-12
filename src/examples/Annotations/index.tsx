@@ -21,11 +21,14 @@ import { light,dark,sepia } from '../CustomThemes/themes';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { Toc } from '@epubjs-react-native/core';
 import Slider from '@react-native-community/slider';
+import { DatabaseConnection } from '../../database/database-connection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Book(props:any) {
 
   const epub=props.file;
   const loc=props.location;
+  const db = DatabaseConnection.getbookmarked_articles_databaseDB();
 
   const navigation =useNavigation();
   const { width, height } = useWindowDimensions();
@@ -144,6 +147,7 @@ function Book(props:any) {
 
   const { toc, section } = useReader();
   const [data, setData] = useState(toc);
+  const [email, setEmail] = useState<any>();
 
   const [note, setNote] = useState('');
   const [tocContent, setTocContent] = useState();
@@ -153,6 +157,9 @@ function Book(props:any) {
   const handleIndexChange = (index:any) => {
       setSelectedIndex(index)
   }
+
+  let [highlightListItems, setHightlightListItems] = useState([]);
+
 
 
   useEffect(() => {
@@ -168,6 +175,39 @@ function Book(props:any) {
       setCurrentBookmark(bookmark);
       setNote(bookmark.data?.note || '');
     }
+    const getMail=async() =>{
+      const mail =await AsyncStorage.getItem('email');
+      if(mail){
+        setEmail(mail);
+      }
+
+      const book_name = epub.split("/").pop();
+
+      //select all highlights previous DB
+      db.transaction((tx:any) => {
+        tx.executeSql(
+          'SELECT * FROM epub_book_highlights WHERE email=? AND book_name=?',
+          [email,book_name],
+          (tx:any, results:any) => {
+            var temp:any = [];
+
+            for (let i = 0; i < results.rows.length; i++)
+              var hightlight=results.rows.item(i).article_highlighted;
+              temp.push(JSON.parse(hightlight));
+            setHightlightListItems(temp);
+          }
+        );
+      });
+
+
+      //select all highlights 
+
+
+    }
+    getMail();
+    console.log("Highlightedshjhsjjs",highlightListItems);
+    
+
     
     const ids = toc.map(({ id }) => id);
     const filtered = toc.filter(({ id }, index) =>
@@ -279,6 +319,8 @@ function Book(props:any) {
           console.log('onUpdateBookmark', bookmark)
         }
         onReady={()=>{
+
+          //goto default date of daily devotional
           let obj =Object.entries(data);
           obj.map((j) => {
             let chap=j[1].label.trim().toLowerCase();
@@ -289,6 +331,8 @@ function Book(props:any) {
             }
           
           });
+
+          
         }}
         onPressExternalLink={(url) => {
           Linking.openURL(url);
@@ -298,27 +342,9 @@ function Book(props:any) {
         // }
         enableSelection
         // initialLocation={defaultLocation}
-        initialAnnotations={[
-          // Chapter 1
-          {
-            cfiRange: 'epubcfi(/6/10!/4/2/4,/1:0,/1:319)',
-            data: {},
-            sectionIndex: 4,
-            styles: { color: '#23CE6B' },
-            cfiRangeText:
-              'The pale Usher—threadbare in coat, heart, body, and brain; I see him now. He was ever dusting his old lexicons and grammars, with a queer handkerchief, mockingly embellished with all the gay flags of all the known nations of the world. He loved to dust his old grammars; it somehow mildly reminded him of his mortality.',
-            type: 'highlight',
-          },
-          // Chapter 5
-          {
-            cfiRange: 'epubcfi(/6/22!/4/2/4,/1:80,/1:88)',
-            data: {},
-            sectionIndex: 3,
-            styles: { color: '#CBA135' },
-            cfiRangeText: 'landlord',
-            type: 'highlight',
-          },
-        ]}
+        initialAnnotations={
+              highlightListItems[0]
+        }
         onAddAnnotation={(annotation) => {
           if (annotation.type === 'highlight' && annotation.data?.isTemp) {
             setTempMark(annotation);
@@ -331,7 +357,62 @@ function Book(props:any) {
 
         }}
         onChangeAnnotations={(annotation) => {
-          console.log('onChangeAnnotations', annotation);
+
+          const date = new Date();
+          const formatter = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: '2-digit', year: 'numeric',hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const formattedDate = formatter.format(date);
+          const book_name = epub.split("/").pop();
+          const article_highlighted =JSON.stringify(annotation);
+   
+          // const epub
+          db.transaction(function (txn:any) {
+            txn.executeSql(
+              "SELECT * FROM epub_book_highlights WHERE book_name=? AND email=?",
+              [book_name,email],
+              function (txn:any, resp:any) {
+                // insert into DB no existing highlights
+                if (resp.rows.length == 0) {
+                  db.transaction((tx:any) => {
+                    tx.executeSql(
+                      'INSERT INTO epub_book_highlights (email,book_name, article_highlighted, article_highlight_date_key, instancename) VALUES (?, ?,?,?,?)',
+                      [ email,
+                        book_name,
+                        article_highlighted,
+                        formattedDate,
+                        '1'],
+                      (tx:any, results:any) => {
+                        console.log('INSERT successfull');
+                      },
+                      (error:any) => {
+                        console.error('Error executing INSERT SQL: ', error);
+                      }
+                    );
+                  });
+                }else{
+                  //Update highlights
+                  db.transaction((txp:any) => {
+                    txp.executeSql(
+                      'UPDATE epub_book_highlights set article_highlighted=?',
+                      [article_highlighted],
+                      (txp:any, resultsp:any) => {
+                        console.log('Results', resultsp.rowsAffected);
+                        if (resultsp.rowsAffected > 0) {
+                          console.log("Updated sucessfulyyuu");
+                          
+                        } else {
+                          console.log("Failed to update record");
+                        }
+                      }
+                    );
+                  });
+                }
+              }
+            );
+          });
+
+          
+
+
         }}
         menuItems={[
           {
@@ -720,6 +801,8 @@ Brush Script MT (cursive) */}
         </View>
           <View style={{padding:5}}>
           <ScrollView style={{ width: '100%', marginVertical: 20 }}>
+
+
       {annotations
         .filter(
           (annotation) =>
@@ -826,7 +909,7 @@ Brush Script MT (cursive) */}
                     setModalTOCVisible(!modalTOCVisible);
                     }}>
                 <ListItem.Content>
-                    <ListItem.Title>{item.label}</ListItem.Title>
+                    <ListItem.Title>{item.label.trim()}</ListItem.Title>
                     </ListItem.Content>
                     </ListItem>
                 )}
@@ -839,6 +922,7 @@ Brush Script MT (cursive) */}
         (
           <>
           <ScrollView showsVerticalScrollIndicator={false}>
+
           {annotations
         .filter(
           (annotation) =>
@@ -902,7 +986,7 @@ Brush Script MT (cursive) */}
           </View>
         </View>
       </Modal>
-      {/* end of table of contents modal */}
+      {/* end of table of contents modal */} 
     </GestureHandlerRootView>
   );
 }
