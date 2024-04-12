@@ -28,7 +28,6 @@ const getLibrary = async () => {
 
             axios.post(Strings.BOOKS_URL+'/library', {
                 email: mail
-
               })
               .then((res) => {
                 console.log("Library Books",res.data.result);

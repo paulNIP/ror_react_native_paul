@@ -7,6 +7,8 @@ import RNFS from 'react-native-fs';
 import { DatabaseConnection } from '../database/database-connection';
 import {Dimensions} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoaderKit from 'react-native-loader-kit';
+import LoadingComponent from "../components/LoadingComponent";
 
 
 const db = DatabaseConnection.getdb();
@@ -21,11 +23,26 @@ const LibraryScreen = ({navigation}) => {
   const [listAlign, setListAlign] = useState(false);
   const [booksNo, setBooksNo] = useState([]);
   const [email, setEmail] = useState();
+  const [bookExists, setBookExists] = useState();
+  const [downloading, setDownloading] = useState(false);
 
     useEffect(() => {
       const fetchData = async () => {
           const data = await getLibrary();
+          
           setBooks(data);
+          
+          let bkurl=data[0].url;
+          let bk =bkurl.split("/").pop();
+          const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+bk;
+          console.log("gshhhdh",EPUB_PATH)
+          const exists = await RNFS.exists(EPUB_PATH);
+          if (exists) {
+            setBookExists(true);
+          } else {
+            setBookExists(false);
+            
+          }
           const mail= await AsyncStorage.getItem('email');
           setEmail(mail);
           if(mail==null){
@@ -35,7 +52,6 @@ const LibraryScreen = ({navigation}) => {
           }
       }
 
-      const header = booksNo+"";
       fetchData();
 
     }, []);
@@ -50,17 +66,16 @@ const LibraryScreen = ({navigation}) => {
 
     const imgr = item.book_image;
 
-    const book = item.title+'.epub';
     return (
 
-      <View style={{marginEnd:10,width:100}}>
+      <View style={{marginEnd:10,width:Dimensions.get('window').width*0.25}}>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
             <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                 <Image
                   source={{uri:imgr}}
                   style={{
-                    height: 150,
-                    width: 100
+                    height: Dimensions.get('window').height*0.2,
+                    width: Dimensions.get('window').width*0.25
                   }}
                   // resizeMode="contain"
                 />
@@ -73,24 +88,28 @@ const LibraryScreen = ({navigation}) => {
 
               {/* check if file is already downloaded */}
               
-              
-              <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50}}>              
-                <TouchableOpacity onPress={()=>{navigation.navigate('EpubReader',{
-                  file2: item.url
-                })}}>
+              {bookExists &&(
+                <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50}}>              
+                <TouchableOpacity onPress={()=>{
+                  navigation.navigate('EpubReader',{file2: item.url})
+                  
+                  }}>
                   <Text style={{alignSelf:"center",fontSize:8,color:'white',marginTop:5}}>Read Book</Text>
                 </TouchableOpacity>
                 </View> 
 
+              )}
               {/* check if file is already downloaded */}
               
               
-              
-              <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50, marginTop:5}}>
+              {!bookExists &&(
+              <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50,
+               marginTop:5,marginBottom:5}}>
               <TouchableOpacity 
               onPress={()=>{
+                setDownloading(true);
                 const url = item.url;
-                const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                const filePath = `${RNFS.DocumentDirectoryPath}/` + url.split("/").pop();
 
                 RNFS.downloadFile({
                   fromUrl: item.url,
@@ -106,6 +125,7 @@ const LibraryScreen = ({navigation}) => {
                   .promise.then((response) => {
                     console.log('File downloaded!', response);
                     //insert data into the database
+                    setDownloading(false);
 
                     db.transaction(function (tx) {
                       tx.executeSql(
@@ -149,10 +169,10 @@ const LibraryScreen = ({navigation}) => {
               }}>
                 <Text style={{alignSelf:"center",color:'white',fontSize:8,marginTop:5}}>Download</Text>
               </TouchableOpacity>
-            </View>
+            </View>)}
 
 
-            
+            {bookExists &&(
                 <View style={{backgroundColor:'#FF0000',marginStart:10,marginEnd:10,marginTop:5,height:20,marginBottom:5, borderRadius:50,borderStyle:"solid"}}>
                   <TouchableOpacity onPress={()=>{
                     // Optional: Delete the file if it exists before downloading
@@ -169,7 +189,7 @@ const LibraryScreen = ({navigation}) => {
                   }}>
                     <Text style={{alignSelf:"center",color:'white',fontSize:8,marginTop:5}}>Delete Book</Text>
                   </TouchableOpacity>
-                </View> 
+                </View> )}
             
 
             </View>
@@ -275,8 +295,9 @@ const LibraryScreen = ({navigation}) => {
                      <View style={{marginTop:Dimensions.get('window').height*0.02}}>
                      <Divider style={{width:'90%',color:'#DAA520'}} color='#A9A9A9' width={1}/>
 
+                     {!bookExists&&(
 
-                     {/* <TouchableOpacity onPress={()=>{}} 
+                      <TouchableOpacity onPress={()=>{}} 
                               style={{      
                               alignItems: 'center',
                               backgroundColor: '#D8A623',
@@ -288,7 +309,10 @@ const LibraryScreen = ({navigation}) => {
                               justifyContent: 'center'}}>
 
                           <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Download Book</Text>
-                     </TouchableOpacity> */}
+                     </TouchableOpacity> 
+
+                     )}
+                     
 
                     
                     <View>
@@ -329,9 +353,6 @@ const LibraryScreen = ({navigation}) => {
 
 
                      </View>
-                     
-
-                     
 
                 </View>
                 
@@ -339,7 +360,10 @@ const LibraryScreen = ({navigation}) => {
 
             </View>
           </View> : null})}
+          {downloading&&(
 
+            <LoadingComponent/>
+          )}
 
           </ScrollView>
          ):
