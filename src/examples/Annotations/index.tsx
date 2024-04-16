@@ -24,9 +24,21 @@ import Slider from '@react-native-community/slider';
 import { DatabaseConnection } from '../../database/database-connection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+
 function Book(props:any) {
 
-  const epub=props.file;
+
+
+
+  // const epub=props.file;
+  // console.log("ghhddhdhdh",epub)
+  // const epub=props.file;
+
+  // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024_April_test.epub';
+
+  const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024-april-2.epub';
+
   const loc=props.location;
   const db = DatabaseConnection.getbookmarked_articles_databaseDB();
 
@@ -132,6 +144,9 @@ function Book(props:any) {
   const bottomSheetThemeRef = React.useRef<BottomSheet>(null);
   const bottomSheetBookmarkRef = React.useRef<BottomSheet>(null);
   const bottomSheetSearchRef = React.useRef<BottomSheet>(null);
+  const bottomSheetNotesRef = React.useRef<BottomSheet>(null);
+
+
   const snapPoints = React.useMemo(() => ['50%', '75%', '100%'], []);
   const [term, setTerm] = React.useState('');
   const [defaultLocation, setDefaultLocation] = useState<any>();
@@ -214,9 +229,8 @@ function Book(props:any) {
         !ids.includes(id, index + 1));
     setData(filtered);
 
-
-
   }, [
+
     bookmarks,
     currentLocation?.end.cfi,
     currentLocation?.start.cfi,
@@ -352,8 +366,7 @@ function Book(props:any) {
         }}
         onPressAnnotation={(annotation) => {
           setSelectedAnnotation(annotation);
-          setModalVisible(true);
-          // bottomSheetRef.current?.snapToIndex(0);
+          setModalVisible(true);;
 
         }}
         onChangeAnnotations={(annotation) => {
@@ -772,6 +785,9 @@ Brush Script MT (cursive) */}
             </BottomSheetView>
           </BottomSheet>
       {/* end of bookmark list */}
+
+
+      
 
       <Modal
         animationType="slide"

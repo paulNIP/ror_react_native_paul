@@ -13,8 +13,10 @@ import { useFileSystem } from '@epubjs-react-native/file-system';
 import base64 from './base64';
 import { styles } from './styles';
 
-const epub =
-  'https://epubjs-react-native.s3.amazonaws.com/failing-forward.epub';
+// const epub =
+//   'https://epubjs-react-native.s3.amazonaws.com/failing-forward.epub';
+
+  const epub ='https://rhapsodyonline.slack.com/files/UU44E276F/F06UEE982P5/epub2024_april_test.epub';
 const opf = 'https://s3.amazonaws.com/moby-dick/OPS/package.opf';
 
 export function Formats() {
