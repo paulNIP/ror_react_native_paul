@@ -34,7 +34,7 @@ const renderRightActions = (
       </Animated.View>
       <Animated.View style={[styles.deleteButton, {opacity}]}>
         <TouchableOpacity style={{marginLeft:15,marginRight:15}} onPress={()=>{
-          //Remove annotation
+        //   Remove annotation
         //   if (annotation.data?.key) {
         //     const withMarkAnnotations = annotations.filter(
         //       ({ data }) => data.key === annotation.data.key
