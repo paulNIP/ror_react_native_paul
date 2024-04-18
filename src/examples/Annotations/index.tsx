@@ -29,8 +29,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function Book(props:any) {
 
 
-
-
   // const epub=props.file;
   // console.log("ghhddhdhdh",epub)
   // const epub=props.file;

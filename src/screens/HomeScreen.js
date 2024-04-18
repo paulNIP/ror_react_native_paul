@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TurboModuleRegistry
 } from 'react-native';
 import WordOfMonth from '../components/WordOfMonth';
 import DailyDevotional from '../components/DailyDevotional';
@@ -28,6 +29,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {Overlay} from '@rneui/themed';
 import {Dimensions, Image, Animated, Easing} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import { getProfile } from '../service/authService';
 
 const THEME_COLOR = '##D8A623';
 const windowHeight = Dimensions.get('window').height * 0.6;
@@ -37,6 +39,9 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   const [visibleCongs, setVisibleCongs] = useState(false);
+  const [theme, setTheme] = useState(false);
+  const [note, setNotes] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
   const toggleReadingOverlay = () => {
     setVisibleCongs(!visibleCongs);
@@ -76,6 +81,17 @@ const HomeScreen = () => {
         setVisibleCongs(true);
       } else {
         setVisibleCongs(false);
+      }
+
+      const mail =await AsyncStorage.getItem('email');
+      if(mail){
+
+        const status= await getProfile(mail);
+        if(status.subscription.status!=='expired' || status.subscription.status!==undefined){
+          setSubscribed(true);
+
+        }
+
       }
     }
     setExpiry();
@@ -225,7 +241,16 @@ const HomeScreen = () => {
             <ActionButton.Item
               buttonColor="#D8A623"
               title="Change Theme"
-              onPress={() => alert('Change Theme')}>
+              onPress={() => {
+                if(!subscribed){
+                  alert('Change Theme');
+
+                }else{
+                  setTheme(true);
+                }
+                
+              
+              }}>
               <MaterialCommunityIcons
                 style={{alignSelf: 'center'}}
                 name="format-paint"
@@ -236,7 +261,17 @@ const HomeScreen = () => {
             <ActionButton.Item
               buttonColor="#D8A623"
               title="Notes"
-              onPress={() => navigation.navigate('AllNotes')}>
+              onPress={() => {
+                if(!subscribed){
+                  navigation.navigate('Your Notes');
+
+                }else{
+                  setNotes(true);
+                }
+                
+
+              }
+              }>
               <MaterialCommunityIcons
                 style={{alignSelf: 'center'}}
                 name="lead-pencil"
@@ -283,19 +318,10 @@ const HomeScreen = () => {
               />
             </View>
 
-            <Text style={{alignSelf: 'center'}}>
-              Gain Exclusive access to life changing
+            <Text style={{alignSelf: 'center',flexWrap:"wrap"}}>
+              Gain Exclusive access to life changing articles on various topics such as health finances, spiritual growth and faith. Plus Bible references, reading plans, extensive search
             </Text>
-            <Text style={{alignSelf: 'center'}}>
-              {' '}
-              articles on various topics such as health
-            </Text>
-            <Text style={{alignSelf: 'center'}}>
-              finances, spiritual growth and faith. Plus Bible
-            </Text>
-            <Text style={{alignSelf: 'center'}}>
-              references, reading plans, extensive search
-            </Text>
+
             <Text style={{alignSelf: 'center'}}>and lots more!{'\n'}</Text>
             <Button
               title="Subscribe Now"
@@ -306,6 +332,132 @@ const HomeScreen = () => {
               }}
             />
           </Overlay>
+
+          <Overlay
+            ModalComponent={Modal}
+            fullScreen={false}
+            isVisible={note}
+            onBackdropPress={toggleReadingOverlay}
+            overlayStyle={{
+              width: windowWidth,
+              height: windowHeight*0.7,
+              padding: 10,
+            }}>
+            <View style={{flexDirection:'row',marginTop:-45}}>
+              <TouchableOpacity style={{marginLeft:"auto"}} onPress={()=>{setNotes(false);}}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={25}
+                color="white"
+              />
+              </TouchableOpacity>
+            </View>
+            <View style={{alignSelf: 'center'}}>
+              <Animated.Image
+                style={animatedStyle}
+                source={require('../assets/sunrays.png')}
+              />
+              <Image
+                style={styles.logo}
+                source={require('../assets/logo.png')}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: 'center',
+                marginTop: 70,
+              }}>
+              <Image
+                style={styles.wing}
+                source={require('../assets/left_wing.png')}
+              />
+              <Text style={{color: '#D8A623'}}>Upgrade</Text>
+              <Image
+                style={styles.wing}
+                source={require('../assets/right_wing.png')}
+              />
+            </View>
+
+            <Text style={{alignSelf: 'center',flexWrap:'wrap'}}>
+              To write and save your notes synced and available anytime,upgrade to a Premium Plan
+            </Text>
+
+            <Button
+              style={{marginTop:10}}
+              title="Subscribe Now"
+              color="#D8A623"
+              onPress={() => {
+                navigation.navigate('Subscription');
+                setVisibleCongs(!visibleCongs);
+              }}
+            />
+          </Overlay>
+
+          <Overlay
+            ModalComponent={Modal}
+            fullScreen={false}
+            isVisible={theme}
+            onBackdropPress={toggleReadingOverlay}
+            overlayStyle={{
+              width: windowWidth,
+              height: windowHeight*0.7,
+              padding: 10,
+            }}>
+            <View style={{flexDirection:'row',marginTop:-45}}>
+              <TouchableOpacity style={{marginLeft:"auto"}} onPress={()=>{setTheme(false)}}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={25}
+                color="white"
+              />
+              </TouchableOpacity>
+            </View>
+            <View style={{alignSelf: 'center'}}>
+              <Animated.Image
+                style={animatedStyle}
+                source={require('../assets/sunrays.png')}
+              />
+              <Image
+                style={styles.logo}
+                source={require('../assets/logo.png')}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: 'center',
+                marginTop: 70,
+              }}>
+              <Image
+                style={styles.wing}
+                source={require('../assets/left_wing.png')}
+              />
+              <Text style={{color: '#D8A623'}}>Upgrade</Text>
+              <Image
+                style={styles.wing}
+                source={require('../assets/right_wing.png')}
+              />
+            </View>
+
+            <Text style={{alignSelf: 'center',flexWrap:'wrap'}}>
+              To be able to change the feel and look of your app.Upgrade to Premiun Plan by Subscribing
+            </Text>
+
+            <Button
+              style={{marginTop:10}}
+              title="Subscribe Now"
+              color="#D8A623"
+              onPress={() => {
+                navigation.navigate('Subscription');
+                setVisibleCongs(!visibleCongs);
+              }}
+            />
+          </Overlay>
+
+
+
+
         </View>
       </ScrollView>
     </SafeAreaView>

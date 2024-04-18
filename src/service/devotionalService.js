@@ -11,7 +11,7 @@ const db = DatabaseConnection.getdevotionalsDB();
 
 const getDailyDevotional = async () => {
     let lang= await AsyncStorage.getItem('language');
-    if(lang ===null){
+    if(lang ===null || lang ==='english'){
       return new Promise((resolve, reject) => {
               axios.post(Strings.API_URL+'/v2/devotional', {
                           date: new Date().toISOString().slice(0, 10)
