@@ -71,6 +71,7 @@ import LatestBooks from './src/screens/LatestBooks';
 import axios from 'axios';
 import AllNotes from './src/screens/AllNotes';
 // import { NotificationListener, requestUserPermission } from './src/service/pushNotificationManager';
+import AppNotes from './src/screens/AppNotes';
 
 
 
@@ -103,6 +104,7 @@ export type StackParamList = {
   PrivacyPolicy:undefined;
   FeedBack:{id:string};
   Annotations:{file:string};
+  AppNotes:undefined;
 };
 
 const StackHeader = createStackNavigator<StackParamList>();
@@ -226,6 +228,7 @@ function HomeStackNavigator() {
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="VideoDetail" component={VideoDetail} />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
+      <Stack.Screen name="Your Notes" component={AppNotes} />
       <Stack.Screen name="LatestBooks" component={LatestBooks}
        options={{
         title: 'Latest Books',

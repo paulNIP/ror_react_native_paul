@@ -93,6 +93,9 @@ const DailyDevotional = () => {
   }
 
   const setPrefferdLanguage =async (lang) => {
+
+    console.log("yweyyehenjejejkekke",lang);
+
     await AsyncStorage.setItem('language',lang);
     const data = await getDailyDevotional();
     setDevotional(data)
@@ -136,7 +139,7 @@ const DailyDevotional = () => {
         setAllTranslatedLanguages(lang.languages)
         let data = await AsyncStorage.getItem('language');
         if(data==null){
-          setLanguage('English')
+
         }else{
           setLanguage(data)
         }
@@ -422,7 +425,7 @@ const DailyDevotional = () => {
 
   const renderDevotional = ( {item} ) => {
 
-    const img = item.photo_link;
+    const img = (language) ? item.photo_link:item.image;
     const body = item.content_body;
     const study= Strings.VERSE_URL+item.study;
     const BA= Strings.VERSE_URL+item.BA;

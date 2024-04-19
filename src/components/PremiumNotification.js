@@ -18,7 +18,7 @@ const db = DatabaseConnection.getdb();
 
 const PremiumNotification = () => {
 
-   const [subscribed, setSubscribed] = React.useState(null);
+   const [subscribed, setSubscribed] = useState(false);
    const [books, setBooks] = useState();
    const navigation =useNavigation();
 
@@ -26,18 +26,18 @@ const PremiumNotification = () => {
    useEffect(() => {
     async function setData() {
       const mail=await AsyncStorage.getItem('email');
-      if(mail===null){
-
-      }else{
+      if(mail){
         const subscribe = await getProfile(mail);
-        
+        console.log("bsnnsnnsnns",subscribe.subscription.status);
+        if(subscribe.subscription.status!=='expired'){
+          setSubscribed(true);
+
+        }
         const bks = await getDailyDevotionalBooks();
         let id =bks.books[0].id;
         const bookDetail =await getBookDetails(id);
         console.log("bOOk details",bookDetail);
         setBooks(bookDetail);
-        setSubscribed(subscribe.subscription.status);
-        
 
 
       }
@@ -76,7 +76,7 @@ const PremiumNotification = () => {
 
 return (
   <>
-     {subscribed==='active' ? (
+     {subscribed && (
       <View style={styles.contentView}> 
        <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center'}}
        name="book-open-variant" size={25} color="#0099e5" />    
@@ -87,30 +87,20 @@ return (
         </TouchableOpacity>
         
       </View>
-       ):(null)} 
+       )} 
 
-      {subscribed==='inactive' || !subscribed  ? (
+      {!subscribed &&(
       <View style={{flexDirection:'row'}}>
           <MaterialCommunityIcons  style={{alignContent:'center',justifyContent:'center', paddingTop : 9, paddingBottom : 10}}
            name="information" size={35} color="#D8A623" />
-          <Text style={{marginTop : 0, paddingRight : 10}}> Subscribe to Premium &#160;
+          <Text style={{marginTop : 0, paddingRight : 10,color:'#007CC0'}}> To unlock thecomplete devotional for the month and enjoy its full features. subscribe to the Premium Plan &#160;
               <TouchableOpacity
                   onPress={() => { navigation.navigate('Subscription'); }}
-                  style={{
-                      borderColor: '#FF0000',
-                      borderWidth: 0.5,
-                      borderRadius: 5,
-                      paddingTop: 8,
-                      paddingLeft : 15,
-                      paddingRight : 15,
-                      paddingBottom : 5,
-                      backgroundColor: 'transparent'
-                  }}
-              ><Text style={{color: '#FF0000', fontSize: 12}}>UPGRADE</Text>
+              ><Text style={{color: '#FF0000'}}>UPGRADE</Text>
               </TouchableOpacity>
            </Text>
           
-        </View>):null}
+        </View>)}
   </>
 );
 };
