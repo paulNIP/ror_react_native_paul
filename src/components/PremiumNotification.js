@@ -28,7 +28,6 @@ const PremiumNotification = () => {
       const mail=await AsyncStorage.getItem('email');
       if(mail){
         const subscribe = await getProfile(mail);
-        console.log("bsnnsnnsnns",subscribe.subscription.status);
         if(subscribe.subscription.status!=='expired'){
           setSubscribed(true);
 
@@ -38,7 +37,6 @@ const PremiumNotification = () => {
         const bookDetail =await getBookDetails(id);
         console.log("bOOk details",bookDetail);
         setBooks(bookDetail);
-
 
       }
       

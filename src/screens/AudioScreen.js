@@ -17,6 +17,7 @@ import { ListItem } from '@rneui/themed';
 import RNFS from 'react-native-fs';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Audio } from 'expo-av';
 
 
 //import RNFetchBlob from 'rn-fetch-blob';
@@ -46,6 +47,39 @@ function AudioScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [spinner, setSpinner] = useState(false);
+  const [sound, setSound] = useState();
+
+
+  async function playSound(url) {
+    const AUDIO_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+    const exists = await RNFS.exists(AUDIO_PATH);
+    if (!exists) {
+          //set downloading
+          RNFS.downloadFile({
+              fromUrl: url,
+              toFile: AUDIO_PATH,
+              background: true, // Enable downloading in the background (iOS only)
+              discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+              progress: (res) => {
+                  // Handle download progress updates if needed
+                  const progress = (res.bytesWritten / res.contentLength) * 100;
+                  console.log(`Progress: ${progress.toFixed(2)}%`);
+              },
+          }).promise.then((response) => {
+          }).catch((err) => {
+                  console.log('Download error:', err);
+              });
+
+    } else {
+      console.log('Loading Sound');
+      const { sound } = await Audio.Sound.createAsync(AUDIO_PATH);
+      setSound(sound);
+
+      console.log('Playing Sound');
+      await sound.playAsync();
+    }
+    
+  }
 
 
 
@@ -112,8 +146,17 @@ const downloadFile = async url => {
   }
 };
 
+  useEffect(() => {
+    return sound
+      ? () => {
+          console.log('Unloading Sound');
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
-// end of download function
+
+  // end of download function
 
   useEffect(() => {
 
@@ -395,9 +438,7 @@ const downloadFile = async url => {
               audioArray.map((l, i) => {
                 let url=l.url;
                 return (
-                <TouchableOpacity onPress={()=>{
-                  onStartPlay(url);
-                 }}>
+                <TouchableOpacity onPress={()=>{playSound(url);}}>
                 <ListItem key={i} bottomDivider>
                    <Image
                      style={styles.image}
