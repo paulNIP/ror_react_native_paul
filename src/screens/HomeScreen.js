@@ -31,15 +31,19 @@ import {Dimensions, Image, Animated, Easing} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import { getProfile } from '../service/authService';
 
-const THEME_COLOR = '##D8A623';
+
 const windowHeight = Dimensions.get('window').height * 0.6;
 const windowWidth = Dimensions.get('window').width * 0.8;
 
 const HomeScreen = () => {
   const navigation = useNavigation();
 
+  const [themeColor,setThemeColor] = useState('#D8A623');
+  const [themeLabel,setThemeLabel] = useState('GOLD');
+
   const [visibleCongs, setVisibleCongs] = useState(false);
   const [theme, setTheme] = useState(false);
+  const [changeTheme, setChangeTheme] = useState(false);
   const [note, setNotes] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
 
@@ -72,6 +76,11 @@ const HomeScreen = () => {
     height: 150,
   };
 
+  const changeAppTheme =async(appTheme)=>{
+    await AsyncStorage.setItem("THEME",appTheme)
+
+  }
+
   useEffect(() => {
     async function setExpiry() {
       const expiryData = await AsyncStorage.getItem('expiry_date');
@@ -99,7 +108,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={THEME_COLOR} />
+      <StatusBar barStyle={themeColor} />
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}>
@@ -243,10 +252,10 @@ const HomeScreen = () => {
               title="Change Theme"
               onPress={() => {
                 if(!subscribed){
-                  alert('Change Theme');
+                  setTheme(true);
 
                 }else{
-                  setTheme(true);
+                  setChangeTheme(true);
                 }
                 
               
@@ -263,10 +272,11 @@ const HomeScreen = () => {
               title="Notes"
               onPress={() => {
                 if(!subscribed){
-                  navigation.navigate('Your Notes');
+                  setNotes(true);
 
                 }else{
-                  setNotes(true);
+                  navigation.navigate('Your Notes');
+                  
                 }
                 
 
@@ -454,6 +464,100 @@ const HomeScreen = () => {
               }}
             />
           </Overlay>
+
+           {/* table of contents modal */}
+      <Modal
+        animationType="slide"
+        // transparent={true}
+        visible={changeTheme}
+        onRequestClose={() => {
+        }}>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:themeColor,}}>
+            <View style={{flexDirection:"row",marginTop:20}}>
+                <Text style={{fontSize:20,marginLeft:20}}>Choose your theme</Text>
+                <TouchableOpacity onPress={()=>setChangeTheme(!changeTheme)} style={{marginLeft:'auto'}}>
+                <MaterialCommunityIcons  name='close' size={20} color='#00000'/>
+                </TouchableOpacity>
+            </View>
+        
+        <View style={{backgroundColor:themeColor,justifyContent:"center",alignItems:'center'}}>
+            
+            <TouchableOpacity onPress={()=>{
+                setThemeColor('#D8A623');
+                setThemeLabel('GOLD');
+              }}
+              style={{backgroundColor:'#D8A623',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={()=>{
+                setThemeColor('#007cc0');
+                setThemeLabel('TOPAZ');
+              }}
+              style={{backgroundColor:'#007cc0',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={()=>{
+                setThemeColor('#2F92E5');
+                setThemeLabel('SAPPHIRE');
+              }}
+
+              style={{backgroundColor:'#2F92E5',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={()=>{
+                setThemeColor('#8F0338');
+                setThemeLabel('NOBEL RED');
+              }}
+              style={{backgroundColor:'#8F0338',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={()=>{
+                setThemeColor('#ff478c');
+                setThemeLabel('RUBY');
+              }}
+              style={{backgroundColor:'#ff478c',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+
+
+            <TouchableOpacity 
+              onPress={()=>{
+                setThemeColor('#202124');
+                setThemeLabel('DARK');
+              }}
+              style={{backgroundColor:'#202124',marginTop:20,
+                      width:50,height:50,borderRadius:25,borderWidth:2,borderColor:"#ffffff"}}>
+
+            </TouchableOpacity>
+
+
+            <TouchableOpacity  onPress={()=>{
+              changeAppTheme(themeLabel);
+            }}
+              style={{backgroundColor:'#D8A623',marginTop:30,width:windowWidth,
+                      borderRadius:5,borderWidth:1,borderColor:"#ffffff"}}>
+                        <Text style={{alignSelf:'center',padding:10}}>APPLY - {themeLabel}</Text>
+
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+
+
+      {/* end of table of contents modal */} 
 
 
 

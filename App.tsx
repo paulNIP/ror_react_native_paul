@@ -176,8 +176,6 @@ function HomeStackNavigator() {
 
   }, []);
 
-
-
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} 
