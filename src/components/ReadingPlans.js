@@ -1,6 +1,8 @@
 import React, { useState,useEffect, useRef } from 'react';
-import { View, Text, ScrollView, ImageBackground, StyleSheet, Dimensions, 
-  TextInput, TouchableOpacity,Alert,Modal, Image,FlatList,Button } from 'react-native';
+import {
+    View, Text, ScrollView, ImageBackground, StyleSheet, Dimensions,
+    TextInput, TouchableOpacity, Alert, Modal, Image, FlatList, Button, Platform
+} from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Input } from '@rneui/themed';
@@ -29,9 +31,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 const windowHeight = Dimensions.get('window').height*0.4;
 const windowWidth = Dimensions.get('window').width*0.8;
-
-
-// SKU RhapsodyReader
 
 
 
@@ -97,14 +96,38 @@ const ReadingPlans = () => {
 
   const purchaseSubscription = async () => {
     try {
-      // Initiate the subscription purchase
-      const purchase = await RNIap.requestSubscription('your_subscription_product_id');
-      
-      // Handle the purchase response accordingly
-    //   console.log('Subscription purchased successfully:', purchase);
-      
-      // Optionally, update the UI to reflect the subscription status
-      setIsSubscribed(true);
+
+        //RhapsodyReader
+        const subscriptionSkus = Platform.select({
+            ios: ['monthlyPlanNew2']
+        });
+
+        await RNIap.initConnection();
+        const billingResult = await RNIap.getAvailablePurchases();
+        console.log("billingresult", billingResult);
+        if(billingResult){
+            console.log("already purchased")
+            console.log("productid", billingResult[0].productId)
+            console.log("purchased on transaction date", billingResult[0].transactionDate)
+        }
+
+
+        const products = await RNIap.getProducts({ skus: subscriptionSkus });
+        console.log('AvailableProducts:', products);
+        console.log("AvailableProducts product id is ", products[0].productId );
+
+        const purchase= await RNIap.requestPurchase({ sku: products[0].productId});
+        let purchaseStatus = 0
+        if(purchase) {
+            purchaseStatus = 1
+            console.log(purchase.transactionReceipt)
+            // Send the receipt to your server for verification and track the duration
+            //sendToServerForVerification(purchase.transactionReceipt);
+            //setIsSubscribed(true);
+        }
+        console.log(purchaseStatus)
+
+
     } catch (error) {
       console.warn('Error purchasing subscription:', error);
     }
@@ -556,7 +579,9 @@ const ReadingPlans = () => {
 
                                         <TouchableOpacity style={{alignItems: 'center',
                                             backgroundColor: '#D8A623',
-                                            padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{}}>
+                                            padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
+                                            purchaseSubscription()
+                                        }}>
                                             <Text>SUBSCRIBE</Text>
                                         </TouchableOpacity>
                                         {/* <Text style={{alignSelf:'center',marginBottom:5,marginTop:5}}> or </Text> */}
