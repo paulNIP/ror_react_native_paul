@@ -43,30 +43,30 @@ const StoreScreen = ({ navigation }) => {
   const [allbooks, setAllBooks] = useState();
 
   useEffect(() => {
-
-    const getAllBooks = async () => {
-      try {
-        const response = await axios.get(Strings.BOOKS_URL+'/fetch').then((res) => {
-          setIsLoading(false);
-          setAllBooks(response.data.EBOOK_APP);
-        })
-        .catch((err) => {
-          console.log(err)
-        });
-      }catch(e){
-        console.log(e);
-        }
-    }
+    // const getAllBooks = async () => {
+    //   try {
+    //     const response = await axios.get(Strings.BOOKS_URL+'/fetch').then((res) => {
+    //       setIsLoading(false);
+    //       setAllBooks(response.data.EBOOK_APP);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     });
+    //   }catch(e){
+    //     console.log(e);
+    //     }
+    // }
 
     const fetchData = async () => {
         const data = await getBooks();
         setBooks(data);
         const translated = await getTranslatedBooks();
         setTranslatedBooks(translated.languages);
+        setIsLoading(false);
     }
 
     fetchData();
-    getAllBooks();
+    // getAllBooks();
 
 
   }, []);
@@ -432,23 +432,22 @@ const StoreScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 
-      {isLoading? (
+      {/* {isLoading? (
       <View>
       <View style={{
         justifyContent: 'center',
         alignItems: 'center',
       }} >
        
-        <ActivityIndicator
+        <ActivityIndicator 
         style={{justifyContent: 'center',
         alignItems: 'center'}}
-            color="#FFFFFF"
-            size="large"
+            color="gray"
           />
           
       </View>
       </View>
-      ):(
+      ):( */}
       <View>
         <FeaturedBooks/>
             <BookCategories/>
@@ -479,7 +478,9 @@ const StoreScreen = ({ navigation }) => {
 
             <TranslatedBooks/>
 
-      </View>)}
+      </View>
+      
+      {/* // )} */}
         
         
 

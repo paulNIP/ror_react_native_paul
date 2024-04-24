@@ -463,7 +463,6 @@ function StoreStackNavigator() {
                       <TouchableOpacity onPress={()=>{
                         navigation.navigate('AppFeedBack');
                       }}>
-                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
                       </TouchableOpacity>
               </View>
             )}}
