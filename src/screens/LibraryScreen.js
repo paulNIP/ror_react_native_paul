@@ -66,6 +66,8 @@ const LibraryScreen = ({navigation}) => {
 
     const imgr = item.book_image;
 
+    console.log("hghdhhdhhdhhdhhd",item.url);
+
     return (
 
       <View style={{marginEnd:10,width:Dimensions.get('window').width*0.25}}>
@@ -91,7 +93,7 @@ const LibraryScreen = ({navigation}) => {
               {bookExists &&(
                 <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50}}>              
                 <TouchableOpacity onPress={()=>{
-                  navigation.navigate('EpubReader',{file2: item.url})
+                  navigation.navigate('EpubReader',{file2: item.url,location:null})
                   
                   }}>
                   <Text style={{alignSelf:"center",fontSize:8,color:'white',marginTop:5}}>Read Book</Text>
@@ -263,10 +265,6 @@ const LibraryScreen = ({navigation}) => {
                 // Check if file is downloaded for app folder
                 const url = l.url;
                 const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
-                console.log("File Name Downloaded",filePath);
-                console.log("File Name Downloaded2",url.split("/").pop());
-
-
 
                 return i === 0 ?
                 
@@ -321,6 +319,7 @@ const LibraryScreen = ({navigation}) => {
                          <Text style={{flexWrap:'wrap',marginBottom:5,marginTop:5,color:'#A9A9A9'}}>Already Downloaded</Text>
                      </View> 
                      <View style={{flexDirection:'row'}}>
+                        {bookExists &&(
                          <TouchableOpacity onPress={()=>{}} 
                               style={{      
                               alignItems: 'center',
@@ -334,7 +333,22 @@ const LibraryScreen = ({navigation}) => {
 
                           <Text style={{alignSelf:"center",color:"#FFFFFF"}}>Open / Read Book</Text>
                          </TouchableOpacity>
-                         <TouchableOpacity onPress={()=>{}} 
+                         )}
+
+                       {bookExists &&(
+                         <TouchableOpacity onPress={()=>{
+                           // Optional: Delete the file if it exists before downloading
+                          const url = item.url;
+                          const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                          RNFS.unlink(filePath)
+                            .then(() => {
+                              Alert.alert('File deleted');
+                            })
+                            .catch((err) => {
+                              console.log(err.message);
+                            });
+
+                         }} 
                             style={{      
                               alignItems: 'center',
                               backgroundColor: '#FFFFFF',
@@ -346,7 +360,7 @@ const LibraryScreen = ({navigation}) => {
                               justifyContent: 'center'}}
                               >
                           <Text style={{alignSelf:"center",color:'red'}}>Delete Book</Text>
-                         </TouchableOpacity>
+                         </TouchableOpacity>)}
                          
                      </View>
                      </View>
