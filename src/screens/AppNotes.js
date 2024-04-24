@@ -14,16 +14,39 @@ import BottomSheet, { BottomSheetView,BottomSheetTextInput, } from '@gorhom/bott
 const AppNotes =() =>{
     const [modalVisible, setModalVisible] = useState(false);
     const [notesVisible, setNotesVisible] = useState(true);
-    const [text, onChangeText] = useState('UselessText');
+    const [text, onChangeText] = useState('Note Title');
 
     const bottomSheetRef = React.useRef(null);
     const snapPoints = React.useMemo(() => ['50%', '75%', '100%'], []);
 
     return(
         <SafeAreaView style={styles.container}>
+
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={{heigh:40, backgroundColor:'#D8A623', flexDirection:'row',marginBottom:10}}>
+            <Text style={{fontWeight:'bold',color:'#ffffff',marginTop:10,marginLeft:10}}>3 Notes</Text>
+            <View style={{flexDirection:'row',marginLeft:'auto'}}>
+              <TouchableOpacity style={{alignItems:'center',marginLeft:10}}>
+                <MaterialCommunityIcons
+                        name="refresh"
+                        size={25}
+                        color="#FFFFFF"
+                    />
+                <Text style={{color:'gray'}}>Refresh</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{alignItems:'center',marginLeft:10}}>
+                  <MaterialCommunityIcons
+                        name="cloud-outline"
+                        size={25}
+                        color="#FFFFFF"
+                    />
+                <Text style={{color:'gray'}}>Sync Notes</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
             <TouchableOpacity style={{backgroundColor: "#eee", borderRadius: 10,
-             overflow: "hidden",marginBottom:15}}>
+             overflow: "hidden",marginBottom:15,marginHorizontal: 8}}>
               <View>
                 <View style={{flex:1,flexDirection:'row',
                               alignContent:'center',marginTop:15}}>
@@ -136,11 +159,52 @@ const AppNotes =() =>{
             }}
           >
             <BottomSheetView style={styles.contentContainer}>
+                <View style={{height:40,
+                 alignContent:'center',justifyContent:'center'}}>
+                  <View style={{flexDirection:'row',marginTop:2}}>
+                    <TouchableOpacity onPress={()=>{}} style={{marginLeft:10,marginRight:10}}>
+                      <MaterialCommunityIcons  name='close' size={25} color='#D8A623'/>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        borderBottomColor: 'gray',
+                        borderBottomWidth: 0.5,
+                      }}>
+                      <TextInput
+                        style={{width:Dimensions.get('window').width * 0.6}}
+                        onChangeText={onChangeText}
+                        value={text}
+                    />
+                    </View>
+                    <View style={{flexDirection:"row",marginLeft:'auto'}}>
+                      <TouchableOpacity onPress={()=>{}} style={{marginLeft:5}}>
+                      <MaterialCommunityIcons  name='content-save' size={25} color='#D8A623'/>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{}} style={{marginLeft:10}}>
+                      <MaterialCommunityIcons  name='share-variant' size={25} color='#D8A623'/>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={()=>{}} style={{marginLeft:10}}>
+                      <MaterialCommunityIcons  name='delete' size={25} color='#D8A623'/>
+                      </TouchableOpacity>
+                    </View>
+                  </View> 
+                </View>
+
+                <TextInput
+                        style={{width:Dimensions.get('window').width}}
+                        value={text}
+                        numberOfLines={50}
+                        underlineColorAndroid="gray"
+                        
+                />
+                
 
 
 
             </BottomSheetView>
           </BottomSheet>
+
+          {/* Toast.makeText(getContext(), "Notes Refreshed", Toast.LENGTH_SHORT).show(); */}
             
 
             <Modal
@@ -151,15 +215,14 @@ const AppNotes =() =>{
               setModalVisible(!modalVisible);
             }}>
             <View>
-                 <View style={{backgroundColor:"#D8A623",height:40,marginTop:60,
+                 <View style={{height:40,marginTop:60,
                  alignContent:'center',justifyContent:'center'}}>
                   <View style={{flexDirection:'row',marginTop:2}}>
                     <TouchableOpacity onPress={()=>{}} style={{marginLeft:10,marginRight:10}}>
-                      <MaterialCommunityIcons  name='close' size={25} color='#FFFFFF'/>
+                      <MaterialCommunityIcons  name='close' size={25} color='gray'/>
                     </TouchableOpacity>
                     <View
                       style={{
-                        backgroundColor: '#D8A623',
                         borderBottomColor: 'gray',
                         borderBottomWidth: 0.5,
                       }}>
@@ -174,29 +237,15 @@ const AppNotes =() =>{
                       <MaterialCommunityIcons  name='content-save' size={25} color='gray'/>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={()=>{}} style={{marginLeft:10}}>
-                      <MaterialCommunityIcons  name='share-variant' size={25} color='#FFFFFF'/>
+                      <MaterialCommunityIcons  name='share-variant' size={25} color='gray'/>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={()=>{}} style={{marginLeft:10}}>
-                      <MaterialCommunityIcons  name='delete' size={25} color='#FFFFFF'/>
+                      <MaterialCommunityIcons  name='delete' size={25} color='gray'/>
                       </TouchableOpacity>
                     </View>
                   </View> 
                  </View>
 
-
-                {/* <View  style={{
-                        backgroundColor: '#D8A623',
-                        borderBottomColor: 'gray',
-                        borderBottomWidth: 1,
-                      }}>
-                        <TextInput
-                            editable
-                            multiline
-                            numberOfLines={4}
-                            maxLength={40}
-                            onChangeText={text => onChangeText(text)}
-                          />
-                </View> */}
 
             <TextInput placeholder=""
                   style={{
@@ -227,17 +276,14 @@ const AppNotes =() =>{
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop:10,
       backgroundColor:'#ffffff',
       paddingTop: StatusBar.currentHeight,
     },
     scrollView: {
-      marginHorizontal: 8,
+      marginHorizontal: 0,
     },
     contentContainer: {
       flex: 1,
-      alignItems: 'center',
-      paddingHorizontal: 24,
     },
     text: {
       fontSize: 42,

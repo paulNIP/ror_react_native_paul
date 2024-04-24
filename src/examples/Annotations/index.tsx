@@ -331,20 +331,22 @@ function Book(props:any) {
           console.log('onUpdateBookmark', bookmark)
         }
         onReady={()=>{
+          // if initial location set
+          if(loc){
+            //goto default date of daily devotional
+            let obj =Object.entries(data);
+            obj.map((j) => {
+              let chap=j[1].label.trim().toLowerCase();
+              if(chap.startsWith(loc.toLowerCase())){
+                // console.log("Location sgshhhsjsj",j[1].href);
+                let initialloc:any =j[1].href;
+                goToLocation(initialloc);
+              }
+            
+            });
 
-          //goto default date of daily devotional
-          let obj =Object.entries(data);
-          obj.map((j) => {
-            let chap=j[1].label.trim().toLowerCase();
-            if(chap.startsWith(loc.toLowerCase())){
-              // console.log("Location sgshhhsjsj",j[1].href);
-              let initialloc:any =j[1].href;
-              goToLocation(initialloc);
-            }
-          
-          });
+          }
 
-          
         }}
         onPressExternalLink={(url) => {
           Linking.openURL(url);
