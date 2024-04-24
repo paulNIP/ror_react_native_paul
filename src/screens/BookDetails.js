@@ -8,7 +8,8 @@ import {
     FlatList,
     TouchableOpacity,
     Modal,
-    Pressable
+    Pressable,
+    ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,18 +32,34 @@ const BookDetails = ({ route, navigation }) => {
 
   const [book, setBook] = useState();
   const [visible, setVisible] = useState(false);
+  const [downloadVisible, setDownloadVisible] = useState(false);
   const [favouritesColor, setFavouritesColor] = useState('#808080');
   const db = DatabaseConnection.getdb();
   const [progress, setProgress] = useState(0);
 
-  const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
+    const [bookExist, setBookExist] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await getBookDetails(book_id);
             setBook(data);
+
+            let url = book[0].book_file_url;
+            const fileName = url.split("/").pop();
+            const filePath = RNFS.DocumentDirectoryPath + '/' + fileName; // Ensure you have the '/' between the directory path and file name
+            // Check if the file already exists
+            const fileExists = await RNFS.exists(filePath);
+            if (fileExists) {
+                setBookExist(true);
+
+            } else {
+
+            }
+            console.log("Bookgdg mm",book[0].payment_option);
+
   
         }
 
@@ -75,13 +92,6 @@ const BookDetails = ({ route, navigation }) => {
             const fileName = url.split("/").pop();
             const filePath = RNFS.DocumentDirectoryPath + '/' + fileName; // Ensure you have the '/' between the directory path and file name
 
-            // Check if the file already exists
-            const fileExists = await RNFS.exists(filePath);
-            if (fileExists) {
-                setAlertTitle("Book Exists")
-                setAlertMessage("Sorry you have already downloaded this book and it's available in your library.")
-                setModalVisible(true)
-            } else {
                 RNFS.downloadFile({
                     fromUrl: url,
                     toFile: filePath,
@@ -89,12 +99,14 @@ const BookDetails = ({ route, navigation }) => {
                     discretionary: true, // Allow the OS to control the timing and speed (iOS only)
                     progress: (res) => {
                         // Handle download progress updates if needed
-                        const progress = (res.bytesWritten / res.contentLength) * 100;
-                        setProgress(progress);
-                        console.log(`Progress: ${progress.toFixed(2)}%`);
+                        setDownloadVisible(true);
+                        const progress00 = (res.bytesWritten / res.contentLength) * 100;
+                        setProgress(progress00);
+                        console.log(`Progress: ${progress00.toFixed(2)}%`);
                     },
                 })
                     .promise.then((response) => {
+                    setDownloadVisible(false);
                     setAlertTitle("Success")
                     setAlertMessage("The book download is complete and it is now available in your app library.")
                     setModalVisible(true)
@@ -102,7 +114,6 @@ const BookDetails = ({ route, navigation }) => {
                     .catch((err) => {
                         console.log('Download error:', err);
                     });
-            }
         } else {
             navigation.navigate('Login');
         }
@@ -265,6 +276,7 @@ const BookDetails = ({ route, navigation }) => {
         const book_views=item.book_views;
         const author_name=item.author_name;
         const product=item.apple_product_code;
+        const price =item.price;
 
         return (
           <View>
@@ -388,16 +400,29 @@ const BookDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                      <TouchableOpacity onPress={()=>{
-                          downloadFile(item.book_file_url)
-                      }}>
-                        <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
-                        <Text style={{alignSelf:"center"}}>Download</Text>
-                        </TouchableOpacity>
+                        {!bookExist &&(
+                            <TouchableOpacity onPress={()=>{
+                                setDownloadVisible(true);
+                                downloadFile(item.book_file_url)
+                            }}>
+                              <MaterialCommunityIcons style={{alignSelf:"center"}} name="cloud-download" size={30} color="#5D3FD3" />
+                              <Text style={{alignSelf:"center"}}>Download</Text>
+                              </TouchableOpacity>
+
+                        )}
+                      
                     </View>
                     <View>
                      <TouchableOpacity  onPress={()=>{
                          //openBook()
+                         if(price===0){
+                            navigation.navigate('EpubReader',{file2: item.url,location:null})
+
+                         }else{
+                            //Buy and if buy is sucess navigate to reader
+
+                         }
+                         
                      }}>
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="file-multiple-outline" size={30} color="#9AC4F8" />
                         <Text style={{alignSelf:"center"}} >Read</Text>
@@ -450,6 +475,25 @@ const BookDetails = ({ route, navigation }) => {
                 <ScrollView showsVerticalScrollIndicator={false}
                 >
                    <FlatList data={book} renderItem={renderBook}  ItemSeparatorComponent={() => <View style={{height: 5}} />}/>
+                   {downloadVisible && (
+                        <View style={{
+                        position: "absolute",
+                        height:50,
+                        bottom: Dimensions.get('window').height * 0.45,
+                        top:Dimensions.get('window').height * 0.45,
+                        right: Dimensions.get('window').width * 0.25,
+                        left: Dimensions.get('window').width * 0.25,
+                        alignContent:'center',justifyContent:'center',
+                        backgroundColor:'#000',
+                        opacity:0.25
+                        }}>
+                        <ActivityIndicator color="gray"/>
+                        <Text style={{color:'white',alignSelf:'center',fontWeight:'bold'}}>{progress} %</Text>
+                        <Text style={{color:'white',alignSelf:'center',fontWeight:'bold'}}>Downloading Book ...</Text>
+            
+                        </View>
+
+                     )}
                 </ScrollView>
 
         </SafeAreaView>

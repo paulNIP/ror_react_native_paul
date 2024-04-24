@@ -475,8 +475,8 @@ const HomeScreen = () => {
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor:themeColor,}}>
             <View style={{flexDirection:"row",marginTop:20}}>
                 <Text style={{fontSize:20,marginLeft:20}}>Choose your theme</Text>
-                <TouchableOpacity onPress={()=>setChangeTheme(!changeTheme)} style={{marginLeft:'auto'}}>
-                <MaterialCommunityIcons  name='close' size={20} color='#00000'/>
+                <TouchableOpacity onPress={()=>setChangeTheme(!changeTheme)} style={{marginLeft:'auto',marginRight:40}}>
+                <MaterialCommunityIcons  name='close' size={20} color='#FFFFFF'/>
                 </TouchableOpacity>
             </View>
         

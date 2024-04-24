@@ -226,7 +226,35 @@ function HomeStackNavigator() {
       <Stack.Screen name="EmailCodeAuth" component={EmailCodeAuth} />
       <Stack.Screen name="VideoDetail" component={VideoDetail} />
       <Stack.Screen name="Rhapsody TV" component={RhapsodyTVScreen} />
-      <Stack.Screen name="Your Notes" component={AppNotes} />
+      <Stack.Screen name="Your Notes" component={AppNotes}
+      options={{
+        title:'',
+        headerLeft: () => (
+          <View style={{flexDirection:"row", marginLeft:8}}>
+            <TouchableOpacity>
+              <MaterialCommunityIcons  name='menu' size={25} color='#FFFFFF'/>
+            </TouchableOpacity>
+            <Text style={{color:'white',fontWeight:"bold",fontSize:18,marginLeft:10}}>Your </Text>
+            <Text style={{color:'black',fontWeight:"bold",fontSize:18,marginLeft:10,marginRight:10}}>Notes</Text>
+            <Image
+                  style={{width:30,height:30,marginLeft:2}}
+                  source={require('./src/assets/prof.png')}
+                />
+          </View>
+         ),
+        headerRight: () => (
+          <View style={{marginRight:10}}>
+                  <TouchableOpacity onPress={()=>{
+                    navigation.navigate('AppFeedBack');
+                  }}>
+                    <Text style={{fontWeight:"bold",color:'#FFFFFF',fontSize:18}}>FEEDBACK</Text>
+                  </TouchableOpacity>
+
+
+
+          </View>
+         )}} 
+          />
       <Stack.Screen name="LatestBooks" component={LatestBooks}
        options={{
         title: 'Latest Books',
@@ -266,7 +294,10 @@ function HomeStackNavigator() {
 
 
           </View>
-         )}} />
+         )}} 
+         
+         
+         />
 
 
     </Stack.Navigator>
@@ -432,7 +463,6 @@ function StoreStackNavigator() {
                       <TouchableOpacity onPress={()=>{
                         navigation.navigate('AppFeedBack');
                       }}>
-                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
                       </TouchableOpacity>
               </View>
             )}}

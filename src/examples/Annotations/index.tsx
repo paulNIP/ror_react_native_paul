@@ -29,13 +29,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function Book(props:any) {
 
 
-  // const epub=props.file;
-  // console.log("ghhddhdhdh",epub)
-  // const epub=props.file;
+  const epub=props.file2;
+  console.log("ghhddhdhdh",epub)
+  // // const epub=props.file;
 
-  // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024_April_test.epub';
+  // // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024_April_test.epub';
 
-  const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024-april-2.epub';
+  // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024-april-2.epub';
 
   const loc=props.location;
   const db = DatabaseConnection.getbookmarked_articles_databaseDB();
@@ -331,20 +331,22 @@ function Book(props:any) {
           console.log('onUpdateBookmark', bookmark)
         }
         onReady={()=>{
+          // if initial location set
+          if(loc){
+            //goto default date of daily devotional
+            let obj =Object.entries(data);
+            obj.map((j) => {
+              let chap=j[1].label.trim().toLowerCase();
+              if(chap.startsWith(loc.toLowerCase())){
+                // console.log("Location sgshhhsjsj",j[1].href);
+                let initialloc:any =j[1].href;
+                goToLocation(initialloc);
+              }
+            
+            });
 
-          //goto default date of daily devotional
-          let obj =Object.entries(data);
-          obj.map((j) => {
-            let chap=j[1].label.trim().toLowerCase();
-            if(chap.startsWith(loc.toLowerCase())){
-              // console.log("Location sgshhhsjsj",j[1].href);
-              let initialloc:any =j[1].href;
-              goToLocation(initialloc);
-            }
-          
-          });
+          }
 
-          
         }}
         onPressExternalLink={(url) => {
           Linking.openURL(url);
