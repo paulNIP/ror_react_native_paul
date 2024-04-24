@@ -35,12 +35,10 @@ const PremiumNotification = () => {
         const bks = await getDailyDevotionalBooks();
         let id =bks.books[0].id;
         const bookDetail =await getBookDetails(id);
-        console.log("bOOk details",bookDetail);
         setBooks(bookDetail);
 
       }
       
-
     }
     setData();
 

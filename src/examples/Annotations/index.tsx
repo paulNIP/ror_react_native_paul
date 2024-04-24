@@ -29,13 +29,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function Book(props:any) {
 
 
-  // const epub=props.file;
-  // console.log("ghhddhdhdh",epub)
-  // const epub=props.file;
+  const epub=props.file2;
+  console.log("ghhddhdhdh",epub)
+  // // const epub=props.file;
 
-  // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024_April_test.epub';
+  // // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024_April_test.epub';
 
-  const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024-april-2.epub';
+  // const epub='https://rhapsodyofrealities.b-cdn.net/app/books/test/epub2024-april-2.epub';
 
   const loc=props.location;
   const db = DatabaseConnection.getbookmarked_articles_databaseDB();
