@@ -645,6 +645,7 @@ const ReadingPlans = () => {
                         </Overlay> 
                 </View>
             </View>
+            {loading && <ActivityIndicator size="large" />}
         </ScrollView>
 
 

@@ -122,6 +122,7 @@ return (
                 navigation.navigate('Subscription');
 
               }
+
             }}
             >
             <Text>Upgrade Subscription</Text>

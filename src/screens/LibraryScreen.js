@@ -93,7 +93,9 @@ const LibraryScreen = ({navigation}) => {
               {bookExists &&(
                 <View style={{backgroundColor:'#F9A825',marginStart:10,marginEnd:10,height:20, borderRadius:50}}>              
                 <TouchableOpacity onPress={()=>{
-                  navigation.navigate('EpubReader',{file2: item.url,location:null})
+                    const url=item.url;
+                    const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+                    navigation.navigate('EpubReader',{file2: EPUB_PATH,location:null});
                   
                   }}>
                   <Text style={{alignSelf:"center",fontSize:8,color:'white',marginTop:5}}>Read Book</Text>
@@ -320,7 +322,12 @@ const LibraryScreen = ({navigation}) => {
                      </View> 
                      <View style={{flexDirection:'row'}}>
                         {bookExists &&(
-                         <TouchableOpacity onPress={()=>{}} 
+                         <TouchableOpacity onPress={()=>{
+                          const url=item.url;
+                          const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+                          navigation.navigate('EpubReader',{file2: EPUB_PATH,location:null});
+                          
+                         }} 
                               style={{      
                               alignItems: 'center',
                               backgroundColor: '#D8A623',
