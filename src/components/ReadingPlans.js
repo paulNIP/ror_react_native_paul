@@ -110,9 +110,14 @@ const ReadingPlans = () => {
   const saveSubscription = async(productID, purchase)=>{
 
       let packagePrice
-      if(productID.description === "monthlyPlanNew"){
+      if(productID.productId === "monthlyPlanNew2"){
           packagePrice = 2.99
-      }else{
+      }else if(productID.productId === "ThreeMonthPlan"){
+          packagePrice = 4
+      }else if(productID.productId === "yearlyPlanNewNew"){
+          packagePrice = 24
+      }
+      else{
           packagePrice = 0
       }
 
@@ -169,7 +174,7 @@ const giveSubscription = async(email, packagePrice)=>{
 }
 
     const CustomAlert = (props) => {
-        const [iOSDefaults, setIOSDefaults] = useState({
+        const [iOSDefaults] = useState({
             container: {
                 backgroundColor: (props.ios && props.ios.container && props.ios.container.backgroundColor) || '#F8F8F8',
             },
