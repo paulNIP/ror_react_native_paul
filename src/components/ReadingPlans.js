@@ -665,6 +665,7 @@ const giveSubscription = async(email, packagePrice)=>{
 
                 </View>
             </View>
+            {loading && <ActivityIndicator size="large" />}
         </ScrollView>
 
 

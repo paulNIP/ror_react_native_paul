@@ -416,7 +416,9 @@ const BookDetails = ({ route, navigation }) => {
                      <TouchableOpacity  onPress={()=>{
                          //openBook()
                          if(price===0){
-                            navigation.navigate('EpubReader',{file2: item.url,location:null})
+                            const url=item.url;
+                            const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+                            navigation.navigate('EpubReader',{file2: EPUB_PATH,location:null})
 
                          }else{
                             //Buy and if buy is sucess navigate to reader

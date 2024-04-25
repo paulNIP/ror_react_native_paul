@@ -26,7 +26,7 @@ const isIos = Platform.OS === "ios";
 
 //product id from appstoreconnect app->subscriptions
 const subscriptionSkus = Platform.select({
-  ios: ["cwgmonthly299"],
+  ios: ["7SpiritsOfGodNew"],
 });
 
 export const OldSubscription = ({ navigation }) => {
@@ -235,7 +235,7 @@ export const OldSubscription = ({ navigation }) => {
                       style={styles.button}
                       onPress={() => {
                         setLoading(true);
-                        handleBuySubscription(subscription.productId);
+                        handleBuySubscription("7SpiritsOfGodNew");
                       }}
                     >
                       <Text style={styles.buttonText}>Subscribe</Text>
