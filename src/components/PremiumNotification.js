@@ -49,8 +49,6 @@ const PremiumNotification = () => {
    }
 
     const openRhapsodyReader = async() => {
-
-
         let url =books[0].book_file_url;
 
         let options = { weekday: 'long', day: 'numeric'};
@@ -62,7 +60,7 @@ const PremiumNotification = () => {
         if (!exists) {
           Alert.alert("Book doesnot exist in your Library Please Download It from your Library");
         } else {
-          openEpub(url,initialLocation); 
+          openEpub(EPUB_PATH,initialLocation); 
         }
 
         
