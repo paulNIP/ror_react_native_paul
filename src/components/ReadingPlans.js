@@ -363,95 +363,6 @@ const giveSubscription = async(email, packagePrice)=>{
 
 
 
-    const rhapsodyPlusSubscription=async()=> {
-        let mail= await AsyncStorage.getItem("email");
-        if(activeIndex===0){
-            setSubscriptionPackage(2.99);
-
-        }else if(activeIndex===1){
-            setSubscriptionPackage(4.0);
-
-        }else if(activeIndex===2){
-            setSubscriptionPackage(6.0);
-
-        }else if(activeIndex===3){
-            setSubscriptionPackage(12.0);
-
-        }else if(activeIndex===4){
-            setSubscriptionPackage(24.0);
-
-        }else if(activeIndex===5){
-            setSubscriptionPackage(48.0);
-
-        }
-
-        const randomKeyTag = Math.random().toString(36).substring(2, 5);
-        try {
-        const pk = await generate(randomKeyTag);
-        // console.log("pksnsnndnd",pk)
-        } catch (e) {
-        const {message, userInfo} =  e;
-        // console.log("Generation Erriorttt",message);
-        }
-
-        const crypto = createCryptoContext(randomKeyTag);
-
-        // Create jwt
-        const signedJwt = await new SignJWT(crypto)
-        .setPayload({
-            sub: 'demoApp',
-            iss: 'PagoPa',
-        })
-        .setProtectedHeader({ typ: 'JWT' })
-        .sign();
-
-        const data={
-            "email":mail,
-            "password":"rabadaba",
-            "source":"app",
-            "package":subscriptionPackage
-        }
-
-        axios.post('https://rowtoken.rhapsodyofrealities.org/api/subscription/add',data, {
-        //example with bearer token
-        headers: {
-            'Authentication': 'Bearer '+signedJwt
-        }
-        })
-        .then(function (res) {
-        console.log("rhapsodyPlusSubscription responsesbdbdhfbfb",res.data.response);
-        if(res.data.status===1){
-
-            if(subscriptionPackage===2.99){
-    
-            }else if(subscriptionPackage===4.0){
-    
-            }else if(subscriptionPackage===6.0){
-    
-            }else if(subscriptionPackage===12.0){
-    
-            }else if(subscriptionPackage===24.0){
-    
-            }else if(subscriptionPackage===48.0){
-    
-            }
-
-
-        }else{
-
-
-        }
-
-
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
-    }
-  
-
-
   return (
     <ScrollView style={styles.container}>
             <View style={{flex:1, height: screenHeight+400}}>
@@ -739,15 +650,6 @@ const giveSubscription = async(email, packagePrice)=>{
                                         </TouchableOpacity>
 
                                         ) }
-
-                                        {/*<TouchableOpacity style={{alignItems: 'center',*/}
-                                        {/*    backgroundColor: '#D8A623',*/}
-                                        {/*    padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{*/}
-                                        {/*    purchaseSubscription()*/}
-                                        {/*}}>*/}
-                                        {/*    <Text>SUBSCRIBE</Text>*/}
-                                        {/*</TouchableOpacity>*/}
-
 
                                         <View style={{height:100}}>
 
