@@ -31,6 +31,7 @@
     "expo-av": "~13.10.5",
     "expo-document-picker": "~11.10.1",
     "expo-status-bar": "~1.11.1",
+    "force": "^0.0.3",
     "formik": "^2.4.5",
     "i18n-js": "^4.4.3",
     "install-expo-modules": "^0.8.1",
