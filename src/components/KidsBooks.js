@@ -47,7 +47,7 @@ const KidsBooks = () => {
         return (
             <View style={{marginEnd:10, width:Dimensions.get('window').width*0.25}}>
                 <TouchableOpacity onPress={()=>{
-                    navigation.navigate('BookDetails',{book_id:item.id})
+                    navigation.navigate('BookDetails',{book_id:item.id,code:item.apple_product_code})
                 }
                 }>
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>

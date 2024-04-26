@@ -92,7 +92,7 @@ export type StackParamList = {
   RecipeDetail:{ id: string };
   Registration:{email:string};
   LanguageBooks:{lang:string};
-  BookDetails:{book_id:string};
+  BookDetails:{book_id:string,code:string};
   ArticleDetails:{id:string};
   GroupedBooks:{cat_id:string,category:string};
   BookCategories:undefined;
@@ -168,11 +168,16 @@ function HomeStackNavigator() {
             let data = await getProfile(mail);
             setName(data.name);
 
-          }
-          
+          }  
           
       }
-      fetchData();
+      
+
+      const interval = setInterval(() => {
+        fetchData();
+      }, 2000);
+
+      return () => clearInterval(interval);
 
   }, []);
 
@@ -451,7 +456,7 @@ function StoreStackNavigator() {
       
       />
 
-    <Stack.Screen name="BookDetails" component={BookDetails}
+    {/* <Stack.Screen name="BookDetails" component={BookDetails}
           options={{
             headerRight: () => (
               <View style={{marginRight:10,flexDirection:'row'}}>
@@ -467,7 +472,7 @@ function StoreStackNavigator() {
               </View>
             )}}
       
-      />
+      /> */}
 
     <Stack.Screen name="FeedBack" component={FeedBack}
       />
@@ -497,7 +502,13 @@ function MoreStackNavigator() {
 
           
       }
-      fetchData();
+
+
+      const interval = setInterval(() => {
+        fetchData();
+      }, 2000);
+
+      return () => clearInterval(interval);
 
   }, []);
 
