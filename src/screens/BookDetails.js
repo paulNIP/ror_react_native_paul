@@ -9,10 +9,11 @@ import {
     TouchableOpacity,
     Modal,
     Pressable,
-    ActivityIndicator
+    ActivityIndicator,Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import BottomSheet, { BottomSheetView,BottomSheetTextInput, } from '@gorhom/bottom-sheet';
 import { Divider} from '@rneui/themed';
 import { Button } from '@rneui/themed';
 import { getBookDetails } from '../service/libraryService';
@@ -20,15 +21,51 @@ import {Dimensions} from 'react-native';
 import { DatabaseConnection } from '../database/database-connection';
 import SnackBar from 'react-native-snackbar-component';
 import RNFS from 'react-native-fs';
-import * as RNIap from 'react-native-iap';
+import {
+    PurchaseError,
+    requestSubscription,
+    useIAP,
+    validateReceiptIos,
+  } from "react-native-iap";
+
+  const errorLog = ({ message, error }) => {
+    console.error("An error happened", message, error);
+  };
+  
+  const isIos = Platform.OS === "ios";
+  
+
+  
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Strings from '../constants/Strings';
 
 
 
 const BookDetails = ({ route, navigation }) => {
 
+  
+  //useIAP - easy way to access react-native-iap methods to
+  //get your products, purchases, subscriptions, callback
+  //and error handlers.
+  const {
+    connected,
+    subscriptions, //returns subscriptions for this app.
+    getSubscriptions, //Gets available subsctiptions for this app.
+    currentPurchase, //current purchase for the tranasction
+    finishTransaction,
+    purchaseHistory, //return the purchase history of the user on the device (sandbox user in dev)
+    getPurchaseHistory, //gets users purchase history
+  } = useIAP();
+
   const book_id = route.params.book_id;
   const title  = route.params.title;
+  const sku  = route.params.code;
+
+  console.log("Apple product ID mdnddjjdjdjdj ",sku);
+      //product id from appstoreconnect app->subscriptions
+  const subscriptionSkus = Platform.select({
+        ios: [sku],
+    });
 
   const [book, setBook] = useState();
   const [visible, setVisible] = useState(false);
@@ -36,31 +73,31 @@ const BookDetails = ({ route, navigation }) => {
   const [favouritesColor, setFavouritesColor] = useState('#808080');
   const db = DatabaseConnection.getdb();
   const [progress, setProgress] = useState(0);
+  const bottomSheetThemeRef = React.useRef<BottomSheet>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [bookExist, setBookExist] = useState(false);
+  const bottomSheetRef = React.useRef(null);
+  const snapPoints = React.useMemo(() => ['50%', '75%', '100%'], []);
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [alertTitle, setAlertTitle] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
-    const [bookExist, setBookExist] = useState(false);
+
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await getBookDetails(book_id);
             setBook(data);
-
             let url = book[0].book_file_url;
-            const fileName = url.split("/").pop();
-            const filePath = RNFS.DocumentDirectoryPath + '/' + fileName; // Ensure you have the '/' between the directory path and file name
             // Check if the file already exists
-            const fileExists = await RNFS.exists(filePath);
+            const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+            const fileExists = await RNFS.exists(EPUB_PATH);
             if (fileExists) {
                 setBookExist(true);
 
             } else {
 
             }
-            console.log("Bookgdg mm",book[0].payment_option);
 
-  
         }
 
         fetchData();
@@ -71,19 +108,115 @@ const BookDetails = ({ route, navigation }) => {
       }, [navigation]);
 
 
-      const purchaseProduct = async (productId) => {
-          const email = await AsyncStorage.getItem('email')
-          if(email){
-              try {
-                  const purchase = await RNIap.requestPurchase(productId);
-                  console.log('Purchase:', purchase);
-              } catch (error) {
-                  console.log('Error purchasing:', error.message);
-              }
-          }else{
-              navigation.navigate('Login')
+
+
+  const [loading, setLoading] = useState(false);
+
+  const handleGetPurchaseHistory = async () => {
+    try {
+      await getPurchaseHistory();
+    } catch (error) {
+      errorLog({ message: "handleGetPurchaseHistory", error });
+    }
+  };
+
+  useEffect(() => {
+    handleGetPurchaseHistory();
+  }, [connected]);
+
+  const handleGetSubscriptions = async () => {
+    try {
+      await getSubscriptions({ skus: subscriptionSkus });
+    } catch (error) {
+      errorLog({ message: "handleGetSubscriptions", error });
+    }
+  };
+
+  useEffect(() => {
+    handleGetSubscriptions();
+  }, [connected]);
+
+  useEffect(() => {
+    // ... listen if connected, purchaseHistory and subscriptions exist
+    if (
+      purchaseHistory.find(
+        (x) => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
+      )
+    ) {
+      navigation.navigate("Home");
+    }
+  }, [connected, purchaseHistory, subscriptions]);
+
+  const handleBuySubscription = async (productId) => {
+    try {
+      await requestSubscription({
+        sku: productId,
+      });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      if (error instanceof PurchaseError) {
+        errorLog({ message: `[${error.code}]: ${error.message}`, error });
+      } else {
+        errorLog({ message: "handleBuySubscription", error });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const checkCurrentPurchase = async (purchase) => {
+      if (purchase) {
+        try {
+          const receipt = purchase.transactionReceipt;
+          if (receipt) {
+            if (Platform.OS === "ios") {
+              const isTestEnvironment = __DEV__;
+
+              //send receipt body to apple server to validete
+              const appleReceiptResponse = await validateReceiptIos(
+                {
+                  "receipt-data": receipt,
+                  password: Strings.APP_SHARED_SECRET
+                },
+                isTestEnvironment,
+              );
+
+              //if receipt is valid
+            //   if (appleReceiptResponse) {
+            //     const { status } = appleReceiptResponse;
+            //     if (status) {
+            //       navigation.navigate("Home");
+            //     }
+            //   }
+
+              return;
+            }
           }
-      };
+        } catch (error) {
+          console.log("error", error);
+        }
+      }
+    };
+    checkCurrentPurchase(currentPurchase);
+  }, [currentPurchase, finishTransaction]);
+
+
+
+
+
+    //   const purchaseProduct = async (productId) => {
+    //       const email = await AsyncStorage.getItem('email')
+    //       if(email){
+    //           try {
+    //               const purchase = await RNIap.requestPurchase(productId);
+    //               console.log('Purchase:', purchase);
+    //           } catch (error) {
+    //               console.log('Error purchasing:', error.message);
+    //           }
+    //       }else{
+    //           navigation.navigate('Login')
+    //       }
+    //   };
 
 
     const downloadFile = async (url) => {
@@ -335,8 +468,10 @@ const BookDetails = ({ route, navigation }) => {
                                marginEnd:10,justifyContent:'center',alignContent:'center'}}
                                
                                onPress={()=>{
-                                console.log("product ID",product);
-                                purchaseProduct(product);
+                                bottomSheetRef.current?.snapToIndex(0);
+                                // console.log("product ID",product);
+                                // // purchaseProduct(product);
+                                // bottomSheetRef
                                
                               }}
                                >
@@ -422,6 +557,8 @@ const BookDetails = ({ route, navigation }) => {
 
                          }else{
                             //Buy and if buy is sucess navigate to reader
+                            // bottomSheetThemeRef.current?.snapToIndex(0);
+                            handleBuySubscription(sku);
 
                          }
                          
@@ -496,6 +633,134 @@ const BookDetails = ({ route, navigation }) => {
                         </View>
 
                      )}
+
+                    <BottomSheet
+                            ref={bottomSheetRef}
+                            index={-1}
+                            snapPoints={snapPoints}
+                            keyboardBehavior="fillParent"
+                            enablePanDownToClose
+                            onClose={() => {
+                            }}
+                        >
+                            <BottomSheetView style={styles.contentContainer}>
+                            <View style={{ padding: 10 }}>
+                                <Text
+                                    style={{
+                                    fontSize: 28,
+                                    textAlign: "center",
+                                    paddingBottom: 15,
+                                    color: "black",
+                                    fontWeight: "bold",
+                                    }}
+                                >
+                                    Subscribe
+                                </Text>
+                                <Text style={styles.listItem}>
+                                    Subscribe to some cool stuff today.
+                                </Text>
+                                <Text
+                                    style={
+                                    (styles.listItem,
+                                    {
+                                        fontWeight: "500",
+                                        textAlign: "center",
+                                        marginTop: 10,
+                                        fontSize: 18,
+                                    })
+                                    }
+                                >
+                                    Choose your membership plan.
+                                </Text>
+                                <View style={{ marginTop: 10 }}>
+                                    {subscriptions.map((subscription, index) => {
+                                    const owned = purchaseHistory.find(
+                                        (s) => s?.productId === subscription.productId,
+                                    );
+                                    console.log("subscriptions", subscription?.productId);
+                                    return (
+                                        <View style={styles.box} key={index}>
+                                        {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                                            <>
+                                            <Text style={styles.specialTag}>SPECIAL OFFER</Text>
+                                            </>
+                                        )}
+                                        <View
+                                            style={{
+                                            flex: 1,
+                                            flexDirection: "row",
+                                            justifyContent: "space-between",
+                                            marginTop: 10,
+                                            }}
+                                        >
+                                            <Text
+                                            style={{
+                                                paddingBottom: 10,
+                                                fontWeight: "bold",
+                                                fontSize: 18,
+                                                textTransform: "uppercase",
+                                            }}
+                                            >
+                                            {subscription?.title}
+                                            </Text>
+                                            <Text
+                                            style={{
+                                                paddingBottom: 20,
+                                                fontWeight: "bold",
+                                                fontSize: 18,
+                                            }}
+                                            >
+                                            {subscription?.localizedPrice}
+                                            </Text>
+                                        </View>
+                                        {subscription?.introductoryPriceSubscriptionPeriodIOS && (
+                                            <Text>
+                                            Free for 1{" "}
+                                            {subscription?.introductoryPriceSubscriptionPeriodIOS}
+                                            </Text>
+                                        )}
+                                        <Text style={{ paddingBottom: 20 }}>
+                                            {subscription?.description}
+                                        </Text>
+                                        {owned && (
+                                            <Text style={{ textAlign: "center", marginBottom: 10 }}>
+                                            You are Subscribed to this plan!
+                                            </Text>
+                                        )}
+                                        {owned && (
+                                            <TouchableOpacity
+                                            style={[styles.button, { backgroundColor: "#0071bc" }]}
+                                            onPress={() => {
+                                                navigation.navigate("Home");
+                                            }}
+                                            >
+                                            <Text style={styles.buttonText}>Continue to App</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        {loading && <ActivityIndicator size="large" />}
+                                        {!loading && !owned && isIos && (
+                                            <TouchableOpacity
+                                            style={styles.button}
+                                            onPress={() => {
+                                                setLoading(true);
+                                                handleBuySubscription("7SpiritsOfGodNew");
+                                            }}
+                                            >
+                                            <Text style={styles.buttonText}>Subscribe</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        </View>
+                                    );
+                                    })}
+                                </View>
+                                </View>
+
+                            </BottomSheetView>
+                    </BottomSheet>
+
+
+
+
                 </ScrollView>
 
         </SafeAreaView>
@@ -625,6 +890,11 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textAlign: "center",
     },
+    contentContainer: {
+        flex: 1,
+        alignItems: 'center',
+        paddingHorizontal: 24,
+      },
     iOSMessage: {
         paddingTop: 0,
         paddingRight: 16,
