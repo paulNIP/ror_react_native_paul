@@ -21,6 +21,7 @@ import {Dimensions} from 'react-native';
 import { DatabaseConnection } from '../database/database-connection';
 import SnackBar from 'react-native-snackbar-component';
 import RNFS from 'react-native-fs';
+
 import {
     PurchaseError,
     requestSubscription,
@@ -182,12 +183,12 @@ const BookDetails = ({ route, navigation }) => {
               );
 
               //if receipt is valid
-            //   if (appleReceiptResponse) {
-            //     const { status } = appleReceiptResponse;
-            //     if (status) {
-            //       navigation.navigate("Home");
-            //     }
-            //   }
+              if (appleReceiptResponse) {
+                const { status } = appleReceiptResponse;
+                if (status) {
+                  navigation.navigate("Home");
+                }
+              }
 
               return;
             }
@@ -204,19 +205,19 @@ const BookDetails = ({ route, navigation }) => {
 
 
 
-    //   const purchaseProduct = async (productId) => {
-    //       const email = await AsyncStorage.getItem('email')
-    //       if(email){
-    //           try {
-    //               const purchase = await RNIap.requestPurchase(productId);
-    //               console.log('Purchase:', purchase);
-    //           } catch (error) {
-    //               console.log('Error purchasing:', error.message);
-    //           }
-    //       }else{
-    //           navigation.navigate('Login')
-    //       }
-    //   };
+      const purchaseProduct = async (productId) => {
+          const email = await AsyncStorage.getItem('email')
+          if(email){
+              try {
+                  const purchase = await RNIap.requestPurchase(productId);
+                  console.log('Purchase:', purchase);
+              } catch (error) {
+                  console.log('Error purchasing:', error.message);
+              }
+          }else{
+              navigation.navigate('Login')
+          }
+      };
 
 
     const downloadFile = async (url) => {

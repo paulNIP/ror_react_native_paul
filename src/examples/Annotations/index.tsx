@@ -219,10 +219,8 @@ function Book(props:any) {
 
     }
     getMail();
-    console.log("Highlightedshjhsjjs",highlightListItems);
-    
 
-    
+
     const ids = toc.map(({ id }) => id);
     const filtered = toc.filter(({ id }, index) =>
         !ids.includes(id, index + 1));
@@ -320,7 +318,7 @@ function Book(props:any) {
   return (
     <GestureHandlerRootView>
       <Reader
-        src={epub}
+        src={EPUB_PATH}
         width={width}
         height={height*0.80}
         fileSystem={useFileSystem}
