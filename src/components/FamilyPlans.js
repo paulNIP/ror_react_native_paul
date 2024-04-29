@@ -19,31 +19,22 @@ const FamilyPlans = () => {
 
   const carouselRef = useRef(null)
 
-    const [lista, setLista] = useState([
+    const [FamilyPlansList, setFamilyPlansList] = useState([
         {
-            title:"Viúva Negra",
-            description: "Em Viúva Negra, após seu nascimento, Natasha Romanoff (Scarlett Johansson) é dada à KGB, que a prepara para se tornar sua agente definitiva.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/family_9_header.png'),
             img_header: require('../assets/family_9.png')
         },
         {
-            title:"Free Guy",
-            description: "Um caixa de banco preso a uma entediante rotina tem sua vida virada de cabeça para baixo quando ele descobre que é personagem em um brutalmente realista vídeo game de mundo aberto.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/family_28_header.png'),
             img_header: require('../assets/family_28.png')
         },
         {
-            title:"Top Gun: MAVERICK",
-            description: "Em Top Gun: Maverick, depois de mais de 30 anos de serviço como um dos principais aviadores da Marinha, o piloto à moda antiga Maverick (Tom Cruise) enfrenta drones e prova que o fator humano ainda é fundamental no mundo contemporâneo das guerras tecnológicas.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/family_109_header.png'),
             img_header: require('../assets/family_109.png')
         }
     ]);
 
-    const [background, setBackground] = useState(lista[0].img)
+    const [background, setBackground] = useState(FamilyPlansList[0].img)
 
     const [activeIndex, setActiveIndex] = useState(0)
 
@@ -73,13 +64,13 @@ const FamilyPlans = () => {
                             <Carousel
                                 style={styles.carousel}
                                 ref={carouselRef}
-                                data={lista}
+                                data={FamilyPlansList}
                                 renderItem={_renderItem}
                                 sliderWidth={screenWidth}
                                 itemWidth={200}
                                 inactiveSlideOpacity={0.5}
                                 onSnapToItem={(index) => {
-                                    setBackground(lista[index].img)
+                                    setBackground(FamilyPlansList[index].img)
                                     setActiveIndex(index)
                                 }}
                             />
@@ -93,7 +84,7 @@ const FamilyPlans = () => {
                                         style={{width:Dimensions.get('window').width,marginTop:-5,
                                         resizeMode:'contain',height:Dimensions.get('window').width*0.5,
                                         borderTopRightRadius:30,borderTopLeftRadius:30}}
-                                        source={lista[activeIndex].img_header}
+                                        source={FamilyPlansList[activeIndex].img_header}
                                     />
                                 </View>
                                 <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,marginLeft:20,marginRight:20,marginBottom:50}}>
