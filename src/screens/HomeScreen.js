@@ -103,7 +103,13 @@ const HomeScreen = () => {
 
       }
     }
-    setExpiry();
+    
+
+    const interval = setInterval(() => {
+      setExpiry();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

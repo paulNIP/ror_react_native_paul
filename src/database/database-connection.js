@@ -22,4 +22,5 @@ export const DatabaseConnection = {
     getrhapsodyDaysReadDb: () => openDatabase('rhapsodyDaysReadDb'),
     getsettings_database: () => openDatabase('settings_database'),
     getuserDB: () => openDatabase('user'),
+    getNotesDB: () => openDatabase('notes_db'),
 };
