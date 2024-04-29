@@ -4,31 +4,16 @@ import {
     TextInput, TouchableOpacity, Alert, Modal, Image, FlatList, Button, Platform, Pressable
 } from 'react-native';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import {Overlay } from '@rneui/themed';
 
-import * as RNIap from 'react-native-iap';
-import {
-    decode,
-    verify,
-    isSignatureValid,
-    SignJWT,
-    thumbprint,
-    sha256ToBase64,
-    EncryptJwe,
-    getRemoteJWKSet,
-  } from '@pagopa/io-react-native-jwt';
-  
-  import { generate, sign, getPublicKey,CryptoError } from '@pagopa/io-react-native-crypto';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 
 import styles from '../screens/styles'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import {purchaseSubscription} from "../service/subscriptionService";
+
+
 const windowHeight = Dimensions.get('window').height*0.4;
 const windowWidth = Dimensions.get('window').width*0.8;
 
@@ -37,12 +22,6 @@ const ReadingPlans = () => {
 
    const carouselRef = useRef(null)
    const [visible, setVisible] = useState(false);
-   const [isEligibleForFreeTrial, setIsEligibleForFreeTrial] = useState(false);
-   const [isSubscribed, setIsSubscribed] = useState(false);
-   const [voucher, setVoucher] = useState();
-   const [skuProduct,setSkuProduct] = useState();
-   const [subscriptionPackage,setSubscriptionPackage] = useState();
-
    const [visibleError, setVisibleError] = useState(false);
    const [errorMessage,setErrorMessage] = useState();
 
@@ -50,128 +29,15 @@ const ReadingPlans = () => {
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
 
+    const [subscribed, setSubscribed] = useState(false);
+
    useEffect(() => {
     //checkSubscriptionStatus();
   }, []);
 
-
-
-  const checkSubscriptionStatus = async () => {
-    try {
-      // Get the available products
-      const products = await RNIap.getProducts(['your_subscription_product_id']);
-
-      // Check if the user is subscribed
-      const subscriptionProduct = products.find(product => product.productId === 'your_subscription_product_id');
-
-      if (subscriptionProduct && subscriptionProduct.isSubscribed) {
-        setIsSubscribed(true);
-      } else {
-        setIsSubscribed(false);
-      }
-    } catch (error) {
-      console.warn('Error checking subscription status:', error);
+    const subscribe = async (plan) => {
+        purchaseSubscription(plan)
     }
-  };
-
-
-  /**
-   * Purchase a subscription plan.
-   * @async
-   * @param {string} plan - The subscription plan to purchase.
-   * @returns {void}
-   * @throws {Error} if there is an error purchasing the subscription.
-   */
-  const purchaseSubscription = async (plan) => {
-    try {
-        const subscriptionSkus = Platform.select({
-            ios: [plan]
-        });
-        await RNIap.initConnection();
-        const products = await RNIap.getProducts({ skus: subscriptionSkus });
-        console.log("product is ", products)
-        if (products && products.length > 0) {
-            const productID = products[0]
-            const purchase= await RNIap.requestPurchase({ sku: productID.productId});
-            if(purchase) {
-                await saveSubscription(productID, purchase)
-            }
-        }
-    } catch (error) {
-      console.warn('Error purchasing subscription:', error);
-    }
-  };
-
-  /**
-   * Saves the subscription for a given product and purchase.
-   * @param {object} productID - The product ID object.
-   * @param {object} purchase - The purchase object.
-   */
-  const saveSubscription = async(productID, purchase)=>{
-
-      let packagePrice
-      if(productID.productId === "monthlyPlanNew2"){
-          packagePrice = 2.99
-      }else if(productID.productId === "ThreeMonthPlan"){
-          packagePrice = 4
-      }else if(productID.productId === "yearlyPlanNewNew"){
-          packagePrice = 24
-      }
-      else{
-          packagePrice = 0
-      }
-
-      const email = await AsyncStorage.getItem('email');
-      const name = await AsyncStorage.getItem('name');
-      const country = await AsyncStorage.getItem('country')
-
-      let data = {
-          "email": email,
-          "fullnames": name,
-          "country": country,
-          "currency": productID.currency,
-          "amount": productID.price,
-          "transaction_id": purchase.transactionId,
-          "reference_id": "ios-" + purchase.transactionId,
-          "status": "success",
-          "usd_package": packagePrice,
-          "source": "ios",
-          "payment_method": "applepay",
-          "password": "rabadaba"
-      };
-
-      const response = await axios.post('https://rhapsodysubscriptions.org/api/subscription/init', data);
-      console.log(response.data)
-      if(response.data && response.data.status === 1) {
-          await giveSubscription(email, packagePrice)
-          console.log('Subscription saved');
-      } else {
-          console.log('Failed to save data');
-      }
-  }
-
-/**
- * Sends a subscription request to row token (the wallet)
- * @param {string} email - The email address of the subscriber.
- * @param {number} packagePrice - The subscription package.
- */
-const giveSubscription = async(email, packagePrice)=>{
-    let data = {
-        "email": email,
-        "package": packagePrice,
-        "password": "rabadaba"
-    };
-    const response = await axios.post('https://rowtoken.rhapsodyofrealities.org/api/subscription/add', data);
-    console.log(response.data)
-    if(response.data && response.data.status === 1) {
-        setAlertTitle("Success")
-        setAlertMessage("Your Subscription is successful.")
-        setModalVisible(true)
-        console.log('Subscription complete');
-    } else {
-        console.log('Failed to subscribe');
-    }
-}
 
     const CustomAlert = (props) => {
         const [iOSDefaults] = useState({
@@ -287,62 +153,35 @@ const giveSubscription = async(email, packagePrice)=>{
         )
     }
 
-   const toggleOverlay = () => {
-    setVisible(!visible);
-   };
 
-   const toggleErrorOverlay = () => {
-    setVisibleError(!visibleError);
-   };
-
-
-
-    const [lista, setLista] = useState([
+    const [ReadingPlansList, setReadingPlansList] = useState([
         {
-            title:"O Justiceiro",
-            description: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_2_99.png'),
             img_header: require('../assets/basic_2_header_99.png')
         },
         {
-            title:"Bad Boys for life",
-            description: "Terceiro episódio das histórias dos policiais Burnett (Martin Lawrence) e Lowrey (Will Smith), que devem encontrar e prender os mais perigosos traficantes de drogas da cidade.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_4_header.png'),
             img_header: require('../assets/basic_4.png')
         },
         {
-            title:"Viúva Negra",
-            description: "Em Viúva Negra, após seu nascimento, Natasha Romanoff (Scarlett Johansson) é dada à KGB, que a prepara para se tornar sua agente definitiva.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_6_header_3months.png'),
             img_header: require('../assets/basic_6_3months.png')
         },
         {
-            title:"Free Guy",
-            description: "Um caixa de banco preso a uma entediante rotina tem sua vida virada de cabeça para baixo quando ele descobre que é personagem em um brutalmente realista vídeo game de mundo aberto.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_12_header_3months.png'),
             img_header: require('../assets/basic_12_3months.png')
         },
         {
-            title:"Top Gun: MAVERICK",
-            description: "Em Top Gun: Maverick, depois de mais de 30 anos de serviço como um dos principais aviadores da Marinha, o piloto à moda antiga Maverick (Tom Cruise) enfrenta drones e prova que o fator humano ainda é fundamental no mundo contemporâneo das guerras tecnológicas.",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_24_header_yearly.png'),
             img_header: require('../assets/basic_24_yearly.png')
         },
         {
-            title:"BloodShot",
-            description: "Bloodshot é um ex-soldado com poderes especiais: o de regeneração e a capacidade de se metamorfosear. ",
-            eligibility: "<h4>An Ordered HTML List</h4><p>Benefits</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol><p>App features</p><ol><li>Coffee</li><li>Tea</li><li>Milk</li></ol>",
             img: require('../assets/basic_48_header_yearly.png'),
             img_header: require('../assets/basic_48_yearly.png')
         },
     ]);
 
-    const [background, setBackground] = useState(lista[0].img)
+    const [background, setBackground] = useState(ReadingPlansList[0].img)
 
     const [activeIndex, setActiveIndex] = useState(0)
 
@@ -398,13 +237,13 @@ const giveSubscription = async(email, packagePrice)=>{
                             <Carousel
                                 style={styles.carousel}
                                 ref={carouselRef}
-                                data={lista}
+                                data={ReadingPlansList}
                                 renderItem={_renderItem}
                                 sliderWidth={screenWidth}
-                                itemWidth={200}
-                                inactiveSlideOpacity={0.5}
+                                itemWidth={160}
+                                inactiveSlideOpacity={0.2}
                                 onSnapToItem={(index) => {
-                                    setBackground(lista[index].img)
+                                    setBackground(ReadingPlansList[index].img)
                                     setActiveIndex(index)
                                 }}
                             />
@@ -416,16 +255,13 @@ const giveSubscription = async(email, packagePrice)=>{
                                 <View style={{borderTopRightRadius:30,borderTopLeftRadius:30}}>
                                     <Image
                                         style={{width:Dimensions.get('window').width,marginTop:-5,
-                                        resizeMode:'contain',height:Dimensions.get('window').width*0.5,
-                                        borderTopRightRadius:30,borderTopLeftRadius:30}}
-                                        source={lista[activeIndex].img_header}
+                                        resizeMode:'contain',height:Dimensions.get('window').width*0.48,
+                                        borderTopRightRadius:20,borderTopLeftRadius:20}}
+                                        source={ReadingPlansList[activeIndex].img_header}
                                     />
                                 </View>
                                 <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,
                                     marginLeft:20,marginRight:20,marginBottom:50}}>
-                                {/* <Text>{isSubscribed ? 'You are subscribed!' : 'Not subscribed.'}</Text> */}
-
-                                {/* {!isSubscribed && <Button title="Subscribe" onPress={purchaseSubscription} />} */}
 
                                 {(activeIndex===0 || activeIndex===1) &&(
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
@@ -481,7 +317,7 @@ const giveSubscription = async(email, packagePrice)=>{
                                             <TouchableOpacity style={{alignItems: 'center',
                                                 backgroundColor: '#D8A623',
                                                 padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
-                                                purchaseSubscription('monthlyPlanNew2')
+                                                subscribe('monthlyPlanNew2')
                                             }}><Text>SUBSCRIBE $2 </Text>
                                             </TouchableOpacity>
                                         </View>)}
@@ -510,7 +346,7 @@ const giveSubscription = async(email, packagePrice)=>{
                                             <TouchableOpacity style={{alignItems: 'center',
                                                 backgroundColor: '#D8A623',
                                                 padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
-                                                purchaseSubscription('ThreeMonthPlan')
+                                                subscribe('ThreeMonthPlan')
                                             }}><Text>SUBSCRIBE $4 </Text>
                                             </TouchableOpacity>
                                         </View>)}
@@ -585,7 +421,7 @@ const giveSubscription = async(email, packagePrice)=>{
                                             <TouchableOpacity style={{alignItems: 'center',
                                                 backgroundColor: '#D8A623',
                                                 padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
-                                                purchaseSubscription('yearlyPlanNewNew')
+                                                subscribe('yearlyPlanNewNew')
                                             }}><Text>SUBSCRIBE $24 </Text>
                                             </TouchableOpacity>
                                         </View>)}
@@ -613,59 +449,18 @@ const giveSubscription = async(email, packagePrice)=>{
                                             />
                                         </View>)}
 
-                                        {/* if user is eligible for free trial */}
-
-                                        {isEligibleForFreeTrial &&  (
-                                        <View style={{marginTop:10,borderColor:'#26cc00',
-                                        borderRadius:8,borderWidth:2,backgroundColor:'#d2f2d4'}}>
-                                            <Text style={{alignSelf:'center',fontWeight:'bold',marginTop:5,marginBottom:5}}>
-                                                You are Eligible for 7 days free
-                                            </Text>
-                                            <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
-                                                1. To Begin your free trial, click the button below, provide the valid billing information.
-                                             you wont be charged during the trial period.</Text>
-                                             <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
-                                                2. Unless canceled before the end of the trial period, your Rhapsody subscription will automatically convert to 
-                                                paid subscription to continue your premium experience</Text>
-                                             <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
-                                                3. After the free trial, your Rhapsody subscription will automatically renew at $2.99 every MONTH, 
-                                                providing uninterrupted access to uour enriching devotionational content.</Text>
-                                             <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
-                                                4. Enjoy full acess to all the above App benefits and 
-                                                features during your free trial. Immmerse yourself daily</Text>
-                                             <Text style={{flexWrap:'wrap',marginBottom:5,marginLeft:5,marginRight:5}}>
-                                                5. Easily cancel your free trial anytime  through your Appple store account 
-                                                before the trial period concludes to avoid any changes.
-                                             </Text>
-
-                                        </View>
-
-                                        )}
-
-                                        {isEligibleForFreeTrial && (
-                                            <TouchableOpacity style={{alignItems: 'center',
-                                            backgroundColor: '#D8A623',
-                                            padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{}}>
-                                            <Text>SUBSCRIBE</Text>
-                                        </TouchableOpacity>
-
-                                        ) }
 
                                         <View style={{height:100}}>
 
                                         </View>
 
                                 </View>
-                                
-
                             </View>
                         </View>
 
 
-
                 </View>
             </View>
-            {loading && <ActivityIndicator size="large" />}
         </ScrollView>
 
 

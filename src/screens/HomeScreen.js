@@ -98,9 +98,7 @@ const HomeScreen = () => {
         const status= await getProfile(mail);
         if(status.subscription.status!=='expired' || status.subscription.status!==undefined){
           setSubscribed(true);
-
         }
-
       }
     }
     
