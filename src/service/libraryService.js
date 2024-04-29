@@ -56,6 +56,22 @@ const getCategoryList =async (cat_id)=>{
 });
 }
 
+const getNotesList =async (email)=>{
+  return new Promise((resolve, reject) => {
+
+    axios.post(Strings.BOOKS_URL+'/catfetch', {
+      email: email
+      })
+      .then((res) => {
+        //console.log(res.data.result)
+        resolve(res.data.result)
+    })
+      .catch((err) => {
+        reject(err)
+    });
+});
+}
+
 const getBookDetails =async (book_id)=>{
   return new Promise((resolve, reject) => {
 

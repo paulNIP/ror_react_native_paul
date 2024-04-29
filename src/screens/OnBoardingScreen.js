@@ -52,6 +52,7 @@ const rhapsodyDaysReadDb = DatabaseConnection.getrhapsodyDaysReadDb();
 
 const settings_database = DatabaseConnection.getsettings_database();
 const userDB = DatabaseConnection.getuserDB();
+const noteDB = DatabaseConnection.getNotesDB();
 
 const _renderItem = ({item}) => {
   return (
@@ -214,6 +215,16 @@ const OnboardingScreen = () => {
                 console.log("Create table error", error)
               }
             );
+
+            noteDB.executeSql(
+              'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT, note_id TEXT, body TEXT, action TEXT, note_type TEXT,note_date TEXT,email TEXT)',[], (result) => {
+                console.log("Notes Table created successfully");
+              }, (error) => {
+                console.log("Create table error", error)
+              }
+            );
+
+            
   
   
   
