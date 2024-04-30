@@ -11,8 +11,11 @@ const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 
 import styles from '../screens/styles'
-import {purchaseSubscription} from "../service/subscriptionService";
-
+import {giveSubscription, purchaseSubscription, saveSubscription} from "../service/subscriptionService";
+import CustomAlert from "./CustomAlert";
+import * as RNIap from "react-native-iap";
+import {getFaithProsperity} from "../service/storeService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const windowHeight = Dimensions.get('window').height*0.4;
 const windowWidth = Dimensions.get('window').width*0.8;
@@ -36,122 +39,57 @@ const ReadingPlans = () => {
   }, []);
 
     const subscribe = async (plan) => {
-        purchaseSubscription(plan)
-    }
 
-    const CustomAlert = (props) => {
-        const [iOSDefaults] = useState({
-            container: {
-                backgroundColor: (props.ios && props.ios.container && props.ios.container.backgroundColor) || '#F8F8F8',
-            },
-            title: {
-                color: (props.ios && props.ios.title && props.ios.title.color) || '#000000',
-                fontFamily: (props.ios && props.ios.title && props.ios.title.fontFamily) || 'initial',
-                fontSize: (props.ios && props.ios.title && props.ios.title.fontSize) || 17,
-                fontWeight: (props.ios && props.ios.title && props.ios.title.fontWeight) || '600',
-            },
-            message: {
-                color: (props.ios && props.ios.message && props.ios.message.color) || '#000000',
-                fontFamily: (props.ios && props.ios.message && props.ios.message.fontFamily) || 'initial',
-                fontSize: (props.ios && props.ios.message && props.ios.message.fontSize) || 13,
-                fontWeight: (props.ios && props.ios.message && props.ios.message.fontWeight) || 'normal',
-            },
-            button: {
-                color: '#387ef5',
-                fontFamily: 'initial',
-                fontSize: 17,
-                fontWeight: '500',
-                textTransform: 'none',
-                backgroundColor: 'transparent',
-            },
-        });
+        try {
+            const subscriptionSkus = Platform.select({
+                ios: [plan]
+            });
+            await RNIap.initConnection();
+            const products = await RNIap.getProducts({ skus: subscriptionSkus });
+            //console.log("product is ", products)
+            if (products && products.length > 0) {
+                const productID = products[0]
 
-        const IOSButtonBox = () => {
-            const buttonProps = props.buttons && props.buttons.length > 0 ? props.buttons : [{}]
-            const [buttonLayoutHorizontal, setButtonLayoutHorizontal] = useState(buttonProps.length === 2 ? 1 : 0);
-            return (
-                <View style={[modalStyles.iOSButtonGroup, {
-                    flexDirection: buttonLayoutHorizontal === 1 ? "row" : "column",
-                }]} onLayout={(e) => {
-                    if (e.nativeEvent.layout.height > 60)
-                        setButtonLayoutHorizontal(0);
-                }}>
-                    {
-                        buttonProps.map((item, index) => {
-                            let defaultButtonText = 'OK'
-                            if (buttonProps.length > 2) {
-                                if (index === 0)
-                                    defaultButtonText = 'ASK ME LATER'
-                                else if (index === 1)
-                                    defaultButtonText = 'CANCEL';
-                            } else if (buttonProps.length === 2 && index === 0)
-                                defaultButtonText = 'CANCEL';
-                            const singleButtonWrapperStyle = {}
-                            let singleButtonWeight = iOSDefaults.button.fontWeight;
-                            if (index === buttonProps.length - 1) {
-                                singleButtonWeight = '700';
-                            }
-                            if (buttonLayoutHorizontal === 1) {
-                                singleButtonWrapperStyle.minWidth = '50%';
-                                if (index === 0) {
-                                    singleButtonWrapperStyle.borderStyle = 'solid';
-                                    singleButtonWrapperStyle.borderRightWidth = 0.55;
-                                    singleButtonWrapperStyle.borderRightColor = '#dbdbdf';
-                                }
+                let packagePrice
+                if(productID.productId === "monthlyPlanNew2"){
+                    packagePrice = 2.99
+                } else if(productID.productId === "ThreeMonthPlan"){
+                    packagePrice = 4
+                } else if(productID.productId === "yearlyPlanNewNew"){
+                    packagePrice = 24
+                } else if(productID.productId === "familyPlan"){
+                    packagePrice = 9.99
+                } else{
+                    packagePrice = 0
+                }
 
-                            }
-                            return (
-                                <View style={[modalStyles.iOSButton, singleButtonWrapperStyle]}>
-                                    <Pressable onPress={() => {
-                                        props.setModalVisible(false)
-                                        if (item.func && typeof (item.func) === 'function')
-                                            item.func();
-                                    }}>
-                                        <View
-                                            style={[modalStyles.iOSButtonInner, {backgroundColor: (item.modalStyles && item.modalStyles.backgroundColor) || iOSDefaults.button.backgroundColor}]}>
-                                            <Text
-                                                style={{
-                                                    color: (item.modalStyles && item.modalStyles.color) || iOSDefaults.button.color,
-                                                    fontFamily: (item.modalStyles && item.modalStyles.fontFamily) || iOSDefaults.button.fontFamily,
-                                                    fontSize: (item.modalStyles && item.modalStyles.fontSize) || iOSDefaults.button.fontSize,
-                                                    fontWeight: (item.modalStyles && item.modalStyles.fontWeight) || singleButtonWeight,
-                                                    textTransform: (item.modalStyles && item.modalStyles.textTransform) || iOSDefaults.button.textTransform,
-                                                    textAlign: 'center'
-                                                }}
-                                            >{item.text || defaultButtonText}</Text>
-                                        </View>
-                                    </Pressable>
-                                </View>
-                            )
-                        })
+                const purchase= await RNIap.requestPurchase({ sku: productID.productId});
+                if(purchase) {
+                    const data = await saveSubscription(productID, purchase)
 
+                    if( data.status === 1){
+                        const email =  await AsyncStorage.getItem('email');
+                        const points = await giveSubscription(email, packagePrice)
+                        if( points.status === 1){
+                            setAlertTitle("Congratulations ... ")
+                            setAlertMessage("Your subscription is successful. " + points.response )
+                            setModalVisible(true)
+                        }
+                    }else{
+                        setAlertTitle("Error")
+                        setAlertMessage("Something went wrong with your subscription. Please try again")
+                        setModalVisible(true)
                     }
-                </View>
-            );
+                }else{
+
+                }
+
+            }
+        } catch (error) {
+            console.warn('Error purchasing subscription:', error);
         }
-        return (
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={props.modalVisible}
-                onRequestClose={() => {
-                    props.setModalVisible(false);
-                }}>
-                <Pressable
-                    style={[ modalStyles.iOSBackdrop , modalStyles.backdrop ]}
-                    onPress={() => props.setModalVisible(false)}/>
-                <View style={modalStyles.alertBox}>
-                    {
-                        <View style={[modalStyles.iOSAlertBox, iOSDefaults.container]}>
-                            <Text style={[modalStyles.iOSTitle, iOSDefaults.title]}>{props.title || 'Message'}</Text>
-                            <Text style={[modalStyles.iOSMessage, iOSDefaults.message]}>{props.message || ''}</Text>
-                            <IOSButtonBox/>
-                        </View>
-                    }
-                </View>
-            </Modal>
-        )
     }
+
 
 
     const [ReadingPlansList, setReadingPlansList] = useState([
@@ -204,34 +142,35 @@ const ReadingPlans = () => {
 
   return (
     <ScrollView style={styles.container}>
+
+        <CustomAlert
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            title={alertTitle}
+            message={alertMessage}
+            ios={{
+                container: {
+                    backgroundColor: 'white'
+                },
+                title: {
+                    color: '#52565e',
+                    fontSize: 26,
+                    fontWeight : '500'
+                },
+                message: {
+                    color: '#52565e',
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    fontWeight: 'regular',
+                },
+            }}
+            buttons={[{
+                text: 'OK'
+            }]}
+        />
+
             <View style={{flex:1, height: screenHeight+400}}>
                 <View style={{...StyleSheet.absoluteFill}}>
-
-                    <CustomAlert
-                        modalVisible={modalVisible}
-                        setModalVisible={setModalVisible}
-                        title={alertTitle}
-                        message={alertMessage}
-                        ios={{
-                            container: {
-                                backgroundColor: 'white'
-                            },
-                            title: {
-                                color: '#52565e',
-                                fontSize: 26,
-                                fontWeight : '500'
-                            },
-                            message: {
-                                color: '#52565e',
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: 'regular',
-                            },
-                        }}
-                        buttons={[{
-                            text: 'OK'
-                        }]}
-                    />
 
                         <View style={styles.slideView}>
                             <Carousel
@@ -261,7 +200,7 @@ const ReadingPlans = () => {
                                     />
                                 </View>
                                 <View style={{borderTopRightRadius:20,borderTopLeftRadius:20,
-                                    marginLeft:20,marginRight:20,marginBottom:50}}>
+                                    marginLeft:20,marginRight:20,marginBottom:50, paddingLeft:10}}>
 
                                 {(activeIndex===0 || activeIndex===1) &&(
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold",marginBottom:5,marginTop:5}}>
@@ -277,7 +216,7 @@ const ReadingPlans = () => {
 
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>Benefits</Text>
 
-                                    <View style={{ padding: 10 }}>
+                                    <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Get 1 point instantly!' },
@@ -287,7 +226,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:'wrap'}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:'wrap'}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -296,7 +235,7 @@ const ReadingPlans = () => {
 
                                     <Text style={{ flexWrap: 'wrap',fontWeight:"bold"}}>App features</Text>
                                     {activeIndex===0 &&(
-                                    <View style={{ padding: 10 }}>
+                                    <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Basic Features for 1 Month' },
@@ -309,7 +248,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -325,7 +264,7 @@ const ReadingPlans = () => {
 
 
                                         {activeIndex===1 &&(
-                                        <View style={{ padding: 10 }}>
+                                        <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Premium Features for 1 Month' },
@@ -338,7 +277,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -352,7 +291,7 @@ const ReadingPlans = () => {
                                         </View>)}
 
                                         {activeIndex===2 &&(
-                                        <View style={{ padding: 10 }}>
+                                        <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Basic Features for 3 Months' },
@@ -366,7 +305,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -376,7 +315,7 @@ const ReadingPlans = () => {
                                         )}
 
                                         {activeIndex===3 &&(
-                                        <View style={{ padding: 10 }}>
+                                        <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Premium Features for 3 Months' },
@@ -390,7 +329,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -399,7 +338,7 @@ const ReadingPlans = () => {
 
 
                                         {activeIndex===4 &&(
-                                        <View style={{ padding: 10 }}>
+                                        <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Basic App Features for 1 Year' },
@@ -413,7 +352,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -428,7 +367,7 @@ const ReadingPlans = () => {
 
 
                                         {activeIndex===5 &&(
-                                        <View style={{ padding: 10 }}>
+                                        <View style={{ padding: 10, paddingLeft:30 }}>
                                         <FlatList
                                             data={[
                                                 { key: 'Premium App Features for 1 Year' },
@@ -442,7 +381,7 @@ const ReadingPlans = () => {
                                             renderItem={({ item }) => {
                                                 return (
                                                 <View style={{ marginBottom: 5 }}>
-                                                    <Text style={{flexWrap:"wrap"}}>{`\u25CF ${item.key}`}</Text>
+                                                    <Text style={{flexWrap:"wrap"}}>{`• ${item.key}`}</Text>
                                                 </View>
                                                 );
                                             }}
@@ -468,84 +407,7 @@ const ReadingPlans = () => {
 };
 
 
-const modalStyles = StyleSheet.create({
 
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-
-    button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    buttonOpen: {
-        backgroundColor: "#F194FF",
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    iOSBackdrop: {
-        backgroundColor: "#000000",
-        opacity: 0.3
-    },
-    androidBackdrop: {
-        backgroundColor: "#232f34",
-        opacity: 0.32
-    },
-    backdrop: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    alertBox: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    iOSAlertBox: {
-        maxWidth: 270,
-        width: '100%',
-        zIndex: 10,
-        borderRadius: 13,
-    },
-    iOSTitle: {
-        paddingTop: 12,
-        paddingRight: 16,
-        paddingBottom: 7,
-        paddingLeft: 16,
-        marginTop: 8,
-        textAlign: "center",
-    },
-    iOSMessage: {
-        paddingTop: 0,
-        paddingRight: 16,
-        paddingBottom: 21,
-        paddingLeft: 16,
-        textAlign: "center"
-    },
-    iOSButtonGroup: {
-        marginRight: -0.55
-    },
-    iOSButton: {
-
-        borderTopColor: '#dbdbdf',
-        borderTopWidth: 0.55,
-        borderStyle: 'solid',
-    },
-    iOSButtonInner: {
-        minHeight: 44,
-        justifyContent: 'center'
-    }
-
-});
 
 
 export default ReadingPlans;

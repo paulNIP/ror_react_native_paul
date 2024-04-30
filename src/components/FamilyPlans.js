@@ -1,17 +1,17 @@
 import React, { useState, useRef } from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  ImageBackground,
-  StyleSheet,
-  Dimensions,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  Image,
-  FlatList,
-  Button,
+    View,
+    Text,
+    ScrollView,
+    ImageBackground,
+    StyleSheet,
+    Dimensions,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    Image,
+    FlatList,
+    Button, Pressable, Modal, Platform,
 } from 'react-native';
 
 import Carousel from 'react-native-snap-carousel';
@@ -22,13 +22,70 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 import styles from '../screens/styles';
-import {purchaseSubscription} from "../service/subscriptionService";
+import {giveSubscription, purchaseSubscription, saveSubscription} from "../service/subscriptionService";
+import CustomAlert from "./CustomAlert";
+import * as RNIap from "react-native-iap";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const FamilyPlans = () => {
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+
   const carouselRef = useRef(null);
 
     const subscribe = async (plan) => {
-        purchaseSubscription(plan)
+
+        try {
+            const subscriptionSkus = Platform.select({
+                ios: [plan]
+            });
+            await RNIap.initConnection();
+            const products = await RNIap.getProducts({ skus: subscriptionSkus });
+            //console.log("product is ", products)
+            if (products && products.length > 0) {
+                const productID = products[0]
+
+                let packagePrice
+                if(productID.productId === "monthlyPlanNew2"){
+                    packagePrice = 2.99
+                }else if(productID.productId === "ThreeMonthPlan"){
+                    packagePrice = 4
+                }else if(productID.productId === "yearlyPlanNewNew"){
+                    packagePrice = 24
+                }else if(productID.productId === "familyPlan"){
+                    packagePrice = 9.99
+                } else{
+                    packagePrice = 0
+                }
+
+                const purchase= await RNIap.requestPurchase({ sku: productID.productId});
+                if(purchase) {
+                    const data = await saveSubscription(productID, purchase)
+
+                    if( data.status === 1){
+                        const email =  await AsyncStorage.getItem('email');
+                        const points = await giveSubscription(email, packagePrice)
+                        if( points.status === 1){
+                            setAlertTitle("Congratulations ... ")
+                            setAlertMessage("Your subscription is successful. " + points.response )
+                            setModalVisible(true)
+                        }
+                    }else{
+                        setAlertTitle("Error")
+                        setAlertMessage("Something went wrong with your subscription. Please try again")
+                        setModalVisible(true)
+                    }
+                }else{
+
+                }
+
+            }
+        } catch (error) {
+            console.warn('Error purchasing subscription:', error);
+        }
     }
 
   const [FamilyPlansList, setFamilyPlansList] = useState([
@@ -63,6 +120,33 @@ const FamilyPlans = () => {
 
   return (
     <ScrollView style={styles.container}>
+
+        <CustomAlert
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            title={alertTitle}
+            message={alertMessage}
+            ios={{
+                container: {
+                    backgroundColor: 'white'
+                },
+                title: {
+                    color: '#52565e',
+                    fontSize: 26,
+                    fontWeight : '500'
+                },
+                message: {
+                    color: '#52565e',
+                    fontFamily: 'Roboto',
+                    fontSize: 16,
+                    fontWeight: 'regular',
+                },
+            }}
+            buttons={[{
+                text: 'OK'
+            }]}
+        />
+
       <View style={{ flex: 1, height: screenHeight + 100 }}>
         <View style={{ ...StyleSheet.absoluteFill }}>
           <View style={styles.slideView}>
@@ -105,10 +189,10 @@ const FamilyPlans = () => {
                   marginBottom: 50,
                 }}
               >
-                <Text style={{ flexWrap: 'wrap', fontWeight: 'bold', marginBottom: 5, marginTop: 5 }}>
-                  Subscribe to this package and get access to 30+ life Changing articles for 1 Month
+                <Text style={{ flexWrap: 'wrap', fontWeight: 'bold', marginBottom: 5, marginTop: 5, paddingLeft:10 }}>
+                  Subscribe to this package and get access to :
                 </Text>
-                <Text style={{ flexWrap: 'wrap', fontWeight: 'bold' }}>Benefits</Text>
+                <Text style={{ flexWrap: 'wrap', fontWeight: 'bold', paddingLeft:10 }}>Benefits</Text>
                 {activeIndex === 0 && (
                   <View style={{ padding: 10, paddingLeft:30 }}>
                     <FlatList
@@ -229,3 +313,85 @@ const FamilyPlans = () => {
 };
 
 export default FamilyPlans;
+
+const stylesModal = StyleSheet.create({
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    iOSBackdrop: {
+        backgroundColor: "#000000",
+        opacity: 0.3
+    },
+    androidBackdrop: {
+        backgroundColor: "#232f34",
+        opacity: 0.32
+    },
+    backdrop: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    alertBox: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    iOSAlertBox: {
+        maxWidth: 270,
+        width: '100%',
+        zIndex: 10,
+        borderRadius: 13,
+    },
+    iOSTitle: {
+        paddingTop: 12,
+        paddingRight: 16,
+        paddingBottom: 7,
+        paddingLeft: 16,
+        marginTop: 8,
+        textAlign: "center",
+    },
+    contentContainer: {
+        flex: 1,
+        alignItems: 'center',
+        paddingHorizontal: 24,
+    },
+    iOSMessage: {
+        paddingTop: 0,
+        paddingRight: 16,
+        paddingBottom: 21,
+        paddingLeft: 16,
+        textAlign: "center"
+    },
+    iOSButtonGroup: {
+        marginRight: -0.55
+    },
+    iOSButton: {
+
+        borderTopColor: '#dbdbdf',
+        borderTopWidth: 0.55,
+        borderStyle: 'solid',
+    },
+    iOSButtonInner: {
+        minHeight: 44,
+        justifyContent: 'center'
+    }
+});
