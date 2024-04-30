@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         height: null,
         opacity: 1,
         justifyContent: 'flex-start',
-        backgroundColor: '#000'
+        backgroundColor: '#000',
     },
     viewSearch:{
         marginTop: 15,
@@ -64,7 +64,9 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         flexDirection: "row",
         justifyContent: 'space-around',
-        marginTop:-110
+        marginTop:-135,
+        marginRight : 10,
+        marginLeft : 10,
     },
     movieTitle:{
         paddingLeft: 15,
