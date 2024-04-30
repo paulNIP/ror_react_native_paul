@@ -253,9 +253,7 @@ const ReadingPlans = () => {
                                                 );
                                             }}
                                             />
-                                            <TouchableOpacity style={{alignItems: 'center',
-                                                backgroundColor: '#D8A623',
-                                                padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
+                                            <TouchableOpacity style={btnstyles.subscribeButton} onPress={()=>{
                                                 subscribe('monthlyPlanNew2')
                                             }}><Text>SUBSCRIBE $2 </Text>
                                             </TouchableOpacity>
@@ -282,9 +280,7 @@ const ReadingPlans = () => {
                                                 );
                                             }}
                                             />
-                                            <TouchableOpacity style={{alignItems: 'center',
-                                                backgroundColor: '#D8A623',
-                                                padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
+                                            <TouchableOpacity style={btnstyles.subscribeButton} onPress={()=>{
                                                 subscribe('ThreeMonthPlan')
                                             }}><Text>SUBSCRIBE $4 </Text>
                                             </TouchableOpacity>
@@ -357,9 +353,7 @@ const ReadingPlans = () => {
                                                 );
                                             }}
                                             />
-                                            <TouchableOpacity style={{alignItems: 'center',
-                                                backgroundColor: '#D8A623',
-                                                padding: 10,borderRadius:5,marginTop:30}} onPress={()=>{
+                                            <TouchableOpacity style={ btnstyles.subscribeButton } onPress={()=>{
                                                 subscribe('yearlyPlanNewNew')
                                             }}><Text>SUBSCRIBE $24 </Text>
                                             </TouchableOpacity>
@@ -401,13 +395,20 @@ const ReadingPlans = () => {
                 </View>
             </View>
         </ScrollView>
-
-
   );
 };
 
 
+const btnstyles = StyleSheet.create({
+    subscribeButton :{
+        alignItems: 'center',
+        backgroundColor: '#D8A623',
+        padding: 15,
+        borderRadius:20,
+        marginTop:30,
 
+    }
+})
 
 
 export default ReadingPlans;
