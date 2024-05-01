@@ -181,7 +181,7 @@ const LibraryScreen = ({navigation}) => {
                   <TouchableOpacity onPress={()=>{
                     // Optional: Delete the file if it exists before downloading
                     const url = item.url;
-                    const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                    const filePath = `${RNFS.DocumentDirectoryPath}/` + url.split("/").pop();
                     RNFS.unlink(filePath)
                       .then(() => {
                         Alert.alert('File deleted');
@@ -266,7 +266,7 @@ const LibraryScreen = ({navigation}) => {
 
                 // Check if file is downloaded for app folder
                 const url = l.url;
-                const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                const filePath = `${RNFS.DocumentDirectoryPath}/` + url.split("/").pop();
 
                 return i === 0 ?
                 
@@ -346,7 +346,7 @@ const LibraryScreen = ({navigation}) => {
                          <TouchableOpacity onPress={()=>{
                            // Optional: Delete the file if it exists before downloading
                           const url = item.url;
-                          const filePath = RNFS.DocumentDirectoryPath + url.split("/").pop();
+                          const filePath = `${RNFS.DocumentDirectoryPath}/` + url.split("/").pop();
                           RNFS.unlink(filePath)
                             .then(() => {
                               Alert.alert('File deleted');

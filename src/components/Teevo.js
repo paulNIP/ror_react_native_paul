@@ -46,7 +46,7 @@ const Teevo = () => {
         const imgr = item.book_cover_img;
         return (
             <View style={{marginEnd:10,width:100}}>
-                <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id})}>
+                <TouchableOpacity onPress={()=>navigation.navigate('BookDetails',{book_id:item.id,code:item.apple_product_code})}>
                     <View style={{ flex: 1, alignItems: "center", justifyContent: "center",marginEnd:10 }}>
                         <View style={{ backgroundColor: "#eee", borderRadius: 5, overflow: "hidden" }}>
                             <Image

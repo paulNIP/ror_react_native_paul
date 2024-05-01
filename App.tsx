@@ -73,6 +73,7 @@ import AllNotes from './src/screens/AllNotes';
 // import { NotificationListener, requestUserPermission } from './src/service/pushNotificationManager';
 import AppNotes from './src/screens/AppNotes';
 
+import Constants from 'expo-constants';
 
 
 const Tab = createBottomTabNavigator();
@@ -393,7 +394,6 @@ function StoreStackNavigator() {
                       <TouchableOpacity onPress={()=>{
                         navigation.navigate('AppFeedBack');
                       }}>
-                        <MaterialCommunityIcons  name='lock' color='#FFFFFF'/>
                       </TouchableOpacity>
               </View>
             )}}

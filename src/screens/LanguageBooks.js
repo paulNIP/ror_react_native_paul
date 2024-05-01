@@ -66,7 +66,7 @@ useEffect(() => {
 
   const renderListBooks = ({ item }) => {
   
-
+    const code =item.apple_product_code;
     const imgr = item.book_image;
     const id = item.id;
     const url = item.url;
@@ -162,7 +162,7 @@ useEffect(() => {
                          
                         {!exist && (
                             <TouchableOpacity onPress={()=>{
-                                navigation.navigate('BookDetails',{book_id:id});
+                                navigation.navigate('BookDetails',{book_id:id,code:item.apple_product_code});
                             }} 
                                 style={{      
                                 alignItems: 'center',
@@ -192,7 +192,7 @@ useEffect(() => {
 
   const renderBooks = ({ item }) => {
   
-
+    const code =item.apple_product_code;
     const imgr = item.book_image;
     const id = item.id;
     const url = item.url;
@@ -263,7 +263,7 @@ useEffect(() => {
                 marginTop:5,marginBottom:10}}>
                     <TouchableOpacity 
                     onPress={()=>{
-                        navigation.navigate('BookDetails',{book_id:id});
+                        navigation.navigate('BookDetails',{book_id:id,code:item.apple_product_code});
                     }}>
                     <Text style={{alignSelf:"center",color:'white',
                     marginTop:5,marginBottom:10}}>Download</Text>

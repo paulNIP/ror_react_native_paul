@@ -1,4 +1,4 @@
-import React , { useEffect, useState } from 'react';
+import React , { useEffect, useState,useLayoutEffect } from 'react';
 import {
     StyleSheet,
     ScrollView,
@@ -11,6 +11,7 @@ import {
     Pressable,
     ActivityIndicator,Platform
 } from 'react-native';
+import * as RNIap from "react-native-iap";
 import { SafeAreaView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BottomSheet, { BottomSheetView,BottomSheetTextInput, } from '@gorhom/bottom-sheet';
@@ -21,13 +22,14 @@ import {Dimensions} from 'react-native';
 import { DatabaseConnection } from '../database/database-connection';
 import SnackBar from 'react-native-snackbar-component';
 import RNFS from 'react-native-fs';
-
 import {
     PurchaseError,
     requestSubscription,
     useIAP,
     validateReceiptIos,
   } from "react-native-iap";
+
+
 
   const errorLog = ({ message, error }) => {
     console.error("An error happened", message, error);
@@ -47,26 +49,13 @@ const BookDetails = ({ route, navigation }) => {
   
   //useIAP - easy way to access react-native-iap methods to
   //get your products, purchases, subscriptions, callback
-  //and error handlers.
-  const {
-    connected,
-    subscriptions, //returns subscriptions for this app.
-    getSubscriptions, //Gets available subsctiptions for this app.
-    currentPurchase, //current purchase for the tranasction
-    finishTransaction,
-    purchaseHistory, //return the purchase history of the user on the device (sandbox user in dev)
-    getPurchaseHistory, //gets users purchase history
-  } = useIAP();
 
   const book_id = route.params.book_id;
-  const title  = route.params.title;
   const sku  = route.params.code;
-
-  console.log("Apple product ID mdnddjjdjdjdj ",sku);
-      //product id from appstoreconnect app->subscriptions
+  //product id from appstoreconnect app->subscriptions
   const subscriptionSkus = Platform.select({
-        ios: [sku],
-    });
+    ios: [sku],
+  });
 
   const [book, setBook] = useState();
   const [visible, setVisible] = useState(false);
@@ -81,6 +70,40 @@ const BookDetails = ({ route, navigation }) => {
   const [bookExist, setBookExist] = useState(false);
   const bottomSheetRef = React.useRef(null);
   const snapPoints = React.useMemo(() => ['50%', '75%', '100%'], []);
+
+//useIAP - easy way to access react-native-iap methods to
+  //get your products, purchases, subscriptions, callback
+  //and error handlers.
+  const {
+    connected,
+    subscriptions, //returns subscriptions for this app.
+    getSubscriptions, //Gets available subsctiptions for this app.
+    currentPurchase, //current purchase for the tranasction
+    finishTransaction,
+    purchaseHistory, //return the purchase history of the user on the device (sandbox user in dev)
+    getPurchaseHistory, //gets users purchase history
+  } = useIAP();
+
+
+  const checkSubscriptionStatus = async () => {
+    try {
+      // Get the available products
+      const products = await RNIap.getProducts([sku]);
+      
+      // Check if the user is subscribed
+      const subscriptionProduct = products.find(product => product.productId === sku);
+
+      if (subscriptionProduct && subscriptionProduct.isSubscribed) {
+        // setIsSubscribed(true);
+        console.log("Bought 73y73ybhdjndmdmdmdmdmdmmd");
+      } else {
+        // setIsSubscribed(false);
+        console.log("Not nnnxn Bought 73y73ybhdjndmdmdmdmdmdmmd");
+      }
+    } catch (error) {
+      console.warn('Error checking subscription status:', error);
+    }
+  };
 
 
 
@@ -102,122 +125,16 @@ const BookDetails = ({ route, navigation }) => {
         }
 
         fetchData();
-        navigation.setOptions({
-          title: title,
-        });
-  
-      }, [navigation]);
 
+
+  
+      });
 
 
 
   const [loading, setLoading] = useState(false);
 
-  const handleGetPurchaseHistory = async () => {
-    try {
-      await getPurchaseHistory();
-    } catch (error) {
-      errorLog({ message: "handleGetPurchaseHistory", error });
-    }
-  };
-
-  useEffect(() => {
-    handleGetPurchaseHistory();
-  }, [connected]);
-
-  const handleGetSubscriptions = async () => {
-    try {
-      await getSubscriptions({ skus: subscriptionSkus });
-    } catch (error) {
-      errorLog({ message: "handleGetSubscriptions", error });
-    }
-  };
-
-  useEffect(() => {
-    handleGetSubscriptions();
-  }, [connected]);
-
-  useEffect(() => {
-    // ... listen if connected, purchaseHistory and subscriptions exist
-    if (
-      purchaseHistory.find(
-        (x) => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
-      )
-    ) {
-      navigation.navigate("Home");
-    }
-  }, [connected, purchaseHistory, subscriptions]);
-
-  const handleBuySubscription = async (productId) => {
-    try {
-      await requestSubscription({
-        sku: productId,
-      });
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      if (error instanceof PurchaseError) {
-        errorLog({ message: `[${error.code}]: ${error.message}`, error });
-      } else {
-        errorLog({ message: "handleBuySubscription", error });
-      }
-    }
-  };
-
-  useEffect(() => {
-    const checkCurrentPurchase = async (purchase) => {
-      if (purchase) {
-        try {
-          const receipt = purchase.transactionReceipt;
-          if (receipt) {
-            if (Platform.OS === "ios") {
-              const isTestEnvironment = __DEV__;
-
-              //send receipt body to apple server to validete
-              const appleReceiptResponse = await validateReceiptIos(
-                {
-                  "receipt-data": receipt,
-                  password: Strings.APP_SHARED_SECRET
-                },
-                isTestEnvironment,
-              );
-
-              //if receipt is valid
-              if (appleReceiptResponse) {
-                const { status } = appleReceiptResponse;
-                if (status) {
-                  navigation.navigate("Home");
-                }
-              }
-
-              return;
-            }
-          }
-        } catch (error) {
-          console.log("error", error);
-        }
-      }
-    };
-    checkCurrentPurchase(currentPurchase);
-  }, [currentPurchase, finishTransaction]);
-
-
-
-
-
-      const purchaseProduct = async (productId) => {
-          const email = await AsyncStorage.getItem('email')
-          if(email){
-              try {
-                  const purchase = await RNIap.requestPurchase(productId);
-                  console.log('Purchase:', purchase);
-              } catch (error) {
-                  console.log('Error purchasing:', error.message);
-              }
-          }else{
-              navigation.navigate('Login')
-          }
-      };
+  console.log("gsgshnssjjsjsjsjsnsbsgs",book);
 
 
     const downloadFile = async (url) => {
@@ -252,6 +169,77 @@ const BookDetails = ({ route, navigation }) => {
             navigation.navigate('Login');
         }
     };
+
+    const handleBuySubscription = async (productId) => {
+        try {
+          await requestSubscription({
+            sku: productId,
+          });
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          if (error instanceof PurchaseError) {
+            errorLog({ message: `[${error.code}]: ${error.message}`, error });
+          } else {
+            errorLog({ message: "handleBuySubscription", error });
+          }
+        }
+      };
+
+
+
+      const subscribe = async (plan) => {
+
+        try {
+            const subscriptionSkus = Platform.select({
+                ios: [plan]
+            });
+            await RNIap.initConnection();
+            const products = await RNIap.getProducts({ skus: subscriptionSkus });
+            console.log("product is ", products)
+            // if (products && products.length > 0) {
+            //     const productID = products[0]
+
+            //     let packagePrice
+            //     if(productID.productId === "monthlyPlanNew2"){
+            //         packagePrice = 2.99
+            //     } else if(productID.productId === "ThreeMonthPlan"){
+            //         packagePrice = 4
+            //     } else if(productID.productId === "yearlyPlanNewNew"){
+            //         packagePrice = 24
+            //     } else if(productID.productId === "familyPlan"){
+            //         packagePrice = 9.99
+            //     } else{
+            //         packagePrice = 0
+            //     }
+
+            //     const purchase= await RNIap.requestPurchase({ sku: productID.productId});
+            //     if(purchase) {
+            //         const data = await saveSubscription(productID, purchase)
+
+            //         if( data.status === 1){
+            //             const email =  await AsyncStorage.getItem('email');
+            //             const points = await giveSubscription(email, packagePrice)
+            //             if( points.status === 1){
+            //                 setAlertTitle("Congratulations ... ")
+            //                 setAlertMessage("Your subscription is successful. " + points.response )
+            //                 setModalVisible(true)
+            //             }
+            //         }else{
+            //             setAlertTitle("Error")
+            //             setAlertMessage("Something went wrong with your subscription. Please try again")
+            //             setModalVisible(true)
+            //         }
+            //     }else{
+
+            //     }
+
+            // }
+        } catch (error) {
+            console.warn('Error purchasing subscription:', error);
+        }
+    }
+
 
 
       const renderRelatedBooks = ({ item }) => {
@@ -459,24 +447,37 @@ const BookDetails = ({ route, navigation }) => {
                         </TouchableOpacity>
 
                         <View style={{flexDirection:"row",alignContent:"space-between",marginTop:10,marginLeft:15}}>
-                            {/* <TouchableOpacity style={{borderRadius: 4,padding:4,height:40,
-                                                  backgroundColor: '#D8A623',marginEnd:20,justifyContent:'center',alignContent:'center'}}>
-                            <Text style={{marginLeft:10,marginRight:10}}>PRICE : </Text>
-                            </TouchableOpacity> */}
+
                            
                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,
                                                   backgroundColor: '#D8A623',
                                marginEnd:10,justifyContent:'center',alignContent:'center'}}
                                
                                onPress={()=>{
-                                bottomSheetRef.current?.snapToIndex(0);
+
+                                console.log('tyeyeehebdhbhdncncn',item.apple_product_code);
+                                subscribe(item.apple_product_code);
+                                // handleBuySubscription(item.apple_product_code)
+                               
+                              }}
+                               >
+                                <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>BUY US ${item.price}</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={{borderRadius: 4,padding:4,height:30,
+                                                  backgroundColor: '#D8A623',
+                               marginEnd:10,justifyContent:'center',alignContent:'center'}}
+                               
+                               onPress={()=>{
+                                handleBuySubscription("7SpiritsOfGodNew");
+                                // bottomSheetRef.current?.snapToIndex(0);
                                 // console.log("product ID",product);
                                 // // purchaseProduct(product);
                                 // bottomSheetRef
                                
                               }}
                                >
-                                <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>BUY ${item.price}</Text>
+                                <Text style={{color:'#FFFFFF',fontWeight:'500', paddingRight : 10, paddingLeft : 10, fontSize:12 }}>VOUCHER</Text>
                             </TouchableOpacity>
 
                         </View>
@@ -551,17 +552,17 @@ const BookDetails = ({ route, navigation }) => {
                     <View>
                      <TouchableOpacity  onPress={()=>{
                          //openBook()
-                         if(price===0){
-                            const url=item.url;
-                            const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
-                            navigation.navigate('EpubReader',{file2: EPUB_PATH,location:null})
+                        //  if(price===0){
+                        //     const url=item.url;
+                        //     const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+url.split("/").pop();
+                        //     navigation.navigate('EpubReader',{file2: EPUB_PATH,location:null})
 
-                         }else{
+                        //  }else{
                             //Buy and if buy is sucess navigate to reader
                             // bottomSheetThemeRef.current?.snapToIndex(0);
                             handleBuySubscription(sku);
 
-                         }
+                        //  }
                          
                      }}>
                         <MaterialCommunityIcons style={{alignSelf:"center"}} name="file-multiple-outline" size={30} color="#9AC4F8" />

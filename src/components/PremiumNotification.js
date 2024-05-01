@@ -13,6 +13,7 @@ import { getProfile } from '../service/authService';
 import { getBookDetails } from '../service/libraryService';
 import { useNavigation } from '@react-navigation/native'; 
 
+
 const db = DatabaseConnection.getdb();
 
 
@@ -21,6 +22,7 @@ const PremiumNotification = () => {
    const [subscribed, setSubscribed] = useState(false);
    const [books, setBooks] = useState();
    const navigation =useNavigation();
+   const [bookExists, setBookExist] = useState(false);
 
 
    useEffect(() => {
@@ -41,6 +43,9 @@ const PremiumNotification = () => {
       
     }
     setData();
+    // const interval = setInterval(() => {
+    //   fetchData();
+    // }, 2000);
 
   }, []);
    const openEpub=(url,initial)=>{

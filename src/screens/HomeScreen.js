@@ -83,15 +83,6 @@ const HomeScreen = () => {
 
   useEffect(() => {
     async function setExpiry() {
-      const expiryData = await AsyncStorage.getItem('expiry_date');
-      console.log('expiry Date ', expiryData);
-
-      if (expiryData == null) {
-        setVisibleCongs(true);
-      } else {
-        setVisibleCongs(false);
-      }
-
       const mail =await AsyncStorage.getItem('email');
       if(mail){
 
@@ -101,8 +92,19 @@ const HomeScreen = () => {
         }
       }
     }
-    
 
+    async function checkExpiry() {
+      const expiryData = await AsyncStorage.getItem('expiry_date');
+      console.log('expiry Date ', expiryData);
+
+      if (expiryData == null) {
+        setVisibleCongs(true);
+      } else {
+        setVisibleCongs(false);
+      }
+    }
+    
+    checkExpiry();
     const interval = setInterval(() => {
       setExpiry();
     }, 3000);
@@ -299,12 +301,24 @@ const HomeScreen = () => {
             ModalComponent={Modal}
             fullScreen={false}
             isVisible={visibleCongs}
-            onBackdropPress={toggleReadingOverlay}
+            onBackdropPress={()=>{setVisibleCongs(!visibleCongs)}}
             overlayStyle={{
               width: windowWidth,
               height: windowHeight,
-              padding: 30,
+              padding: 20,
             }}>
+            <View style={{flexDirection:'row',marginTop:-50}}>
+              <TouchableOpacity style={{marginLeft:'auto'}} onPress={()=>{
+                setVisibleCongs(false);
+              }}>
+                <MaterialCommunityIcons
+                  name="close-circle-outline"
+                  size={25}
+                  color="#FFFFFF"
+                />
+              </TouchableOpacity>
+
+            </View>
             <View style={{alignSelf: 'center'}}>
               <Animated.Image
                 style={animatedStyle}
@@ -351,7 +365,7 @@ const HomeScreen = () => {
             ModalComponent={Modal}
             fullScreen={false}
             isVisible={note}
-            onBackdropPress={toggleReadingOverlay}
+            onBackdropPress={()=>{setNotes(!note)}}
             overlayStyle={{
               width: windowWidth,
               height: windowHeight*0.7,
@@ -412,7 +426,7 @@ const HomeScreen = () => {
             ModalComponent={Modal}
             fullScreen={false}
             isVisible={theme}
-            onBackdropPress={toggleReadingOverlay}
+            onBackdropPress={()=>{setChangeTheme(!theme)}}
             overlayStyle={{
               width: windowWidth,
               height: windowHeight*0.7,
