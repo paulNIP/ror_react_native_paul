@@ -31,18 +31,7 @@ const LibraryScreen = ({navigation}) => {
           const data = await getLibrary();
           
           setBooks(data);
-          
-          let bkurl=data[0].url;
-          let bk =bkurl.split("/").pop();
-          const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+bk;
-          console.log("gshhhdh",EPUB_PATH)
-          const exists = await RNFS.exists(EPUB_PATH);
-          if (exists) {
-            setBookExists(true);
-          } else {
-            setBookExists(false);
-            
-          }
+
           const mail= await AsyncStorage.getItem('email');
           setEmail(mail);
           if(mail==null){
@@ -53,6 +42,26 @@ const LibraryScreen = ({navigation}) => {
       }
 
       fetchData();
+
+      const setData = async () => {
+        let bkurl=books[0].url;
+        let bk =bkurl.split("/").pop();
+        const EPUB_PATH = `${RNFS.DocumentDirectoryPath}/`+bk;
+        const exists = await RNFS.exists(EPUB_PATH);
+        if (exists) {
+          setBookExists(true);
+        } else {
+          setBookExists(false);
+          
+        }
+
+      }
+
+      const interval = setInterval(() => {
+        setData();
+      }, 3000);
+  
+      return () => clearInterval(interval);
 
     }, []);
 

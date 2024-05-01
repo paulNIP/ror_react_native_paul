@@ -42,10 +42,12 @@ const PremiumNotification = () => {
       }
       
     }
-    setData();
-    // const interval = setInterval(() => {
-    //   fetchData();
-    // }, 2000);
+
+    const interval = setInterval(() => {
+      setData();
+    }, 3000);
+
+    return () => clearInterval(interval);
 
   }, []);
    const openEpub=(url,initial)=>{
