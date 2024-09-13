@@ -54,7 +54,7 @@ const DailyDevotional = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [userEmail, setUserEmail] = useState();
   const [rneMessage, setRneMessage] = useState();
-  const [readCompletion,setReadCompletion] =useState();
+  const [readCompletion,setReadCompletion] =useState(false);
   const [language, setLanguage] = useState();
   const [allTranslatedLanguages, setAllTranslatedLanguages] = useState();
   const [searchText, setSearchText] = useState('');
@@ -93,8 +93,6 @@ const DailyDevotional = () => {
   }
 
   const setPrefferdLanguage =async (lang) => {
-
-    console.log("yweyyehenjejejkekke",lang);
 
     await AsyncStorage.setItem('language',lang);
     const data = await getDailyDevotional();
@@ -256,7 +254,11 @@ const DailyDevotional = () => {
 
       const fetchData = async () => {
           const read =await AsyncStorage.getItem("rne_date");
-          setReadCompletion(true);
+          console.log("gsghhhhshhshshhs",read);
+
+          if(read){
+            setReadCompletion(true);
+          }
           const data = await getDailyDevotional();
           setDevotional(data)
       }
@@ -350,6 +352,7 @@ const DailyDevotional = () => {
   //set reading completed
   const setReadingCompleted=async()=>{
     const rne_date= await AsyncStorage.getItem('rne_date');
+
     if(rne_date==null){
       await AsyncStorage.setItem('rne_date',new Date().toISOString().slice(0, 10));
 
@@ -364,10 +367,9 @@ const DailyDevotional = () => {
     const randomKeyTag = Math.random().toString(36).substring(2, 5);
     try {
       const pk = await generate(randomKeyTag);
-      // console.log("pksnsnndnd",pk)
     } catch (e) {
       const {message, userInfo} =  e;
-      // console.log("Generation Erriorttt",message);
+
     }
 
     const crypto = createCryptoContext(randomKeyTag);
@@ -598,8 +600,14 @@ const DailyDevotional = () => {
             <Pressable onPress={()=>toggleOverlay(BB)}>
               <Text style={styles.verses}>{item.two_yearbb}</Text>
             </Pressable>
+            {
+            (language==='english' || language===null) &&(
+              <DailyQuiz/>
+             )
+           }
+            
 
-            <DailyQuiz/>
+
             <Overlay ModalComponent={Modal} fullScreen={false}
               isVisible={visible}
               onBackdropPress={toggleOverlay} overlayStyle={{width:windowWidth,height:windowHeight}}>

@@ -72,6 +72,7 @@ import axios from 'axios';
 import AllNotes from './src/screens/AllNotes';
 // import { NotificationListener, requestUserPermission } from './src/service/pushNotificationManager';
 import AppNotes from './src/screens/AppNotes';
+import AudioModule from './src/screens/AudioModule';
 
 import Constants from 'expo-constants';
 
@@ -318,7 +319,7 @@ function AudioStackNavigator() {
                     },
                     headerTintColor: "white",
                     headerBackTitle: "Back"}}>
-      <Stack.Screen name="Rhapsody Audio" component={AudioScreen} 
+      <Stack.Screen name="Rhapsody Audio" component={AudioModule} 
       // options={{
       //           headerTitleStyle: { 
       //               textAlign:"center", 

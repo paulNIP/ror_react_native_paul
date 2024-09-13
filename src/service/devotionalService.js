@@ -13,20 +13,16 @@ const getDailyDevotional = async () => {
     let lang= await AsyncStorage.getItem('language');
     if(lang ===null || lang ==='english'){
       return new Promise((resolve, reject) => {
-              axios.post(Strings.API_URL+'/v2/devotional', {
-                          date: new Date().toISOString().slice(0, 10)
-
-                        })
-                        .then((res) => {
-                          //console.log(res.data.result)
-                          resolve(res.data.result);
-                          console.log("Devotional data",res.data.result)
-                      })
-                        .catch((err) => {
-                          reject(err)
-                      });
-              });
-
+        let url ='https://api.rorangel.com/?devotional&date='+new Date().toISOString().slice(0, 10)+'&lang=english';
+        axios.get(url)
+                  .then((res) => {
+                    resolve(res.data.devotionals);
+                    console.log("Devotional data",res.data.devotionals)
+                })
+                  .catch((err) => {
+                    reject(err)
+                });
+        });
               
 
     }else{
